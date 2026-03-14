@@ -210,7 +210,22 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'skincare-app-storage',
-      version: 1,
+      version: 2,
+      migrate: (persistedState: unknown, _version: number) => {
+        const s = (persistedState ?? {}) as Record<string, unknown>;
+        const routine = (s.routine ?? {}) as Record<string, unknown>;
+        return {
+          ...s,
+          articles: Array.isArray(s.articles) ? s.articles : [],
+          wishlist: Array.isArray(s.wishlist) ? s.wishlist : [],
+          procedureWishlist: Array.isArray(s.procedureWishlist) ? s.procedureWishlist : [],
+          routine: {
+            am: Array.isArray(routine.am) ? routine.am : [],
+            pm: Array.isArray(routine.pm) ? routine.pm : [],
+            weekly: Array.isArray(routine.weekly) ? routine.weekly : [],
+          },
+        };
+      },
     }
   )
 );

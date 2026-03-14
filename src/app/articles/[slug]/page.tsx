@@ -1,5 +1,6 @@
 'use client';
-import { use, useState } from 'react';
+import { useState } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Calendar, Tag, Heart, Package, Syringe, Check } from 'lucide-react';
 import { useArticles, useAppStore } from '@/lib/store';
@@ -108,8 +109,8 @@ function LinkedProcedureCard({ procedure }: { procedure: Procedure }) {
   );
 }
 
-export default function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params);
+export default function ArticlePage() {
+  const { slug } = useParams<{ slug: string }>();
   const articles = useArticles();
   const { products, procedures } = useAppStore();
   const article = articles.find((a) => a.slug === slug && a.published);

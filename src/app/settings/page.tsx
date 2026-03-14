@@ -124,8 +124,8 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
             transition={{ duration: 0.3 }}
           >
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-slate-800 mb-2">{steps[step].title}</h1>
-              <p className="text-slate-500">{steps[step].subtitle}</p>
+              <h1 className="text-3xl font-bold text-obsidian-800 mb-2">{steps[step].title}</h1>
+              <p className="text-obsidian-500">{steps[step].subtitle}</p>
             </div>
 
             {/* Step 0: Name */}
@@ -133,7 +133,7 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
               <Card>
                 <CardBody className="space-y-6 p-8">
                   <div className="text-center text-6xl mb-4">🌿</div>
-                  <p className="text-slate-600 text-center text-sm leading-relaxed">
+                  <p className="text-obsidian-600 text-center text-sm leading-relaxed">
                     GlowShelf is your personal skincare companion — track products, discover ingredients, get AI-powered insights, and build routines that actually work for <em>your</em> skin.
                   </p>
                   <Input
@@ -158,13 +158,13 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
                       'flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition-all',
                       data.skinType === s.value
                         ? 'border-rose-400 bg-rose-50 shadow-md'
-                        : 'border-slate-100 bg-white hover:border-rose-200'
+                        : 'border-ivory-darker bg-white hover:border-rose-200'
                     )}
                   >
                     <span className="text-3xl">{s.emoji}</span>
                     <div>
-                      <div className="font-semibold text-slate-800">{s.label}</div>
-                      <div className="text-sm text-slate-500">{s.description}</div>
+                      <div className="font-semibold text-obsidian-800">{s.label}</div>
+                      <div className="text-sm text-obsidian-500">{s.description}</div>
                     </div>
                     {data.skinType === s.value && (
                       <Check className="w-5 h-5 text-rose-500 ml-auto flex-shrink-0" />
@@ -179,7 +179,7 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
               <Card>
                 <CardBody className="p-6 space-y-4">
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-700 mb-3">Select your main concerns (choose all that apply)</h3>
+                    <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Select your main concerns (choose all that apply)</h3>
                     <div className="grid grid-cols-3 gap-2">
                       {ALL_CONCERNS.map((c) => (
                         <button
@@ -189,7 +189,7 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
                             'flex items-center gap-2 p-2.5 rounded-xl border-2 text-sm transition-all',
                             data.skinConcerns.includes(c)
                               ? 'border-rose-400 bg-rose-50 text-rose-700 font-medium'
-                              : 'border-slate-100 bg-white text-slate-600 hover:border-rose-200'
+                              : 'border-ivory-darker bg-white text-obsidian-600 hover:border-rose-200'
                           )}
                         >
                           <span>{CONCERN_EMOJIS[c]}</span>
@@ -199,7 +199,7 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-sm font-semibold text-slate-700 mb-2">Your skin goals</h3>
+                    <h3 className="text-sm font-semibold text-obsidian-700 mb-2">Your skin goals</h3>
                     <Textarea
                       placeholder="e.g. Even out my skin tone, reduce breakouts, prevent early aging..."
                       value={data.goals}
@@ -216,7 +216,7 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
               <div className="space-y-4">
                 <Card>
                   <CardBody className="p-5">
-                    <h3 className="text-sm font-semibold text-slate-700 mb-3">Budget preference</h3>
+                    <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Budget preference</h3>
                     <div className="grid grid-cols-2 gap-2">
                       {BUDGET_OPTIONS.map((b) => (
                         <button
@@ -224,13 +224,13 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
                           onClick={() => setData((d) => ({ ...d, budget: b.value }))}
                           className={cn(
                             'flex items-center gap-2 p-3 rounded-xl border-2 text-left transition-all',
-                            data.budget === b.value ? 'border-rose-400 bg-rose-50' : 'border-slate-100 bg-white hover:border-rose-200'
+                            data.budget === b.value ? 'border-rose-400 bg-rose-50' : 'border-ivory-darker bg-white hover:border-rose-200'
                           )}
                         >
                           <span className="text-xl">{b.emoji}</span>
                           <div>
-                            <div className="text-sm font-semibold text-slate-700">{b.label}</div>
-                            <div className="text-xs text-slate-400">{b.description}</div>
+                            <div className="text-sm font-semibold text-obsidian-700">{b.label}</div>
+                            <div className="text-xs text-obsidian-400">{b.description}</div>
                           </div>
                         </button>
                       ))}
@@ -240,8 +240,8 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
 
                 <Card>
                   <CardBody className="p-5">
-                    <h3 className="text-sm font-semibold text-slate-700 mb-1">Known allergies or irritants</h3>
-                    <p className="text-xs text-slate-400 mb-3">e.g. fragrance, lanolin, benzoyl peroxide</p>
+                    <h3 className="text-sm font-semibold text-obsidian-700 mb-1">Known allergies or irritants</h3>
+                    <p className="text-xs text-obsidian-400 mb-3">e.g. fragrance, lanolin, benzoyl peroxide</p>
                     <div className="flex gap-2 mb-2">
                       <Input
                         placeholder="Type and press Add..."
@@ -264,7 +264,7 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
 
                 <Card>
                   <CardBody className="p-5">
-                    <h3 className="text-sm font-semibold text-slate-700 mb-3">Open to these procedures?</h3>
+                    <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Open to these procedures?</h3>
                     <div className="grid grid-cols-2 gap-2">
                       {PROCEDURE_OPTIONS.map((p) => (
                         <button
@@ -272,7 +272,7 @@ function OnboardingWizard({ onComplete }: { onComplete: () => void }) {
                           onClick={() => toggleProcedure(p.value)}
                           className={cn(
                             'flex items-center gap-2 p-2.5 rounded-xl border-2 text-sm transition-all text-left',
-                            data.procedureInterests.includes(p.value) ? 'border-rose-400 bg-rose-50 text-rose-700' : 'border-slate-100 bg-white text-slate-600 hover:border-rose-200'
+                            data.procedureInterests.includes(p.value) ? 'border-rose-400 bg-rose-50 text-rose-700' : 'border-ivory-darker bg-white text-obsidian-600 hover:border-rose-200'
                           )}
                         >
                           <span>{p.emoji}</span> {p.label}
@@ -337,10 +337,10 @@ function SettingsContent() {
   return (
     <div className="p-8 max-w-3xl">
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
-          <Settings className="w-5 h-5 text-slate-600" />
+        <div className="w-10 h-10 bg-ivory-darker rounded-xl flex items-center justify-center">
+          <Settings className="w-5 h-5 text-obsidian-600" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-800">Settings</h1>
+        <h1 className="text-3xl font-bold text-obsidian-800">Settings</h1>
       </div>
 
       <div className="space-y-6">
@@ -371,7 +371,7 @@ function SettingsContent() {
           </CardHeader>
           <CardBody className="space-y-5">
             <div>
-              <label className="text-sm font-medium text-slate-700 block mb-2">Skin Type</label>
+              <label className="text-sm font-medium text-obsidian-700 block mb-2">Skin Type</label>
               <div className="grid grid-cols-5 gap-2">
                 {SKIN_TYPES.map((s) => (
                   <button
@@ -379,7 +379,7 @@ function SettingsContent() {
                     onClick={() => setSkinType(s.value)}
                     className={cn(
                       'flex flex-col items-center gap-1 p-2.5 rounded-xl border-2 text-xs transition-all',
-                      skinType === s.value ? 'border-rose-400 bg-rose-50 text-rose-700 font-semibold' : 'border-slate-100 bg-white text-slate-600 hover:border-rose-200'
+                      skinType === s.value ? 'border-rose-400 bg-rose-50 text-rose-700 font-semibold' : 'border-ivory-darker bg-white text-obsidian-600 hover:border-rose-200'
                     )}
                   >
                     <span className="text-xl">{s.emoji}</span>
@@ -390,7 +390,7 @@ function SettingsContent() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-slate-700 block mb-2">Skin Concerns</label>
+              <label className="text-sm font-medium text-obsidian-700 block mb-2">Skin Concerns</label>
               <div className="flex flex-wrap gap-2">
                 {ALL_CONCERNS.map((c) => (
                   <button
@@ -398,7 +398,7 @@ function SettingsContent() {
                     onClick={() => toggleConcern(c)}
                     className={cn(
                       'text-xs px-3 py-1.5 rounded-full border-2 transition-all',
-                      concerns.includes(c) ? 'border-rose-400 bg-rose-50 text-rose-700 font-medium' : 'border-slate-200 text-slate-500 hover:border-rose-200'
+                      concerns.includes(c) ? 'border-rose-400 bg-rose-50 text-rose-700 font-medium' : 'border-ivory-darker text-obsidian-500 hover:border-rose-200'
                     )}
                   >
                     {CONCERN_EMOJIS[c]} {concernLabel(c)}
@@ -408,7 +408,7 @@ function SettingsContent() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-slate-700 block mb-1">Known Allergies & Irritants</label>
+              <label className="text-sm font-medium text-obsidian-700 block mb-1">Known Allergies & Irritants</label>
               <div className="flex gap-2 mb-2">
                 <Input
                   placeholder="Type and press Add..."
@@ -436,7 +436,7 @@ function SettingsContent() {
             <CardTitle className="flex items-center gap-2"><Target className="w-4 h-4 text-rose-400" /> Preferences</CardTitle>
           </CardHeader>
           <CardBody>
-            <label className="text-sm font-medium text-slate-700 block mb-3">Budget Preference</label>
+            <label className="text-sm font-medium text-obsidian-700 block mb-3">Budget Preference</label>
             <div className="grid grid-cols-2 gap-2">
               {BUDGET_OPTIONS.map((b) => (
                 <button
@@ -444,13 +444,13 @@ function SettingsContent() {
                   onClick={() => setBudget(b.value)}
                   className={cn(
                     'flex items-center gap-2 p-3 rounded-xl border-2 text-left transition-all',
-                    budget === b.value ? 'border-rose-400 bg-rose-50' : 'border-slate-100 hover:border-rose-200'
+                    budget === b.value ? 'border-rose-400 bg-rose-50' : 'border-ivory-darker hover:border-rose-200'
                   )}
                 >
                   <span className="text-xl">{b.emoji}</span>
                   <div>
-                    <div className="text-sm font-semibold text-slate-700">{b.label}</div>
-                    <div className="text-xs text-slate-400">{b.description}</div>
+                    <div className="text-sm font-semibold text-obsidian-700">{b.label}</div>
+                    <div className="text-xs text-obsidian-400">{b.description}</div>
                   </div>
                 </button>
               ))}
@@ -461,7 +461,7 @@ function SettingsContent() {
         {/* Data */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Download className="w-4 h-4 text-slate-400" /> Data</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Download className="w-4 h-4 text-obsidian-400" /> Data</CardTitle>
           </CardHeader>
           <CardBody className="flex gap-3">
             <Button variant="outline" size="sm">

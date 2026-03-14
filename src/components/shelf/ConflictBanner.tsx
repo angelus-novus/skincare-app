@@ -58,11 +58,11 @@ function ConflictCard({ conflict }: { conflict: ConflictResult }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs font-semibold text-slate-700">
+          <span className="text-xs font-semibold text-obsidian-700">
             {conflict.productA.brand} {conflict.productA.name}
           </span>
-          <span className="text-xs text-slate-400">x</span>
-          <span className="text-xs font-semibold text-slate-700">
+          <span className="text-xs text-obsidian-400">x</span>
+          <span className="text-xs font-semibold text-obsidian-700">
             {conflict.productB.brand} {conflict.productB.name}
           </span>
         </div>
@@ -81,19 +81,19 @@ function ConflictCard({ conflict }: { conflict: ConflictResult }) {
           <SeverityIcon severity={conflict.severity} />
         </div>
         <div>
-          <p className="text-xs text-slate-600">{conflict.message}</p>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-obsidian-600">{conflict.message}</p>
+          <p className="text-xs text-obsidian-500 mt-1">
             <span className="font-medium">Tip:</span> {conflict.advice}
           </p>
         </div>
       </div>
       <div className="flex items-center gap-1.5">
-        <span className="text-[10px] text-slate-400">Conflicting:</span>
-        <Badge className="bg-slate-100 text-slate-500 text-[10px]">
+        <span className="text-[10px] text-obsidian-400">Conflicting:</span>
+        <Badge className="bg-ivory-darker text-obsidian-500 text-[10px]">
           {conflict.ingredientA.name}
         </Badge>
-        <span className="text-[10px] text-slate-300">+</span>
-        <Badge className="bg-slate-100 text-slate-500 text-[10px]">
+        <span className="text-[10px] text-obsidian-300">+</span>
+        <Badge className="bg-ivory-darker text-obsidian-500 text-[10px]">
           {conflict.ingredientB.name}
         </Badge>
       </div>
@@ -175,17 +175,17 @@ export function ConflictBanner() {
             <AlertTriangle className="w-5 h-5" />
           </div>
           <div className="flex-1">
-            <div className="text-sm font-semibold text-slate-700">
+            <div className="text-sm font-semibold text-obsidian-700">
               Routine Conflicts Detected
             </div>
-            <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-2">
+            <div className="text-xs text-obsidian-500 mt-0.5 flex items-center gap-2">
               {avoidCount > 0 && (
                 <span className="text-red-600 font-medium">
                   {avoidCount} to avoid
                 </span>
               )}
               {avoidCount > 0 && cautionCount > 0 && (
-                <span className="text-slate-300">|</span>
+                <span className="text-obsidian-300">|</span>
               )}
               {cautionCount > 0 && (
                 <span className="text-amber-600 font-medium">
@@ -194,7 +194,7 @@ export function ConflictBanner() {
               )}
             </div>
           </div>
-          <div className="text-slate-400">
+          <div className="text-obsidian-400">
             {isExpanded ? (
               <ChevronUp className="w-4 h-4" />
             ) : (
@@ -204,7 +204,7 @@ export function ConflictBanner() {
         </button>
         <button
           onClick={() => setIsDismissed(true)}
-          className="ml-2 p-1.5 rounded-lg hover:bg-white/60 text-slate-400 hover:text-slate-600 transition-colors"
+          className="ml-2 p-1.5 rounded-lg hover:bg-white/60 text-obsidian-400 hover:text-obsidian-600 transition-colors"
           aria-label="Dismiss conflict warnings"
         >
           <X className="w-4 h-4" />

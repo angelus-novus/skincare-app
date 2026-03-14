@@ -31,15 +31,14 @@ export function StarRating({
             type="button"
             disabled={!interactive}
             onClick={() => onChange?.(i + 1)}
-            className={cn('transition-colors', interactive && 'cursor-pointer hover:scale-110')}
+            className={cn('transition-transform', interactive && 'cursor-pointer hover:scale-110')}
           >
             <Star
-              className={cn(
-                sizes[size],
-                filled || halfFilled
-                  ? 'text-amber-400 fill-amber-400'
-                  : 'text-slate-200 fill-slate-200'
-              )}
+              className={cn(sizes[size])}
+              style={{
+                color: (filled || halfFilled) ? '#C9A96E' : '#E8E0D5',
+                fill: (filled || halfFilled) ? '#C9A96E' : '#E8E0D5',
+              }}
             />
           </button>
         );

@@ -58,9 +58,9 @@ const EVIDENCE_META: Record<EvidenceLevel, { label: string; description: string;
   anecdotal: {
     label: 'Anecdotal',
     description: 'Based primarily on user reports and traditional use, limited clinical data.',
-    bg: 'bg-slate-100',
-    text: 'text-slate-600',
-    border: 'border-slate-200',
+    bg: 'bg-ivory-darker',
+    text: 'text-obsidian-600',
+    border: 'border-ivory-darker',
   },
 };
 
@@ -269,8 +269,8 @@ function IngredientDetailModal({
             <FlaskConical className={cn('w-7 h-7', meta.text)} />
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-xl font-bold text-slate-800">{ingredient.name}</h2>
-            <p className="text-sm text-slate-400 italic mt-0.5">{ingredient.inci}</p>
+            <h2 className="text-xl font-bold text-obsidian-800">{ingredient.name}</h2>
+            <p className="text-sm text-obsidian-400 italic mt-0.5">{ingredient.inci}</p>
             <div className="flex flex-wrap items-center gap-2 mt-2">
               <EvidenceBadge level={ingredient.evidenceLevel} />
               <span className="bg-rose-100 text-rose-700 text-xs rounded-full px-2.5 py-0.5 font-medium border border-rose-200">
@@ -299,11 +299,11 @@ function IngredientDetailModal({
 
         {/* What it does */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-2 flex items-center gap-2">
             <Info className="w-4 h-4 text-rose-400" />
             What It Does
           </h3>
-          <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 rounded-xl p-3">
+          <p className="text-sm text-obsidian-600 leading-relaxed bg-ivory-dark rounded-xl p-3">
             {ingredient.whatItDoes}
           </p>
         </div>
@@ -312,7 +312,7 @@ function IngredientDetailModal({
           {/* Benefits */}
           {ingredient.benefits.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-obsidian-700 mb-2 flex items-center gap-2">
                 <Check className="w-4 h-4 text-emerald-500" />
                 Benefits
               </h3>
@@ -320,7 +320,7 @@ function IngredientDetailModal({
                 {ingredient.benefits.map((b) => (
                   <div key={b} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
-                    <span className="text-sm text-slate-600">{b}</span>
+                    <span className="text-sm text-obsidian-600">{b}</span>
                   </div>
                 ))}
               </div>
@@ -330,7 +330,7 @@ function IngredientDetailModal({
           {/* Concerns */}
           {ingredient.potentialConcerns.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-slate-700 mb-2 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-obsidian-700 mb-2 flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 text-amber-500" />
                 Potential Concerns
               </h3>
@@ -338,7 +338,7 @@ function IngredientDetailModal({
                 {ingredient.potentialConcerns.map((c) => (
                   <div key={c} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
-                    <span className="text-sm text-slate-600">{c}</span>
+                    <span className="text-sm text-obsidian-600">{c}</span>
                   </div>
                 ))}
               </div>
@@ -350,7 +350,7 @@ function IngredientDetailModal({
           {/* Best for skin types */}
           {ingredient.skinTypes.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-slate-700 mb-2">Best For</h3>
+              <h3 className="text-sm font-semibold text-obsidian-700 mb-2">Best For</h3>
               <div className="flex flex-wrap gap-1.5">
                 {ingredient.skinTypes.map((st) => (
                   <span
@@ -367,7 +367,7 @@ function IngredientDetailModal({
           {/* Targets concerns */}
           {ingredient.concerns.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-slate-700 mb-2">Targets</h3>
+              <h3 className="text-sm font-semibold text-obsidian-700 mb-2">Targets</h3>
               <div className="flex flex-wrap gap-1.5">
                 {ingredient.concerns.map((c) => (
                   <span
@@ -383,14 +383,14 @@ function IngredientDetailModal({
         </div>
 
         {ingredient.notes && (
-          <div className="bg-slate-50 rounded-xl p-3 border border-slate-100">
-            <p className="text-xs text-slate-500 italic">Note: {ingredient.notes}</p>
+          <div className="bg-ivory-dark rounded-xl p-3 border border-ivory-darker">
+            <p className="text-xs text-obsidian-500 italic">Note: {ingredient.notes}</p>
           </div>
         )}
 
         {/* Your products with this ingredient */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3 flex items-center gap-2">
             <Package className="w-4 h-4 text-rose-400" />
             Your Products with {ingredient.name}
             <span className="bg-rose-100 text-rose-600 text-xs rounded-full px-2 py-0.5 font-medium ml-auto">
@@ -398,16 +398,16 @@ function IngredientDetailModal({
             </span>
           </h3>
           {productsWithIngredient.length === 0 ? (
-            <div className="text-center py-6 bg-slate-50 rounded-xl border border-slate-100">
+            <div className="text-center py-6 bg-ivory-dark rounded-xl border border-ivory-darker">
               <Package className="w-8 h-8 text-slate-200 mx-auto mb-2" />
-              <p className="text-sm text-slate-400">None of your shelf products contain this ingredient.</p>
+              <p className="text-sm text-obsidian-400">None of your shelf products contain this ingredient.</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-2">
               {productsWithIngredient.map((product) => (
                 <div
                   key={product.id}
-                  className="flex items-center gap-2.5 bg-slate-50 rounded-xl p-2.5 border border-slate-100 hover:border-rose-100 hover:bg-rose-50/30 transition-colors"
+                  className="flex items-center gap-2.5 bg-ivory-dark rounded-xl p-2.5 border border-ivory-darker hover:border-rose-100 hover:bg-rose-50/30 transition-colors"
                 >
                   <div className="w-8 h-8 rounded-lg overflow-hidden bg-white flex-shrink-0">
                     {product.imageUrl ? (
@@ -426,8 +426,8 @@ function IngredientDetailModal({
                     )}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold text-slate-700 truncate">{product.name}</p>
-                    <p className="text-xs text-slate-400 truncate">{product.brand}</p>
+                    <p className="text-xs font-semibold text-obsidian-700 truncate">{product.name}</p>
+                    <p className="text-xs text-obsidian-400 truncate">{product.brand}</p>
                   </div>
                   {product.keyIngredients.includes(ingredient.id) && (
                     <Sparkles className="w-3 h-3 text-rose-400 flex-shrink-0 ml-auto" />
@@ -440,7 +440,7 @@ function IngredientDetailModal({
 
         {/* Recommended products */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-amber-400" />
             Recommended Products to Try
           </h3>
@@ -451,8 +451,8 @@ function IngredientDetailModal({
                 className="flex items-center justify-between gap-3 bg-gradient-to-r from-rose-50 to-white rounded-xl p-3 border border-rose-100/60"
               >
                 <div>
-                  <p className="text-sm font-semibold text-slate-700">{rp.name}</p>
-                  <p className="text-xs text-slate-400">{rp.brand}</p>
+                  <p className="text-sm font-semibold text-obsidian-700">{rp.name}</p>
+                  <p className="text-xs text-obsidian-400">{rp.brand}</p>
                 </div>
                 <span className="text-xs text-rose-600 bg-rose-50 rounded-full px-2.5 py-0.5 flex-shrink-0 border border-rose-100">
                   {rp.note}
@@ -520,7 +520,7 @@ function IngredientCard({
       exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.2 }}
       onClick={onClick}
-      className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group p-5"
+      className="bg-white rounded-2xl border border-ivory-darker shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group p-5"
     >
       {/* Top row */}
       <div className="flex items-start justify-between gap-2 mb-3">
@@ -529,13 +529,13 @@ function IngredientCard({
             {ingredient.isActive && (
               <Sparkles className="w-3 h-3 text-amber-400 flex-shrink-0" />
             )}
-            <h3 className="font-semibold text-slate-800 text-sm leading-tight">
+            <h3 className="font-semibold text-obsidian-800 text-sm leading-tight">
               {ingredient.name}
             </h3>
           </div>
-          <p className="text-xs text-slate-400 italic mt-0.5 truncate">{ingredient.inci}</p>
+          <p className="text-xs text-obsidian-400 italic mt-0.5 truncate">{ingredient.inci}</p>
         </div>
-        <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-rose-400 transition-colors flex-shrink-0 mt-0.5" />
+        <ChevronRight className="w-4 h-4 text-obsidian-300 group-hover:text-rose-400 transition-colors flex-shrink-0 mt-0.5" />
       </div>
 
       {/* Badges */}
@@ -556,7 +556,7 @@ function IngredientCard({
       </div>
 
       {/* Description */}
-      <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-3">
+      <p className="text-xs text-obsidian-500 leading-relaxed line-clamp-2 mb-3">
         {ingredient.whatItDoes}
       </p>
 
@@ -564,12 +564,12 @@ function IngredientCard({
       <div className="flex items-center justify-between">
         <div className="flex flex-wrap gap-1">
           {ingredient.benefits.slice(0, 2).map((b) => (
-            <span key={b} className="bg-slate-50 text-slate-500 text-xs rounded-full px-2 py-0.5">
+            <span key={b} className="bg-ivory-dark text-obsidian-500 text-xs rounded-full px-2 py-0.5">
               {b}
             </span>
           ))}
           {ingredient.benefits.length > 2 && (
-            <span className="text-xs text-slate-300">+{ingredient.benefits.length - 2}</span>
+            <span className="text-xs text-obsidian-300">+{ingredient.benefits.length - 2}</span>
           )}
         </div>
         {productCount > 0 ? (
@@ -577,7 +577,7 @@ function IngredientCard({
             {productCount} product{productCount !== 1 ? 's' : ''}
           </span>
         ) : (
-          <span className="text-xs text-slate-300 flex-shrink-0">Not in shelf</span>
+          <span className="text-xs text-obsidian-300 flex-shrink-0">Not in shelf</span>
         )}
       </div>
     </motion.div>
@@ -664,16 +664,16 @@ export default function IngredientsPage() {
   }, [ingredients, productCountMap]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-ivory-dark">
       {/* Header */}
-      <div className="bg-white border-b border-slate-100 px-8 py-6">
+      <div className="bg-white border-b border-ivory-darker px-8 py-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-obsidian-800 flex items-center gap-2">
               <FlaskConical className="w-6 h-6 text-rose-500" />
               Ingredients Encyclopedia
             </h1>
-            <p className="text-slate-500 text-sm mt-1">
+            <p className="text-obsidian-500 text-sm mt-1">
               {ingredients.length} ingredients tracked &middot; {stats.inShelf} in your shelf
             </p>
           </div>
@@ -695,14 +695,14 @@ export default function IngredientsPage() {
                   'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border transition-all',
                   filterEvidence === level
                     ? cn(meta.bg, meta.text, meta.border)
-                    : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300'
+                    : 'bg-white text-obsidian-500 border-ivory-darker hover:border-slate-300'
                 )}
               >
                 {meta.label}
                 <span
                   className={cn(
                     'rounded-full px-1.5 py-0.5 text-xs font-bold',
-                    filterEvidence === level ? 'bg-white/60' : 'bg-slate-100'
+                    filterEvidence === level ? 'bg-white/60' : 'bg-ivory-darker'
                   )}
                 >
                   {count}
@@ -718,17 +718,17 @@ export default function IngredientsPage() {
         <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
           <div className="relative flex-1 min-w-56">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-obsidian-400" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search ingredients, INCI names, benefits..."
-              className="w-full rounded-lg border border-slate-200 pl-9 pr-4 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white"
+              className="w-full rounded-lg border border-ivory-darker pl-9 pr-4 py-2 text-sm text-obsidian-800 placeholder:text-obsidian-400 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-obsidian-400 hover:text-obsidian-600"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -737,17 +737,17 @@ export default function IngredientsPage() {
 
           {/* Category filter */}
           <Select.Root value={filterCategory} onValueChange={setFilterCategory}>
-            <Select.Trigger className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-rose-300 min-w-36">
-              <Beaker className="w-3.5 h-3.5 text-slate-400" />
+            <Select.Trigger className="flex items-center gap-2 rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-700 bg-white hover:bg-ivory-dark focus:outline-none focus:ring-2 focus:ring-rose-300 min-w-36">
+              <Beaker className="w-3.5 h-3.5 text-obsidian-400" />
               <Select.Value placeholder="Category" />
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-auto" />
+              <ChevronDown className="w-3.5 h-3.5 text-obsidian-400 ml-auto" />
             </Select.Trigger>
             <Select.Portal>
-              <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-slate-100 max-h-64 overflow-y-auto">
+              <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker max-h-64 overflow-y-auto">
                 <Select.Viewport className="p-1">
                   <Select.Item
                     value="all"
-                    className="flex items-center px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                    className="flex items-center px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                   >
                     <Select.ItemText>All Categories</Select.ItemText>
                   </Select.Item>
@@ -755,7 +755,7 @@ export default function IngredientsPage() {
                     <Select.Item
                       key={cat}
                       value={cat}
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                     >
                       <Select.ItemText>{cat}</Select.ItemText>
                       <Select.ItemIndicator className="ml-auto">
@@ -770,17 +770,17 @@ export default function IngredientsPage() {
 
           {/* Evidence filter */}
           <Select.Root value={filterEvidence} onValueChange={(v) => setFilterEvidence(v as EvidenceLevel | 'all')}>
-            <Select.Trigger className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-rose-300 min-w-36">
-              <Shield className="w-3.5 h-3.5 text-slate-400" />
+            <Select.Trigger className="flex items-center gap-2 rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-700 bg-white hover:bg-ivory-dark focus:outline-none focus:ring-2 focus:ring-rose-300 min-w-36">
+              <Shield className="w-3.5 h-3.5 text-obsidian-400" />
               <Select.Value placeholder="Evidence" />
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-auto" />
+              <ChevronDown className="w-3.5 h-3.5 text-obsidian-400 ml-auto" />
             </Select.Trigger>
             <Select.Portal>
-              <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-slate-100">
+              <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker">
                 <Select.Viewport className="p-1">
                   <Select.Item
                     value="all"
-                    className="flex items-center px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                    className="flex items-center px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                   >
                     <Select.ItemText>All Evidence Levels</Select.ItemText>
                   </Select.Item>
@@ -790,7 +790,7 @@ export default function IngredientsPage() {
                       <Select.Item
                         key={level}
                         value={level}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                       >
                         <span className={cn('w-2 h-2 rounded-full', meta.bg, 'border', meta.border)} />
                         <Select.ItemText>{meta.label}</Select.ItemText>
@@ -807,16 +807,16 @@ export default function IngredientsPage() {
 
           {/* Skin type filter */}
           <Select.Root value={filterSkinType} onValueChange={(v) => setFilterSkinType(v as SkinType | 'all')}>
-            <Select.Trigger className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-rose-300 min-w-36">
+            <Select.Trigger className="flex items-center gap-2 rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-700 bg-white hover:bg-ivory-dark focus:outline-none focus:ring-2 focus:ring-rose-300 min-w-36">
               <Select.Value placeholder="Skin Type" />
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-auto" />
+              <ChevronDown className="w-3.5 h-3.5 text-obsidian-400 ml-auto" />
             </Select.Trigger>
             <Select.Portal>
-              <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-slate-100">
+              <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker">
                 <Select.Viewport className="p-1">
                   <Select.Item
                     value="all"
-                    className="flex items-center px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                    className="flex items-center px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                   >
                     <Select.ItemText>All Skin Types</Select.ItemText>
                   </Select.Item>
@@ -824,7 +824,7 @@ export default function IngredientsPage() {
                     <Select.Item
                       key={st}
                       value={st}
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700 capitalize"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700 capitalize"
                     >
                       <Select.ItemText className="capitalize">{st} skin</Select.ItemText>
                       <Select.ItemIndicator className="ml-auto">
@@ -848,8 +848,8 @@ export default function IngredientsPage() {
         </div>
 
         {/* Results count */}
-        <p className="text-sm text-slate-500">
-          Showing <span className="font-semibold text-slate-700">{filtered.length}</span> of{' '}
+        <p className="text-sm text-obsidian-500">
+          Showing <span className="font-semibold text-obsidian-700">{filtered.length}</span> of{' '}
           {ingredients.length} ingredients
         </p>
 
@@ -858,11 +858,11 @@ export default function IngredientsPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20 bg-white rounded-2xl border border-slate-100"
+            className="text-center py-20 bg-white rounded-2xl border border-ivory-darker"
           >
             <FlaskConical className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-            <h3 className="font-semibold text-slate-700 mb-1">No ingredients found</h3>
-            <p className="text-sm text-slate-400 mb-4">Try adjusting your search or filters</p>
+            <h3 className="font-semibold text-obsidian-700 mb-1">No ingredients found</h3>
+            <p className="text-sm text-obsidian-400 mb-4">Try adjusting your search or filters</p>
             <Button variant="secondary" size="sm" onClick={clearFilters}>
               Clear filters
             </Button>
@@ -892,9 +892,9 @@ export default function IngredientsPage() {
         <div className="mt-10">
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="w-5 h-5 text-amber-500" />
-            <h2 className="text-lg font-bold text-slate-800">Ingredient Compatibility Guide</h2>
+            <h2 className="text-lg font-bold text-obsidian-800">Ingredient Compatibility Guide</h2>
           </div>
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-obsidian-500 mb-5">
             Some ingredients can interact negatively when used together. Here are common combinations
             to be aware of.
           </p>
@@ -916,11 +916,11 @@ export default function IngredientsPage() {
               >
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-sm text-slate-800 capitalize">
+                    <span className="font-semibold text-sm text-obsidian-800 capitalize">
                       {conflict.a}
                     </span>
-                    <span className="text-slate-400 text-xs">+</span>
-                    <span className="font-semibold text-sm text-slate-800 capitalize">
+                    <span className="text-obsidian-400 text-xs">+</span>
+                    <span className="font-semibold text-sm text-obsidian-800 capitalize">
                       {conflict.b}
                     </span>
                   </div>
@@ -936,7 +936,7 @@ export default function IngredientsPage() {
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-600 leading-relaxed mb-3">
+                <p className="text-xs text-obsidian-600 leading-relaxed mb-3">
                   {conflict.explanation}
                 </p>
 

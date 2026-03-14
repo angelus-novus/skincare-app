@@ -185,14 +185,14 @@ function RoutineStepCard({
   onRemove: () => void;
 }) {
   return (
-    <div className="flex items-center gap-3 bg-white rounded-xl border border-slate-100 shadow-sm p-3 group hover:shadow-md transition-all hover:-translate-y-0.5">
+    <div className="flex items-center gap-3 bg-white rounded-xl border border-ivory-darker shadow-sm p-3 group hover:shadow-md transition-all hover:-translate-y-0.5">
       {/* Step number */}
       <div className="w-6 h-6 rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center flex-shrink-0">
         <span className="text-xs font-bold text-rose-500">{index + 1}</span>
       </div>
 
       {/* Drag handle visual */}
-      <GripVertical className="w-3.5 h-3.5 text-slate-300 flex-shrink-0" />
+      <GripVertical className="w-3.5 h-3.5 text-obsidian-300 flex-shrink-0" />
 
       {/* Product image */}
       <div
@@ -213,15 +213,15 @@ function RoutineStepCard({
 
       {/* Product info */}
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-slate-800 truncate">{product.name}</div>
+        <div className="text-sm font-medium text-obsidian-800 truncate">{product.name}</div>
         <div className="flex items-center gap-1.5 mt-0.5">
-          <span className="text-xs text-slate-400">{product.brand}</span>
+          <span className="text-xs text-obsidian-400">{product.brand}</span>
           <span className={cn('text-xs px-1.5 py-0.5 rounded-full font-medium', categoryColor(product.category))}>
             {categoryLabel(product.category)}
           </span>
         </div>
         {step.notes && (
-          <div className="text-xs text-slate-500 mt-1 italic">{step.notes}</div>
+          <div className="text-xs text-obsidian-500 mt-1 italic">{step.notes}</div>
         )}
       </div>
 
@@ -230,23 +230,23 @@ function RoutineStepCard({
         <button
           onClick={onMoveUp}
           disabled={index === 0}
-          className="p-1 rounded hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="p-1 rounded hover:bg-ivory-darker disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           title="Move up"
         >
-          <ChevronUp className="w-3 h-3 text-slate-500" />
+          <ChevronUp className="w-3 h-3 text-obsidian-500" />
         </button>
         <button
           onClick={onMoveDown}
           disabled={index === total - 1}
-          className="p-1 rounded hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className="p-1 rounded hover:bg-ivory-darker disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           title="Move down"
         >
-          <ChevronDown className="w-3 h-3 text-slate-500" />
+          <ChevronDown className="w-3 h-3 text-obsidian-500" />
         </button>
       </div>
       <button
         onClick={onRemove}
-        className="p-1.5 rounded-lg hover:bg-red-50 text-slate-300 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+        className="p-1.5 rounded-lg hover:bg-red-50 text-obsidian-300 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
         title="Remove from routine"
       >
         <Trash2 className="w-3.5 h-3.5" />
@@ -307,12 +307,12 @@ function AddStepModal({
           placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
+          className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
         />
 
         <div className="space-y-2 max-h-72 overflow-y-auto">
           {available.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-8">
+            <p className="text-sm text-obsidian-400 text-center py-8">
               {products.filter((p) => !existingProductIds.includes(p.id)).length === 0
                 ? 'All your products are already in this routine'
                 : 'No products match your search'}
@@ -327,7 +327,7 @@ function AddStepModal({
                   'w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left',
                   selected === p.id
                     ? 'border-rose-300 bg-rose-50'
-                    : 'border-slate-100 bg-white hover:bg-slate-50'
+                    : 'border-ivory-darker bg-white hover:bg-ivory-dark'
                 )}
               >
                 <div
@@ -344,9 +344,9 @@ function AddStepModal({
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-slate-800 truncate">{p.name}</div>
+                  <div className="text-sm font-medium text-obsidian-800 truncate">{p.name}</div>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-xs text-slate-400">{p.brand}</span>
+                    <span className="text-xs text-obsidian-400">{p.brand}</span>
                     <span className={cn('text-xs px-1.5 py-0.5 rounded-full font-medium', categoryColor(p.category))}>
                       {categoryLabel(p.category)}
                     </span>
@@ -366,7 +366,7 @@ function AddStepModal({
             placeholder="Notes for this step (optional)"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
+            className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
           />
         )}
 
@@ -445,8 +445,8 @@ function RoutineColumn({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon className={cn('w-5 h-5', accentColor)} />
-            <h2 className="text-base font-bold text-slate-800">{isAM ? 'AM Routine' : 'PM Routine'}</h2>
-            <span className="text-xs text-slate-400">{steps.length} steps</span>
+            <h2 className="text-base font-bold text-obsidian-800">{isAM ? 'AM Routine' : 'PM Routine'}</h2>
+            <span className="text-xs text-obsidian-400">{steps.length} steps</span>
           </div>
           <Button
             size="sm"
@@ -458,7 +458,7 @@ function RoutineColumn({
             Add Step
           </Button>
         </div>
-        <div className="text-xs text-slate-500 mt-1">
+        <div className="text-xs text-obsidian-500 mt-1">
           {isAM ? 'Cleanse · Protect · SPF' : 'Treat · Repair · Restore'}
         </div>
       </div>
@@ -508,10 +508,10 @@ function RoutineColumn({
 
       {/* Steps list */}
       {steps.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-slate-200 py-12 text-center">
+        <div className="rounded-2xl border-2 border-dashed border-ivory-darker py-12 text-center">
           <div className="text-3xl mb-2">{isAM ? '☀️' : '🌙'}</div>
-          <div className="text-sm text-slate-500">No steps yet</div>
-          <div className="text-xs text-slate-400 mt-1">Add products to build your routine</div>
+          <div className="text-sm text-obsidian-500">No steps yet</div>
+          <div className="text-xs text-obsidian-400 mt-1">Add products to build your routine</div>
           <Button size="sm" variant="outline" className="mt-3" onClick={() => setAddOpen(true)}>
             <Plus className="w-3.5 h-3.5" />
             Add First Step
@@ -539,7 +539,7 @@ function RoutineColumn({
           {/* Add button at bottom */}
           <button
             onClick={() => setAddOpen(true)}
-            className="w-full rounded-xl border-2 border-dashed border-slate-200 py-3 flex items-center justify-center gap-2 text-sm text-slate-400 hover:border-rose-200 hover:text-rose-400 hover:bg-rose-50/30 transition-all"
+            className="w-full rounded-xl border-2 border-dashed border-ivory-darker py-3 flex items-center justify-center gap-2 text-sm text-obsidian-400 hover:border-rose-200 hover:text-rose-400 hover:bg-rose-50/30 transition-all"
           >
             <Plus className="w-4 h-4" />
             Add another step
@@ -571,7 +571,7 @@ function StreakTracker() {
             <Flame className="w-4 h-4 text-orange-500" />
             Routine Streak
           </CardTitle>
-          <span className="text-xs text-slate-400">This week</span>
+          <span className="text-xs text-obsidian-400">This week</span>
         </div>
       </CardHeader>
       <CardBody className="pt-0">
@@ -591,24 +591,24 @@ function StreakTracker() {
         <div className="grid grid-cols-2 gap-2 mb-4">
           <div className={cn(
             'rounded-xl p-2.5 flex items-center gap-2 border',
-            data.completedToday.am ? 'bg-amber-50 border-amber-100' : 'bg-slate-50 border-slate-100'
+            data.completedToday.am ? 'bg-amber-50 border-amber-100' : 'bg-ivory-dark border-ivory-darker'
           )}>
-            <Sun className={cn('w-4 h-4', data.completedToday.am ? 'text-amber-500' : 'text-slate-300')} />
+            <Sun className={cn('w-4 h-4', data.completedToday.am ? 'text-amber-500' : 'text-obsidian-300')} />
             <div>
-              <div className="text-xs font-medium text-slate-700">AM</div>
-              <div className={cn('text-xs', data.completedToday.am ? 'text-amber-600' : 'text-slate-400')}>
+              <div className="text-xs font-medium text-obsidian-700">AM</div>
+              <div className={cn('text-xs', data.completedToday.am ? 'text-amber-600' : 'text-obsidian-400')}>
                 {data.completedToday.am ? 'Done ✓' : 'Not yet'}
               </div>
             </div>
           </div>
           <div className={cn(
             'rounded-xl p-2.5 flex items-center gap-2 border',
-            data.completedToday.pm ? 'bg-indigo-50 border-indigo-100' : 'bg-slate-50 border-slate-100'
+            data.completedToday.pm ? 'bg-indigo-50 border-indigo-100' : 'bg-ivory-dark border-ivory-darker'
           )}>
-            <Moon className={cn('w-4 h-4', data.completedToday.pm ? 'text-indigo-500' : 'text-slate-300')} />
+            <Moon className={cn('w-4 h-4', data.completedToday.pm ? 'text-indigo-500' : 'text-obsidian-300')} />
             <div>
-              <div className="text-xs font-medium text-slate-700">PM</div>
-              <div className={cn('text-xs', data.completedToday.pm ? 'text-indigo-600' : 'text-slate-400')}>
+              <div className="text-xs font-medium text-obsidian-700">PM</div>
+              <div className={cn('text-xs', data.completedToday.pm ? 'text-indigo-600' : 'text-obsidian-400')}>
                 {data.completedToday.pm ? 'Done ✓' : 'Not yet'}
               </div>
             </div>
@@ -620,18 +620,18 @@ function StreakTracker() {
           <div className="grid grid-cols-7 gap-1">
             {data.thisWeek.map((day) => (
               <div key={day.day} className="text-center">
-                <div className="text-xs text-slate-400 mb-1">{day.day}</div>
+                <div className="text-xs text-obsidian-400 mb-1">{day.day}</div>
                 <div className={cn(
                   'w-6 h-6 rounded-md mx-auto mb-0.5 flex items-center justify-center',
-                  day.am ? 'bg-amber-200' : 'bg-slate-100'
+                  day.am ? 'bg-amber-200' : 'bg-ivory-darker'
                 )}>
-                  <Sun className={cn('w-2.5 h-2.5', day.am ? 'text-amber-600' : 'text-slate-300')} />
+                  <Sun className={cn('w-2.5 h-2.5', day.am ? 'text-amber-600' : 'text-obsidian-300')} />
                 </div>
                 <div className={cn(
                   'w-6 h-6 rounded-md mx-auto flex items-center justify-center',
-                  day.pm ? 'bg-indigo-200' : 'bg-slate-100'
+                  day.pm ? 'bg-indigo-200' : 'bg-ivory-darker'
                 )}>
-                  <Moon className={cn('w-2.5 h-2.5', day.pm ? 'text-indigo-600' : 'text-slate-300')} />
+                  <Moon className={cn('w-2.5 h-2.5', day.pm ? 'text-indigo-600' : 'text-obsidian-300')} />
                 </div>
               </div>
             ))}
@@ -687,31 +687,31 @@ function RoutineTipsPanel() {
           const SectionIcon = section.icon;
           const isExpanded = expandedSection === section.id;
           return (
-            <div key={section.id} className="border border-slate-100 rounded-xl overflow-hidden">
+            <div key={section.id} className="border border-ivory-darker rounded-xl overflow-hidden">
               <button
                 onClick={() => setExpandedSection(isExpanded ? null : section.id)}
-                className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-slate-50 transition-colors"
+                className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-ivory-dark transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <SectionIcon className={cn('w-4 h-4', section.iconColor)} />
-                  <span className="text-xs font-semibold text-slate-700">{section.title}</span>
+                  <span className="text-xs font-semibold text-obsidian-700">{section.title}</span>
                 </div>
                 {isExpanded ? (
-                  <ChevronUp className="w-3.5 h-3.5 text-slate-400" />
+                  <ChevronUp className="w-3.5 h-3.5 text-obsidian-400" />
                 ) : (
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  <ChevronDown className="w-3.5 h-3.5 text-obsidian-400" />
                 )}
               </button>
               {isExpanded && (
-                <div className="px-3 pb-3 border-t border-slate-100 pt-3 space-y-2">
+                <div className="px-3 pb-3 border-t border-ivory-darker pt-3 space-y-2">
                   {section.items.map((item, i) => (
                     <div key={i} className="flex items-start gap-2">
                       <span className="text-base leading-none mt-0.5 flex-shrink-0">{item.icon}</span>
                       <div>
                         {item.title && (
-                          <span className="text-xs font-semibold text-slate-700">{item.title}: </span>
+                          <span className="text-xs font-semibold text-obsidian-700">{item.title}: </span>
                         )}
-                        <span className="text-xs text-slate-500">{item.desc}</span>
+                        <span className="text-xs text-obsidian-500">{item.desc}</span>
                       </div>
                     </div>
                   ))}
@@ -747,32 +747,32 @@ function PrintRoutineModal({
   return (
     <Modal open={open} onClose={onClose} title="Export Routine" size="md">
       <div className="space-y-4">
-        <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 font-mono text-sm space-y-4">
+        <div className="bg-ivory-dark rounded-xl p-4 border border-ivory-darker font-mono text-sm space-y-4">
           <div>
             <div className="font-bold text-amber-600 mb-2">☀️ AM ROUTINE</div>
             {amSteps.map((s, i) => {
               const p = getProduct(s.productId);
               return p ? (
-                <div key={s.productId} className="text-slate-700">
+                <div key={s.productId} className="text-obsidian-700">
                   {i + 1}. {p.brand} — {p.name}
-                  {s.notes && <span className="text-slate-400"> ({s.notes})</span>}
+                  {s.notes && <span className="text-obsidian-400"> ({s.notes})</span>}
                 </div>
               ) : null;
             })}
-            {amSteps.length === 0 && <div className="text-slate-400 italic">No steps added</div>}
+            {amSteps.length === 0 && <div className="text-obsidian-400 italic">No steps added</div>}
           </div>
           <div>
             <div className="font-bold text-indigo-600 mb-2">🌙 PM ROUTINE</div>
             {pmSteps.map((s, i) => {
               const p = getProduct(s.productId);
               return p ? (
-                <div key={s.productId} className="text-slate-700">
+                <div key={s.productId} className="text-obsidian-700">
                   {i + 1}. {p.brand} — {p.name}
-                  {s.notes && <span className="text-slate-400"> ({s.notes})</span>}
+                  {s.notes && <span className="text-obsidian-400"> ({s.notes})</span>}
                 </div>
               ) : null;
             })}
-            {pmSteps.length === 0 && <div className="text-slate-400 italic">No steps added</div>}
+            {pmSteps.length === 0 && <div className="text-obsidian-400 italic">No steps added</div>}
           </div>
         </div>
         <div className="flex gap-3">
@@ -831,8 +831,8 @@ export default function RoutinePage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">My Routine</h1>
-          <p className="text-slate-500 mt-1">
+          <h1 className="text-3xl font-bold text-obsidian-800">My Routine</h1>
+          <p className="text-obsidian-500 mt-1">
             {routine.am.length} AM steps · {routine.pm.length} PM steps
             {totalConflicts > 0 && (
               <span className="ml-2 text-amber-600 font-medium">
@@ -891,7 +891,7 @@ export default function RoutinePage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">Not in Routine</CardTitle>
-                <p className="text-xs text-slate-400 mt-0.5">Products on your shelf not yet assigned to AM or PM</p>
+                <p className="text-xs text-obsidian-400 mt-0.5">Products on your shelf not yet assigned to AM or PM</p>
               </CardHeader>
               <CardBody className="pt-0 space-y-2">
                 {products
@@ -903,8 +903,8 @@ export default function RoutinePage() {
                         style={{ backgroundColor: p.imageColor }}
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-medium text-slate-700 truncate">{p.name}</div>
-                        <div className="text-xs text-slate-400 truncate">{p.brand}</div>
+                        <div className="text-xs font-medium text-obsidian-700 truncate">{p.name}</div>
+                        <div className="text-xs text-obsidian-400 truncate">{p.brand}</div>
                       </div>
                       <span className={cn('text-xs px-1.5 py-0.5 rounded-full font-medium flex-shrink-0', categoryColor(p.category))}>
                         {categoryLabel(p.category)}
@@ -939,11 +939,11 @@ export default function RoutinePage() {
                   .map((ing) => (
                     <div key={ing.id} className="flex items-center justify-between">
                       <span className={cn('text-xs px-2 py-0.5 rounded-full font-medium', ing.color)}>{ing.label}</span>
-                      <span className="text-xs text-slate-400">{ing.time}</span>
+                      <span className="text-xs text-obsidian-400">{ing.time}</span>
                     </div>
                   ))}
                 {[...amProducts, ...pmProducts].length === 0 && (
-                  <p className="text-xs text-slate-400 py-2 text-center">Add products to see active ingredients</p>
+                  <p className="text-xs text-obsidian-400 py-2 text-center">Add products to see active ingredients</p>
                 )}
               </div>
             </CardBody>

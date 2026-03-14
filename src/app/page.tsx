@@ -27,7 +27,7 @@ function ShelfSection({ category, products, onProductClick }: {
         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${categoryColor(category)}`}>
           {categoryLabel(category)}
         </span>
-        <span className="text-xs text-slate-400">{products.length} product{products.length !== 1 ? 's' : ''}</span>
+        <span className="text-xs text-obsidian-400">{products.length} product{products.length !== 1 ? 's' : ''}</span>
       </div>
       <div className="relative">
         <div className="bg-gradient-to-b from-rose-50/60 to-white rounded-2xl pt-4 pb-0 px-6 border border-rose-100/50 min-h-[120px]">
@@ -63,9 +63,9 @@ function StatCard({ label, value, sub, icon: Icon, color }: {
           <Icon className="w-5 h-5" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-slate-800">{value}</div>
-          <div className="text-xs text-slate-500">{label}</div>
-          {sub && <div className="text-xs text-slate-400 mt-0.5">{sub}</div>}
+          <div className="text-2xl font-bold text-obsidian-800">{value}</div>
+          <div className="text-xs text-obsidian-500">{label}</div>
+          {sub && <div className="text-xs text-obsidian-400 mt-0.5">{sub}</div>}
         </div>
       </CardBody>
     </Card>
@@ -117,10 +117,10 @@ export default function HomePage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+          <h1 className="text-3xl font-bold text-obsidian-800">
             {profile.name ? `Hello, ${profile.name} ✨` : 'Your Skincare Shelf ✨'}
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="text-obsidian-500 mt-1">
             {products.length} products · {ratedProducts.length} reviewed · {profile.skinType} skin
           </p>
         </div>
@@ -182,8 +182,8 @@ export default function HomePage() {
       {/* The Shelf */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-slate-800">Your Shelf</h2>
-          <div className="flex items-center gap-4 text-xs text-slate-400">
+          <h2 className="text-lg font-bold text-obsidian-800">Your Shelf</h2>
+          <div className="flex items-center gap-4 text-xs text-obsidian-400">
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-amber-400" /><span>Expiring soon</span></div>
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-400" /><span>Expired</span></div>
           </div>
@@ -210,17 +210,17 @@ export default function HomePage() {
       <div className="grid grid-cols-2 gap-6">
         <Card>
           <CardBody>
-            <h3 className="text-sm font-semibold text-slate-700 mb-3">Concerns Coverage</h3>
+            <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Concerns Coverage</h3>
             <div className="space-y-2.5">
               {profile.skinConcerns.map((concern) => {
                 const covered = products.filter((p) => p.concerns.includes(concern)).length;
                 return (
                   <div key={concern} className="flex items-center gap-3">
-                    <div className="text-xs text-slate-600 w-32 flex-shrink-0">{concernLabel(concern)}</div>
-                    <div className="flex-1 bg-slate-100 rounded-full h-1.5">
+                    <div className="text-xs text-obsidian-600 w-32 flex-shrink-0">{concernLabel(concern)}</div>
+                    <div className="flex-1 bg-ivory-darker rounded-full h-1.5">
                       <div className="bg-rose-400 h-1.5 rounded-full" style={{ width: `${Math.min(100, covered * 33)}%` }} />
                     </div>
-                    <div className="text-xs text-slate-400 w-16 text-right">{covered} products</div>
+                    <div className="text-xs text-obsidian-400 w-16 text-right">{covered} products</div>
                   </div>
                 );
               })}
@@ -230,19 +230,19 @@ export default function HomePage() {
 
         <Card>
           <CardBody>
-            <h3 className="text-sm font-semibold text-slate-700 mb-3">Procedure Schedule</h3>
+            <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Procedure Schedule</h3>
             {upcomingProcedures.length === 0 && overdueProcedures.length === 0 ? (
-              <p className="text-xs text-slate-400 text-center py-4">No upcoming procedures scheduled</p>
+              <p className="text-xs text-obsidian-400 text-center py-4">No upcoming procedures scheduled</p>
             ) : (
               <div className="space-y-2">
                 {upcomingProcedures.map((p) => (
-                  <div key={p.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50">
+                  <div key={p.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-ivory-dark">
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold ${p.daysUntil < 14 ? 'bg-rose-100 text-rose-600' : 'bg-blue-50 text-blue-600'}`}>
                       {p.daysUntil}d
                     </div>
                     <div>
-                      <div className="text-xs font-medium text-slate-700">{p.name}</div>
-                      <div className="text-xs text-slate-400">{format(parseISO(p.nextAppointment!), 'MMM d, yyyy')}</div>
+                      <div className="text-xs font-medium text-obsidian-700">{p.name}</div>
+                      <div className="text-xs text-obsidian-400">{format(parseISO(p.nextAppointment!), 'MMM d, yyyy')}</div>
                     </div>
                   </div>
                 ))}
@@ -250,7 +250,7 @@ export default function HomePage() {
                   <div key={p.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-amber-50">
                     <div className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold bg-amber-100 text-amber-600">!</div>
                     <div>
-                      <div className="text-xs font-medium text-slate-700">{p.name}</div>
+                      <div className="text-xs font-medium text-obsidian-700">{p.name}</div>
                       <div className="text-xs text-amber-500">Due {p.daysOverdue}d ago</div>
                     </div>
                   </div>

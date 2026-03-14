@@ -207,7 +207,7 @@ export function ProductBottle({ product, onClick, index }: ProductBottleProps) {
           className="absolute -top-20 left-1/2 -translate-x-1/2 bg-slate-800 text-white rounded-xl px-3 py-2 text-center shadow-xl z-20 w-36 pointer-events-none"
         >
           <div className="text-xs font-semibold leading-tight">{product.name}</div>
-          <div className="text-[10px] text-slate-300 mt-0.5">{product.brand}</div>
+          <div className="text-[10px] text-obsidian-300 mt-0.5">{product.brand}</div>
           <div className="text-[10px] text-rose-300 mt-1">{categoryLabel(product.category)}</div>
           {product.rating && (
             <div className="flex items-center justify-center gap-1 mt-1">

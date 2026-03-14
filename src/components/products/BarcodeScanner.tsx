@@ -193,7 +193,7 @@ function VerdictBadge({ verdict }: { verdict: Verdict }) {
     },
     redundant: {
       label: 'Redundant',
-      className: 'bg-slate-100 text-slate-600',
+      className: 'bg-ivory-darker text-obsidian-600',
       Icon: Package,
     },
   };
@@ -233,23 +233,23 @@ function ProductAnalysisPanel({
       <div className="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-4 border border-rose-100">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs text-slate-400 font-medium">
+            <p className="text-xs text-obsidian-400 font-medium">
               {analysis.scannedProduct.brand}
             </p>
-            <h3 className="text-base font-bold text-slate-800 mt-0.5">
+            <h3 className="text-base font-bold text-obsidian-800 mt-0.5">
               {analysis.scannedProduct.name}
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-obsidian-500 mt-1">
               {analysis.scannedProduct.description}
             </p>
             <div className="flex items-center gap-2 mt-2">
-              <Badge className="bg-slate-100 text-slate-600">
+              <Badge className="bg-ivory-darker text-obsidian-600">
                 {categoryLabel(analysis.scannedProduct.category)}
               </Badge>
-              <span className="text-sm font-semibold text-slate-700">
+              <span className="text-sm font-semibold text-obsidian-700">
                 ${analysis.scannedProduct.price}
               </span>
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-obsidian-400">
                 {analysis.scannedProduct.size}
               </span>
             </div>
@@ -264,15 +264,15 @@ function ProductAnalysisPanel({
           onClick={() => toggle('verdict')}
         >
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-slate-500" />
-            <span className="text-sm font-semibold text-slate-700">
+            <ShieldCheck className="w-4 h-4 text-obsidian-500" />
+            <span className="text-sm font-semibold text-obsidian-700">
               Verdict
             </span>
           </div>
           {expandedSection === 'verdict' ? (
-            <ChevronUp className="w-4 h-4 text-slate-400" />
+            <ChevronUp className="w-4 h-4 text-obsidian-400" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <ChevronDown className="w-4 h-4 text-obsidian-400" />
           )}
         </button>
         <AnimatePresence>
@@ -286,7 +286,7 @@ function ProductAnalysisPanel({
             >
               <div className="px-4 pb-4 space-y-2">
                 <VerdictBadge verdict={analysis.verdict} />
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-obsidian-600">
                   {analysis.verdictReason}
                 </p>
               </div>
@@ -305,7 +305,7 @@ function ProductAnalysisPanel({
                 <span className="text-rose-700 font-medium">
                   You already have this product!
                 </span>
-                <span className="text-slate-500">
+                <span className="text-obsidian-500">
                   ({analysis.alreadyOwned.brand}{' '}
                   {analysis.alreadyOwned.name})
                 </span>
@@ -319,7 +319,7 @@ function ProductAnalysisPanel({
                 </div>
                 <div className="ml-6 space-y-1">
                   {analysis.similarProducts.map((p) => (
-                    <div key={p.id} className="text-xs text-slate-500">
+                    <div key={p.id} className="text-xs text-obsidian-500">
                       {p.brand} {p.name}
                     </div>
                   ))}
@@ -337,15 +337,15 @@ function ProductAnalysisPanel({
           onClick={() => toggle('ingredients')}
         >
           <div className="flex items-center gap-2">
-            <Search className="w-4 h-4 text-slate-500" />
-            <span className="text-sm font-semibold text-slate-700">
+            <Search className="w-4 h-4 text-obsidian-500" />
+            <span className="text-sm font-semibold text-obsidian-700">
               Ingredient Analysis
             </span>
           </div>
           {expandedSection === 'ingredients' ? (
-            <ChevronUp className="w-4 h-4 text-slate-400" />
+            <ChevronUp className="w-4 h-4 text-obsidian-400" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <ChevronDown className="w-4 h-4 text-obsidian-400" />
           )}
         </button>
         <AnimatePresence>
@@ -361,10 +361,10 @@ function ProductAnalysisPanel({
                 {analysis.ingredientAnalysis.map((ia) => (
                   <div
                     key={ia.ingredientId}
-                    className="border border-slate-100 rounded-xl p-3 space-y-1.5"
+                    className="border border-ivory-darker rounded-xl p-3 space-y-1.5"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-slate-700">
+                      <span className="text-sm font-medium text-obsidian-700">
                         {ia.ingredientName}
                       </span>
                       <Badge
@@ -403,7 +403,7 @@ function ProductAnalysisPanel({
                     {ia.lovedIn.length === 0 &&
                       ia.issuesIn.length === 0 &&
                       !ia.isAllergen && (
-                        <div className="text-xs text-slate-400">
+                        <div className="text-xs text-obsidian-400">
                           No personal history with this ingredient yet.
                         </div>
                       )}
@@ -422,15 +422,15 @@ function ProductAnalysisPanel({
           onClick={() => toggle('concerns')}
         >
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-slate-500" />
-            <span className="text-sm font-semibold text-slate-700">
+            <ShieldCheck className="w-4 h-4 text-obsidian-500" />
+            <span className="text-sm font-semibold text-obsidian-700">
               Concern Coverage
             </span>
           </div>
           {expandedSection === 'concerns' ? (
-            <ChevronUp className="w-4 h-4 text-slate-400" />
+            <ChevronUp className="w-4 h-4 text-obsidian-400" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <ChevronDown className="w-4 h-4 text-obsidian-400" />
           )}
         </button>
         <AnimatePresence>
@@ -453,13 +453,13 @@ function ProductAnalysisPanel({
                     </Badge>
                   ))}
                   {analysis.unmatchedConcerns.map((c) => (
-                    <Badge key={c} className="bg-slate-100 text-slate-400">
+                    <Badge key={c} className="bg-ivory-darker text-obsidian-400">
                       {concernLabel(c)}
                     </Badge>
                   ))}
                 </div>
                 {analysis.matchedConcerns.length === 0 && (
-                  <p className="text-xs text-slate-400 mt-2">
+                  <p className="text-xs text-obsidian-400 mt-2">
                     This product does not address any of your listed skin
                     concerns.
                   </p>
@@ -599,8 +599,8 @@ export function BarcodeScanner() {
 
               {/* Center text */}
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <Camera className="w-8 h-8 text-slate-400 mb-2" />
-                <p className="text-slate-400 text-xs">
+                <Camera className="w-8 h-8 text-obsidian-400 mb-2" />
+                <p className="text-obsidian-400 text-xs">
                   Position barcode in frame
                 </p>
               </div>
@@ -612,7 +612,7 @@ export function BarcodeScanner() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-px bg-slate-200" />
-                <span className="text-xs text-slate-400">
+                <span className="text-xs text-obsidian-400">
                   or enter manually
                 </span>
                 <div className="flex-1 h-px bg-slate-200" />
@@ -627,7 +627,7 @@ export function BarcodeScanner() {
                   }}
                   onKeyDown={(e) => e.key === 'Enter' && handleScan()}
                   placeholder="Enter UPC / barcode number..."
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-700 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-colors"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-ivory-darker text-sm text-obsidian-700 placeholder:text-obsidian-300 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-colors"
                 />
                 <Button onClick={handleScan} disabled={isScanning}>
                   {isScanning ? (
@@ -659,7 +659,7 @@ export function BarcodeScanner() {
 
               {/* Quick test barcodes */}
               <div className="space-y-1.5">
-                <p className="text-xs text-slate-400">Try a sample barcode:</p>
+                <p className="text-xs text-obsidian-400">Try a sample barcode:</p>
                 <div className="flex flex-wrap gap-1.5">
                   {[
                     { upc: '3606000537538', label: 'CeraVe Cream' },
@@ -673,7 +673,7 @@ export function BarcodeScanner() {
                         setBarcode(sample.upc);
                         setError('');
                       }}
-                      className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+                      className="text-xs px-2.5 py-1 rounded-full bg-ivory-darker text-obsidian-500 hover:bg-rose-50 hover:text-rose-600 transition-colors"
                     >
                       {sample.label}
                     </button>

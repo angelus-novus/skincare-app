@@ -59,9 +59,9 @@ const EVIDENCE_META: Record<
     label: 'Anecdotal',
     description:
       'Primarily based on user reports and traditional use. Scientific clinical evidence is minimal.',
-    bg: 'bg-slate-100',
-    text: 'text-slate-600',
-    border: 'border-slate-200',
+    bg: 'bg-ivory-darker',
+    text: 'text-obsidian-600',
+    border: 'border-ivory-darker',
     icon: '?',
   },
 };
@@ -370,11 +370,11 @@ export default function IngredientDetailPage() {
 
   if (!ingredient) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-ivory-dark flex items-center justify-center">
         <div className="text-center">
           <FlaskConical className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-700 mb-2">Ingredient Not Found</h2>
-          <p className="text-slate-400 mb-6">This ingredient doesn&apos;t exist in your database.</p>
+          <h2 className="text-xl font-bold text-obsidian-700 mb-2">Ingredient Not Found</h2>
+          <p className="text-obsidian-400 mb-6">This ingredient doesn&apos;t exist in your database.</p>
           <Button onClick={() => router.push('/ingredients')}>
             <ArrowLeft className="w-4 h-4" />
             Back to Ingredients
@@ -387,12 +387,12 @@ export default function IngredientDetailPage() {
   const meta = EVIDENCE_META[ingredient.evidenceLevel];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-ivory-dark">
       {/* Header */}
-      <div className="bg-white border-b border-slate-100 px-8 py-5 sticky top-0 z-10">
+      <div className="bg-white border-b border-ivory-darker px-8 py-5 sticky top-0 z-10">
         <button
           onClick={() => router.push('/ingredients')}
-          className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-rose-500 transition-colors mb-3"
+          className="flex items-center gap-1.5 text-sm text-obsidian-500 hover:text-rose-500 transition-colors mb-3"
         >
           <ChevronLeft className="w-4 h-4" />
           Ingredients Encyclopedia
@@ -412,9 +412,9 @@ export default function IngredientDetailPage() {
                 {ingredient.isActive && (
                   <Sparkles className="w-4 h-4 text-amber-400" />
                 )}
-                <h1 className="text-2xl font-bold text-slate-800">{ingredient.name}</h1>
+                <h1 className="text-2xl font-bold text-obsidian-800">{ingredient.name}</h1>
               </div>
-              <p className="text-slate-400 italic text-sm mt-0.5">{ingredient.inci}</p>
+              <p className="text-obsidian-400 italic text-sm mt-0.5">{ingredient.inci}</p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -474,13 +474,13 @@ export default function IngredientDetailPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6"
+              className="bg-white rounded-2xl border border-ivory-darker shadow-sm p-6"
             >
-              <h2 className="font-semibold text-slate-700 mb-3 flex items-center gap-2">
+              <h2 className="font-semibold text-obsidian-700 mb-3 flex items-center gap-2">
                 <Info className="w-4 h-4 text-rose-400" />
                 What It Does
               </h2>
-              <p className="text-slate-600 leading-relaxed">{ingredient.whatItDoes}</p>
+              <p className="text-obsidian-600 leading-relaxed">{ingredient.whatItDoes}</p>
             </motion.div>
 
             {/* Benefits & Concerns */}
@@ -491,8 +491,8 @@ export default function IngredientDetailPage() {
               className="grid grid-cols-2 gap-4"
             >
               {ingredient.benefits.length > 0 && (
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                  <h3 className="font-semibold text-slate-700 mb-3 flex items-center gap-2 text-sm">
+                <div className="bg-white rounded-2xl border border-ivory-darker shadow-sm p-5">
+                  <h3 className="font-semibold text-obsidian-700 mb-3 flex items-center gap-2 text-sm">
                     <Check className="w-4 h-4 text-emerald-500" />
                     Benefits
                   </h3>
@@ -500,7 +500,7 @@ export default function IngredientDetailPage() {
                     {ingredient.benefits.map((b) => (
                       <li key={b} className="flex items-start gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 flex-shrink-0" />
-                        <span className="text-sm text-slate-600">{b}</span>
+                        <span className="text-sm text-obsidian-600">{b}</span>
                       </li>
                     ))}
                   </ul>
@@ -508,8 +508,8 @@ export default function IngredientDetailPage() {
               )}
 
               {ingredient.potentialConcerns.length > 0 && (
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                  <h3 className="font-semibold text-slate-700 mb-3 flex items-center gap-2 text-sm">
+                <div className="bg-white rounded-2xl border border-ivory-darker shadow-sm p-5">
+                  <h3 className="font-semibold text-obsidian-700 mb-3 flex items-center gap-2 text-sm">
                     <AlertTriangle className="w-4 h-4 text-amber-500" />
                     Potential Concerns
                   </h3>
@@ -517,7 +517,7 @@ export default function IngredientDetailPage() {
                     {ingredient.potentialConcerns.map((c) => (
                       <li key={c} className="flex items-start gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
-                        <span className="text-sm text-slate-600">{c}</span>
+                        <span className="text-sm text-obsidian-600">{c}</span>
                       </li>
                     ))}
                   </ul>
@@ -530,11 +530,11 @@ export default function IngredientDetailPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 grid grid-cols-2 gap-5"
+              className="bg-white rounded-2xl border border-ivory-darker shadow-sm p-6 grid grid-cols-2 gap-5"
             >
               {ingredient.skinTypes.length > 0 && (
                 <div>
-                  <h3 className="font-semibold text-slate-700 mb-3 text-sm">Best For Skin Types</h3>
+                  <h3 className="font-semibold text-obsidian-700 mb-3 text-sm">Best For Skin Types</h3>
                   <div className="flex flex-wrap gap-2">
                     {ingredient.skinTypes.map((st) => (
                       <span
@@ -550,7 +550,7 @@ export default function IngredientDetailPage() {
 
               {ingredient.concerns.length > 0 && (
                 <div>
-                  <h3 className="font-semibold text-slate-700 mb-3 text-sm">Targets Concerns</h3>
+                  <h3 className="font-semibold text-obsidian-700 mb-3 text-sm">Targets Concerns</h3>
                   <div className="flex flex-wrap gap-2">
                     {ingredient.concerns.map((c) => (
                       <span
@@ -566,9 +566,9 @@ export default function IngredientDetailPage() {
             </motion.div>
 
             {ingredient.notes && (
-              <div className="bg-slate-50 rounded-2xl border border-slate-100 p-4">
-                <p className="text-sm text-slate-500 italic flex items-start gap-2">
-                  <Info className="w-4 h-4 mt-0.5 text-slate-400 flex-shrink-0" />
+              <div className="bg-ivory-dark rounded-2xl border border-ivory-darker p-4">
+                <p className="text-sm text-obsidian-500 italic flex items-start gap-2">
+                  <Info className="w-4 h-4 mt-0.5 text-obsidian-400 flex-shrink-0" />
                   {ingredient.notes}
                 </p>
               </div>
@@ -631,9 +631,9 @@ export default function IngredientDetailPage() {
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5"
+              className="bg-white rounded-2xl border border-ivory-darker shadow-sm p-5"
             >
-              <h3 className="font-semibold text-slate-700 mb-3 flex items-center gap-2 text-sm">
+              <h3 className="font-semibold text-obsidian-700 mb-3 flex items-center gap-2 text-sm">
                 <Package className="w-4 h-4 text-rose-400" />
                 Your Products
                 <span className="ml-auto bg-rose-100 text-rose-600 text-xs rounded-full px-2 py-0.5 font-semibold">
@@ -644,7 +644,7 @@ export default function IngredientDetailPage() {
               {productsWithIngredient.length === 0 ? (
                 <div className="text-center py-6">
                   <Package className="w-8 h-8 text-slate-200 mx-auto mb-2" />
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-obsidian-400 leading-relaxed">
                     None of your shelf products contain this ingredient yet.
                   </p>
                 </div>
@@ -653,9 +653,9 @@ export default function IngredientDetailPage() {
                   {productsWithIngredient.map((product) => (
                     <div
                       key={product.id}
-                      className="flex items-center gap-2.5 rounded-xl p-2.5 border border-slate-100 hover:border-rose-100 hover:bg-rose-50/30 transition-colors"
+                      className="flex items-center gap-2.5 rounded-xl p-2.5 border border-ivory-darker hover:border-rose-100 hover:bg-rose-50/30 transition-colors"
                     >
-                      <div className="w-9 h-9 rounded-lg overflow-hidden bg-slate-50 flex-shrink-0">
+                      <div className="w-9 h-9 rounded-lg overflow-hidden bg-ivory-dark flex-shrink-0">
                         {product.imageUrl ? (
                           <img
                             src={product.imageUrl}
@@ -672,10 +672,10 @@ export default function IngredientDetailPage() {
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs font-semibold text-slate-700 truncate">
+                        <p className="text-xs font-semibold text-obsidian-700 truncate">
                           {product.name}
                         </p>
-                        <p className="text-xs text-slate-400">{product.brand}</p>
+                        <p className="text-xs text-obsidian-400">{product.brand}</p>
                         {product.rating && (
                           <StarRating value={product.rating.overall} size="sm" className="mt-0.5" />
                         )}
@@ -694,9 +694,9 @@ export default function IngredientDetailPage() {
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.15 }}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5"
+              className="bg-white rounded-2xl border border-ivory-darker shadow-sm p-5"
             >
-              <h3 className="font-semibold text-slate-700 mb-3 flex items-center gap-2 text-sm">
+              <h3 className="font-semibold text-obsidian-700 mb-3 flex items-center gap-2 text-sm">
                 <Sparkles className="w-4 h-4 text-amber-400" />
                 Recommended Products
               </h3>
@@ -706,12 +706,12 @@ export default function IngredientDetailPage() {
                     key={rp.name}
                     className="rounded-xl border border-rose-50 bg-gradient-to-r from-rose-50 to-white p-3 space-y-1"
                   >
-                    <p className="text-xs font-semibold text-slate-700 leading-tight">{rp.name}</p>
-                    <p className="text-xs text-slate-400">{rp.brand}</p>
+                    <p className="text-xs font-semibold text-obsidian-700 leading-tight">{rp.name}</p>
+                    <p className="text-xs text-obsidian-400">{rp.brand}</p>
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-xs text-rose-600">{rp.note}</span>
                       {rp.price && (
-                        <span className="text-xs font-semibold text-slate-600 bg-slate-50 rounded-full px-2 py-0.5 border border-slate-100">
+                        <span className="text-xs font-semibold text-obsidian-600 bg-ivory-dark rounded-full px-2 py-0.5 border border-ivory-darker">
                           {rp.price}
                         </span>
                       )}
@@ -727,13 +727,13 @@ export default function IngredientDetailPage() {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5"
+                className="bg-white rounded-2xl border border-ivory-darker shadow-sm p-5"
               >
-                <h3 className="font-semibold text-slate-700 mb-3 text-sm">Quick Facts</h3>
+                <h3 className="font-semibold text-obsidian-700 mb-3 text-sm">Quick Facts</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-500">Typical Concentration</span>
-                    <span className="font-medium text-slate-700">{ingredient.concentration}</span>
+                    <span className="text-obsidian-500">Typical Concentration</span>
+                    <span className="font-medium text-obsidian-700">{ingredient.concentration}</span>
                   </div>
                 </div>
               </motion.div>

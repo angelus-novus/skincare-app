@@ -2,15 +2,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  Home,
-  Package,
-  Beaker,
-  Sparkles,
-  Syringe,
-  BookOpen,
-  Sun,
-  Settings,
-  Heart,
+  Home, Package, Beaker, Sparkles, Syringe,
+  BookOpen, Sun, Settings, Gem,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUserProfile } from '@/lib/store';
@@ -31,22 +24,31 @@ export function Sidebar() {
   const profile = useUserProfile();
 
   return (
-    <aside className="w-60 min-h-screen bg-white border-r border-slate-100 flex flex-col fixed left-0 top-0 bottom-0 z-40">
+    <aside className="w-60 min-h-screen flex flex-col fixed left-0 top-0 bottom-0 z-40"
+      style={{ backgroundColor: '#1C1917' }}>
+
       {/* Logo */}
-      <div className="px-6 py-5 border-b border-slate-50">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-gradient-to-br from-rose-400 to-pink-300 rounded-xl flex items-center justify-center shadow-sm">
-            <Heart className="w-4 h-4 text-white fill-white" />
+      <div className="px-6 py-6" style={{ borderBottom: '1px solid rgba(201,169,110,0.15)' }}>
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+            style={{ background: 'linear-gradient(135deg, #C9A96E, #B5622A)' }}>
+            <Gem className="w-4 h-4 text-white" />
           </div>
           <div>
-            <div className="font-bold text-slate-800 text-sm leading-none">GlowShelf</div>
-            <div className="text-xs text-slate-400 mt-0.5">Skincare Manager</div>
+            <div className="font-display font-semibold text-sm leading-none tracking-widest uppercase"
+              style={{ color: '#FAF7F2', fontFamily: 'var(--font-display)' }}>
+              GlowShelf
+            </div>
+            <div className="text-xs mt-0.5 tracking-wider uppercase"
+              style={{ color: 'rgba(201,169,110,0.7)', fontSize: '9px' }}>
+              Skincare Manager
+            </div>
           </div>
         </Link>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5">
+      <nav className="flex-1 px-3 py-5 space-y-0.5">
         {navItems.map(({ href, label, icon: Icon }) => {
           const active = pathname === href || (href !== '/' && pathname.startsWith(href));
           return (
@@ -54,16 +56,26 @@ export function Sidebar() {
               key={href}
               href={href}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
+                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all duration-200',
                 active
-                  ? 'bg-rose-50 text-rose-600'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                  ? 'font-medium'
+                  : 'hover:opacity-80'
               )}
+              style={active ? {
+                backgroundColor: 'rgba(181,98,42,0.18)',
+                color: '#C9A96E',
+              } : {
+                color: 'rgba(250,247,242,0.55)',
+              }}
             >
-              <Icon className={cn('w-4 h-4', active ? 'text-rose-500' : 'text-slate-400')} />
+              <Icon
+                className="w-4 h-4 flex-shrink-0"
+                style={{ color: active ? '#C9A96E' : 'rgba(250,247,242,0.35)' }}
+              />
               {label}
               {label === 'AI Insights' && (
-                <span className="ml-auto text-xs bg-rose-100 text-rose-600 rounded-full px-1.5 py-0.5 font-semibold">
+                <span className="ml-auto text-xs rounded-sm px-1.5 py-0.5 font-medium tracking-wider"
+                  style={{ backgroundColor: 'rgba(201,169,110,0.15)', color: '#C9A96E', fontSize: '9px' }}>
                   AI
                 </span>
               )}
@@ -72,17 +84,27 @@ export function Sidebar() {
         })}
       </nav>
 
+      {/* Thin gold rule */}
+      <div className="mx-6" style={{ height: '1px', background: 'rgba(201,169,110,0.15)' }} />
+
       {/* User profile */}
-      <div className="px-4 py-4 border-t border-slate-50">
+      <div className="px-4 py-5">
         <Link href="/settings" className="flex items-center gap-3 group">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-rose-300 to-pink-200 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
-            {profile.name ? profile.name[0].toUpperCase() : 'Y'}
+          <div
+            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0"
+            style={{ background: 'linear-gradient(135deg, #B5622A, #C9A96E)' }}
+          >
+            {profile.name ? profile.name[0].toUpperCase() : '✦'}
           </div>
           <div className="min-w-0">
-            <div className="text-sm font-medium text-slate-700 truncate group-hover:text-rose-600 transition-colors">
+            <div className="text-sm font-medium truncate transition-colors"
+              style={{ color: 'rgba(250,247,242,0.8)', fontFamily: 'var(--font-sans)' }}>
               {profile.name || 'Your Profile'}
             </div>
-            <div className="text-xs text-slate-400 capitalize">{profile.skinType} skin</div>
+            <div className="text-xs capitalize"
+              style={{ color: 'rgba(201,169,110,0.6)' }}>
+              {profile.skinType} skin
+            </div>
           </div>
         </Link>
       </div>

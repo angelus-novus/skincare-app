@@ -69,8 +69,8 @@ function moodEmoji(mood: JournalEntry['mood']) {
 function WeatherIcon({ weather }: { weather: string }) {
   if (weather === 'sunny') return <Sun className="w-3.5 h-3.5 text-amber-500" />;
   if (weather === 'rainy') return <CloudRain className="w-3.5 h-3.5 text-blue-500" />;
-  if (weather === 'windy') return <Wind className="w-3.5 h-3.5 text-slate-500" />;
-  return <Cloud className="w-3.5 h-3.5 text-slate-400" />;
+  if (weather === 'windy') return <Wind className="w-3.5 h-3.5 text-obsidian-500" />;
+  return <Cloud className="w-3.5 h-3.5 text-obsidian-400" />;
 }
 
 // ── Add Entry Modal ────────────────────────────────────────────────────────────
@@ -159,7 +159,7 @@ function AddEntryModal({
 
         {/* Mood */}
         <div>
-          <label className="text-sm font-medium text-slate-700 block mb-2">Mood</label>
+          <label className="text-sm font-medium text-obsidian-700 block mb-2">Mood</label>
           <div className="flex gap-2">
             {MOODS.map((m) => (
               <button
@@ -169,11 +169,11 @@ function AddEntryModal({
                 className={`flex-1 flex flex-col items-center py-2 rounded-xl border-2 transition-all ${
                   mood === m.value
                     ? 'border-rose-400 bg-rose-50'
-                    : 'border-slate-100 hover:border-slate-200'
+                    : 'border-ivory-darker hover:border-ivory-darker'
                 }`}
               >
                 <span className="text-2xl">{m.emoji}</span>
-                <span className="text-xs text-slate-600 mt-1">{m.label}</span>
+                <span className="text-xs text-obsidian-600 mt-1">{m.label}</span>
               </button>
             ))}
           </div>
@@ -181,7 +181,7 @@ function AddEntryModal({
 
         {/* Skin Condition Slider */}
         <div>
-          <label className="text-sm font-medium text-slate-700 block mb-2">
+          <label className="text-sm font-medium text-obsidian-700 block mb-2">
             Skin Condition:{' '}
             <span className="font-bold" style={{ color: sliderColor() }}>
               {skinCondition}/10
@@ -196,7 +196,7 @@ function AddEntryModal({
             className="w-full h-2 rounded-full appearance-none cursor-pointer"
             style={{ accentColor: sliderColor() }}
           />
-          <div className="flex justify-between text-xs text-slate-400 mt-1">
+          <div className="flex justify-between text-xs text-obsidian-400 mt-1">
             <span>Terrible</span>
             <span>Amazing</span>
           </div>
@@ -213,7 +213,7 @@ function AddEntryModal({
 
         {/* Products Used */}
         <div>
-          <label className="text-sm font-medium text-slate-700 block mb-2">Products Used</label>
+          <label className="text-sm font-medium text-obsidian-700 block mb-2">Products Used</label>
           <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
             {products.map((p) => (
               <button
@@ -223,7 +223,7 @@ function AddEntryModal({
                 className={`text-xs rounded-full px-3 py-1 border transition-all ${
                   selectedProducts.includes(p.id)
                     ? 'bg-rose-100 text-rose-700 border-rose-300'
-                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-rose-200'
+                    : 'bg-ivory-dark text-obsidian-600 border-ivory-darker hover:border-rose-200'
                 }`}
               >
                 {p.name}
@@ -234,7 +234,7 @@ function AddEntryModal({
 
         {/* Concerns */}
         <div>
-          <label className="text-sm font-medium text-slate-700 block mb-2">Skin Concerns Today</label>
+          <label className="text-sm font-medium text-obsidian-700 block mb-2">Skin Concerns Today</label>
           <div className="flex flex-wrap gap-2">
             {CONCERNS.map((c) => (
               <button
@@ -244,7 +244,7 @@ function AddEntryModal({
                 className={`text-xs rounded-full px-3 py-1 border transition-all ${
                   selectedConcerns.includes(c)
                     ? 'bg-rose-100 text-rose-700 border-rose-300'
-                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-rose-200'
+                    : 'bg-ivory-dark text-obsidian-600 border-ivory-darker hover:border-rose-200'
                 }`}
               >
                 {concernLabel(c)}
@@ -255,14 +255,14 @@ function AddEntryModal({
 
         {/* Environment */}
         <div>
-          <label className="text-sm font-medium text-slate-700 block mb-3">Environment</label>
+          <label className="text-sm font-medium text-obsidian-700 block mb-3">Environment</label>
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Weather</label>
+              <label className="text-xs text-obsidian-500 mb-1 block">Weather</label>
               <select
                 value={weather}
                 onChange={(e) => setWeather(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-300"
+                className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 focus:outline-none focus:ring-2 focus:ring-rose-300"
               >
                 <option value="">— Select —</option>
                 {WEATHER_OPTIONS.map((w) => (
@@ -273,7 +273,7 @@ function AddEntryModal({
               </select>
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Stress</label>
+              <label className="text-xs text-obsidian-500 mb-1 block">Stress</label>
               <div className="flex gap-1">
                 {STRESS_OPTIONS.map((s) => (
                   <button
@@ -287,7 +287,7 @@ function AddEntryModal({
                           : s === 'medium'
                           ? 'bg-amber-100 text-amber-700 border-amber-300'
                           : 'bg-red-100 text-red-700 border-red-300'
-                        : 'bg-slate-50 text-slate-500 border-slate-200'
+                        : 'bg-ivory-dark text-obsidian-500 border-ivory-darker'
                     }`}
                   >
                     {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -296,7 +296,7 @@ function AddEntryModal({
               </div>
             </div>
             <div>
-              <label className="text-xs text-slate-500 mb-1 block">Sleep (hrs)</label>
+              <label className="text-xs text-obsidian-500 mb-1 block">Sleep (hrs)</label>
               <Input
                 type="number"
                 min="0"
@@ -350,7 +350,7 @@ function EntryCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
-      className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+      className="bg-white rounded-2xl border border-ivory-darker shadow-sm overflow-hidden hover:shadow-md transition-shadow"
     >
       <div className="flex">
         {/* Date sidebar */}
@@ -381,13 +381,13 @@ function EntryCard({
             <div className="flex gap-1">
               <button
                 onClick={onEdit}
-                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-ivory-darker text-obsidian-400 hover:text-obsidian-600 transition-colors"
               >
                 <CalendarDays className="w-4 h-4" />
               </button>
               <button
                 onClick={onDelete}
-                className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-red-50 text-obsidian-400 hover:text-red-500 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -395,7 +395,7 @@ function EntryCard({
           </div>
 
           {entry.notes && (
-            <p className="text-sm text-slate-600 mb-3 leading-relaxed">{entry.notes}</p>
+            <p className="text-sm text-obsidian-600 mb-3 leading-relaxed">{entry.notes}</p>
           )}
 
           {/* Products */}
@@ -425,7 +425,7 @@ function EntryCard({
 
           {/* Environment */}
           {entry.environment && (
-            <div className="flex items-center gap-3 text-xs text-slate-500">
+            <div className="flex items-center gap-3 text-xs text-obsidian-500">
               {entry.environment.weather && (
                 <span className="flex items-center gap-1">
                   <WeatherIcon weather={entry.environment.weather} />
@@ -457,7 +457,7 @@ function EntryCard({
         </div>
 
         {/* Photo placeholder */}
-        <div className="w-20 flex-shrink-0 bg-slate-50 flex flex-col items-center justify-center text-slate-300 border-l border-slate-100">
+        <div className="w-20 flex-shrink-0 bg-ivory-dark flex flex-col items-center justify-center text-obsidian-300 border-l border-ivory-darker">
           {entry.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={entry.imageUrl} alt="skin photo" className="w-full h-full object-cover" />
@@ -502,7 +502,7 @@ function CalendarHeatmap({ entries }: { entries: JournalEntry[] }) {
               title={`${format(day.date, 'MMM d')}: ${day.entry ? `${day.entry.skinCondition}/10` : 'No entry'}`}
               className={`w-5 h-5 rounded-sm cursor-default ${
                 !day.entry
-                  ? 'bg-slate-100'
+                  ? 'bg-ivory-darker'
                   : day.entry.skinCondition <= 4
                   ? 'bg-red-400'
                   : day.entry.skinCondition <= 6
@@ -598,11 +598,11 @@ export default function JournalPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
       {/* Header */}
-      <div className="bg-white border-b border-slate-100 px-6 py-5 sticky top-0 z-10">
+      <div className="bg-white border-b border-ivory-darker px-6 py-5 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-slate-800">Skin Journal</h1>
-            <p className="text-sm text-slate-500 mt-0.5">
+            <h1 className="text-xl font-bold text-obsidian-800">Skin Journal</h1>
+            <p className="text-sm text-obsidian-500 mt-0.5">
               {journalEntries.length} {journalEntries.length === 1 ? 'entry' : 'entries'} recorded
             </p>
           </div>
@@ -637,11 +637,11 @@ export default function JournalPage() {
             >
               <div className="max-w-5xl mx-auto pt-4 flex flex-wrap gap-3 items-center">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500 font-medium">Mood:</span>
+                  <span className="text-xs text-obsidian-500 font-medium">Mood:</span>
                   <div className="flex gap-1">
                     <button
                       onClick={() => setFilterMood('')}
-                      className={`text-xs px-2 py-1 rounded-lg border transition-all ${!filterMood ? 'bg-rose-100 text-rose-700 border-rose-300' : 'bg-slate-50 border-slate-200'}`}
+                      className={`text-xs px-2 py-1 rounded-lg border transition-all ${!filterMood ? 'bg-rose-100 text-rose-700 border-rose-300' : 'bg-ivory-dark border-ivory-darker'}`}
                     >
                       All
                     </button>
@@ -649,7 +649,7 @@ export default function JournalPage() {
                       <button
                         key={m.value}
                         onClick={() => setFilterMood(m.value)}
-                        className={`text-sm px-2 py-1 rounded-lg border transition-all ${filterMood === m.value ? 'bg-rose-100 border-rose-300' : 'bg-slate-50 border-slate-200'}`}
+                        className={`text-sm px-2 py-1 rounded-lg border transition-all ${filterMood === m.value ? 'bg-rose-100 border-rose-300' : 'bg-ivory-dark border-ivory-darker'}`}
                         title={m.label}
                       >
                         {m.emoji}
@@ -659,19 +659,19 @@ export default function JournalPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500 font-medium">Condition:</span>
+                  <span className="text-xs text-obsidian-500 font-medium">Condition:</span>
                   <select
                     value={filterConditionMin}
                     onChange={(e) => setFilterConditionMin(Number(e.target.value))}
-                    className="text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-rose-300"
+                    className="text-xs border border-ivory-darker rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-rose-300"
                   >
                     {[...Array(10)].map((_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}
                   </select>
-                  <span className="text-xs text-slate-400">–</span>
+                  <span className="text-xs text-obsidian-400">–</span>
                   <select
                     value={filterConditionMax}
                     onChange={(e) => setFilterConditionMax(Number(e.target.value))}
-                    className="text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-rose-300"
+                    className="text-xs border border-ivory-darker rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-rose-300"
                   >
                     {[...Array(10)].map((_, i) => <option key={i + 1} value={i + 1}>{i + 1}</option>)}
                   </select>
@@ -696,8 +696,8 @@ export default function JournalPage() {
             {filteredEntries.length === 0 ? (
               <div className="text-center py-20">
                 <div className="text-6xl mb-4">📓</div>
-                <h3 className="text-lg font-semibold text-slate-700 mb-2">No journal entries yet</h3>
-                <p className="text-slate-400 text-sm mb-6">
+                <h3 className="text-lg font-semibold text-obsidian-700 mb-2">No journal entries yet</h3>
+                <p className="text-obsidian-400 text-sm mb-6">
                   Start tracking your skin journey today.
                 </p>
                 <Button onClick={() => setShowModal(true)}>
@@ -724,17 +724,17 @@ export default function JournalPage() {
             {/* Avg condition */}
             <Card>
               <CardBody>
-                <h3 className="text-sm font-semibold text-slate-700 mb-3">Last 30 Days</h3>
+                <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Last 30 Days</h3>
                 {avgCondition !== null ? (
                   <div className="flex items-center gap-4">
                     <div className="text-center">
                       <div className="text-4xl font-bold text-rose-500">{avgCondition.toFixed(1)}</div>
-                      <div className="text-xs text-slate-400 mt-1">avg condition</div>
+                      <div className="text-xs text-obsidian-400 mt-1">avg condition</div>
                     </div>
                     <div className="flex-1">
                       <div className={`flex items-center gap-1.5 text-sm font-medium ${
                         trendDirection === 'up' ? 'text-emerald-600' :
-                        trendDirection === 'down' ? 'text-red-500' : 'text-slate-400'
+                        trendDirection === 'down' ? 'text-red-500' : 'text-obsidian-400'
                       }`}>
                         {trendDirection === 'up' ? <TrendingUp className="w-4 h-4" /> :
                          trendDirection === 'down' ? <TrendingDown className="w-4 h-4" /> :
@@ -742,11 +742,11 @@ export default function JournalPage() {
                         {trendDirection === 'up' ? 'Improving' :
                          trendDirection === 'down' ? 'Declining' : 'Stable'}
                       </div>
-                      <p className="text-xs text-slate-400 mt-1">{last30.length} entries logged</p>
+                      <p className="text-xs text-obsidian-400 mt-1">{last30.length} entries logged</p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-slate-400 text-sm">No entries in last 30 days</p>
+                  <p className="text-obsidian-400 text-sm">No entries in last 30 days</p>
                 )}
               </CardBody>
             </Card>
@@ -758,7 +758,7 @@ export default function JournalPage() {
               </CardHeader>
               <CardBody className="pt-2">
                 <CalendarHeatmap entries={journalEntries} />
-                <div className="flex items-center gap-3 mt-3 text-xs text-slate-400">
+                <div className="flex items-center gap-3 mt-3 text-xs text-obsidian-400">
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-sm bg-red-400" /> Poor
                   </div>
@@ -782,13 +782,13 @@ export default function JournalPage() {
                   <ul className="space-y-2">
                     {commonConcerns.map(({ concern, count }) => (
                       <li key={concern} className="flex items-center gap-2">
-                        <div className="flex-1 text-sm text-slate-700">{concernLabel(concern)}</div>
+                        <div className="flex-1 text-sm text-obsidian-700">{concernLabel(concern)}</div>
                         <div className="flex items-center gap-1.5">
                           <div
                             className="h-1.5 bg-rose-300 rounded-full"
                             style={{ width: `${(count / last30.length) * 60}px` }}
                           />
-                          <span className="text-xs text-slate-400">{count}x</span>
+                          <span className="text-xs text-obsidian-400">{count}x</span>
                         </div>
                       </li>
                     ))}
@@ -801,8 +801,8 @@ export default function JournalPage() {
             {stressCorrelation && Math.abs(stressCorrelation.diff) > 0.5 && (
               <Card className="bg-gradient-to-br from-violet-50 to-pink-50 border-violet-100">
                 <CardBody>
-                  <h3 className="text-sm font-semibold text-slate-700 mb-2">Correlation Hint</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed">
+                  <h3 className="text-sm font-semibold text-obsidian-700 mb-2">Correlation Hint</h3>
+                  <p className="text-sm text-obsidian-600 leading-relaxed">
                     {stressCorrelation.diff > 0 ? (
                       <>
                         Your skin tends to be{' '}

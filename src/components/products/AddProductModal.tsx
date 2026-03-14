@@ -221,7 +221,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
       <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-1 -mr-1">
         {/* ── Section: Basic Info ── */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3 flex items-center gap-2">
             <Package className="w-4 h-4 text-rose-400" />
             Basic Information
           </h3>
@@ -245,22 +245,22 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
           <div className="grid grid-cols-3 gap-4 mt-4">
             {/* Category */}
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">Category</label>
+              <label className="text-sm font-medium text-obsidian-700">Category</label>
               <Select.Root value={category} onValueChange={(v) => setCategory(v as ProductCategory)}>
-                <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white">
+                <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white">
                   <Select.Value />
                   <Select.Icon>
-                    <ChevronDown className="w-4 h-4 text-slate-400" />
+                    <ChevronDown className="w-4 h-4 text-obsidian-400" />
                   </Select.Icon>
                 </Select.Trigger>
                 <Select.Portal>
-                  <Select.Content className="z-[100] bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden">
+                  <Select.Content className="z-[100] bg-white rounded-xl shadow-lg border border-ivory-darker overflow-hidden">
                     <Select.Viewport className="p-1 max-h-60 overflow-y-auto">
                       {ALL_CATEGORIES.map((cat) => (
                         <Select.Item
                           key={cat}
                           value={cat}
-                          className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer hover:bg-rose-50 hover:text-rose-700 outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer hover:bg-rose-50 hover:text-rose-700 outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                         >
                           <Select.ItemText>{categoryLabel(cat)}</Select.ItemText>
                           <Select.ItemIndicator className="ml-auto">
@@ -307,7 +307,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
 
         {/* ── Section: Image ── */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3">Image</h3>
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Image</h3>
           <div className="grid grid-cols-2 gap-4">
             <Input
               label="Image URL"
@@ -316,7 +316,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
               onChange={(e) => setImageUrl(e.target.value)}
             />
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">Bottle Color (fallback)</label>
+              <label className="text-sm font-medium text-obsidian-700">Bottle Color (fallback)</label>
               <div className="flex items-center gap-2">
                 <div className="flex flex-wrap gap-1.5">
                   {BOTTLE_COLORS.map((color) => (
@@ -338,7 +338,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                   type="color"
                   value={imageColor}
                   onChange={(e) => setImageColor(e.target.value)}
-                  className="w-8 h-8 rounded-lg border border-slate-200 cursor-pointer"
+                  className="w-8 h-8 rounded-lg border border-ivory-darker cursor-pointer"
                   title="Custom color"
                 />
               </div>
@@ -356,13 +356,13 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                 <Package className="w-6 h-6 text-white/60" />
               )}
             </div>
-            <span className="text-xs text-slate-400">Preview</span>
+            <span className="text-xs text-obsidian-400">Preview</span>
           </div>
         </div>
 
         {/* ── Section: Skin Concerns ── */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3">Skin Concerns</h3>
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Skin Concerns</h3>
           <div className="flex flex-wrap gap-1.5">
             {ALL_CONCERNS.map((c) => (
               <button
@@ -373,7 +373,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                   'text-xs rounded-full px-2.5 py-1 border font-medium transition-colors',
                   selectedConcerns.includes(c)
                     ? 'bg-rose-100 text-rose-700 border-rose-200'
-                    : 'bg-white text-slate-500 border-slate-200 hover:border-rose-200 hover:text-rose-600'
+                    : 'bg-white text-obsidian-500 border-ivory-darker hover:border-rose-200 hover:text-rose-600'
                 )}
               >
                 {concernLabel(c)}
@@ -384,7 +384,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
 
         {/* ── Section: Tags ── */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3">Tags</h3>
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Tags</h3>
           <div className="flex gap-2">
             <Input
               placeholder="Type a tag and press Enter..."
@@ -406,7 +406,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 bg-slate-100 text-slate-600 text-xs rounded-full px-2.5 py-1 font-medium"
+                  className="inline-flex items-center gap-1 bg-ivory-darker text-obsidian-600 text-xs rounded-full px-2.5 py-1 font-medium"
                 >
                   {tag}
                   <button
@@ -424,7 +424,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
 
         {/* ── Section: Ingredient Search/Autocomplete ── */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-rose-400" />
             Ingredients
           </h3>
@@ -432,7 +432,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
           {/* Search */}
           <div className="relative">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-obsidian-400" />
               <input
                 ref={ingredientSearchRef}
                 value={ingredientSearch}
@@ -442,7 +442,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                 }}
                 onFocus={() => setIngredientDropdownOpen(true)}
                 placeholder="Search ingredients by name, INCI, or category..."
-                className="w-full rounded-lg border border-slate-200 pl-9 pr-4 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white"
+                className="w-full rounded-lg border border-ivory-darker pl-9 pr-4 py-2 text-sm text-obsidian-800 placeholder:text-obsidian-400 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white"
               />
               {ingredientSearch && (
                 <button
@@ -451,7 +451,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                     setIngredientSearch('');
                     setIngredientDropdownOpen(false);
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-obsidian-400 hover:text-obsidian-600"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -467,7 +467,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-56 overflow-y-auto"
+                  className="absolute z-50 w-full mt-1 bg-white border border-ivory-darker rounded-xl shadow-lg max-h-56 overflow-y-auto"
                 >
                   {filteredIngredients.map((ing) => {
                     const isSelected = selectedIngredients.includes(ing.id);
@@ -476,7 +476,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                       <div
                         key={ing.id}
                         className={cn(
-                          'flex items-center justify-between px-3 py-2.5 hover:bg-slate-50 border-b border-slate-50 last:border-0 cursor-pointer transition-colors',
+                          'flex items-center justify-between px-3 py-2.5 hover:bg-ivory-dark border-b border-ivory-dark last:border-0 cursor-pointer transition-colors',
                           isSelected && 'bg-rose-50/40'
                         )}
                         onClick={() => toggleIngredient(ing.id)}
@@ -494,10 +494,10 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <p className="text-sm text-slate-700 font-medium truncate">{ing.name}</p>
-                              <span className="text-xs text-slate-400 truncate hidden sm:inline">{ing.category}</span>
+                              <p className="text-sm text-obsidian-700 font-medium truncate">{ing.name}</p>
+                              <span className="text-xs text-obsidian-400 truncate hidden sm:inline">{ing.category}</span>
                             </div>
-                            <p className="text-xs text-slate-400 truncate">{ing.inci}</p>
+                            <p className="text-xs text-obsidian-400 truncate">{ing.inci}</p>
                           </div>
                           <span
                             className={cn(
@@ -518,7 +518,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                             'text-xs rounded-full px-2 py-0.5 border font-medium ml-2 flex-shrink-0 transition-colors',
                             isKey
                               ? 'bg-rose-100 text-rose-700 border-rose-200'
-                              : 'bg-slate-50 text-slate-400 border-slate-200 hover:border-rose-200 hover:text-rose-600'
+                              : 'bg-ivory-dark text-obsidian-400 border-ivory-darker hover:border-rose-200 hover:text-rose-600'
                           )}
                         >
                           {isKey ? 'Key' : 'Set key'}
@@ -548,7 +548,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                       'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium cursor-pointer transition-colors',
                       isKey
                         ? 'bg-rose-100 text-rose-700'
-                        : 'bg-slate-100 text-slate-600'
+                        : 'bg-ivory-darker text-obsidian-600'
                     )}
                     onClick={() => toggleKeyIngredient(id)}
                     title={isKey ? 'Click to unmark as key ingredient' : 'Click to mark as key ingredient'}
@@ -571,7 +571,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
             </div>
           )}
           {selectedIngredients.length > 0 && (
-            <p className="text-xs text-slate-400 mt-1.5">
+            <p className="text-xs text-obsidian-400 mt-1.5">
               Click a pill to toggle key ingredient status. {selectedKeyIngredients.length} key, {selectedIngredients.length - selectedKeyIngredients.length} regular.
             </p>
           )}
@@ -579,7 +579,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
 
         {/* ── Section: Expiry & PAO ── */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3">Expiry & Period After Opening</h3>
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Expiry & Period After Opening</h3>
           <div className="grid grid-cols-3 gap-4">
             <Input
               label="PAO (months)"
@@ -605,7 +605,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
 
         {/* ── Section: Routine ── */}
         <div>
-          <h3 className="text-sm font-semibold text-slate-700 mb-3">Routine</h3>
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Routine</h3>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <div
@@ -622,7 +622,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                   )}
                 />
               </div>
-              <span className="text-sm text-slate-700">In routine</span>
+              <span className="text-sm text-obsidian-700">In routine</span>
             </label>
           </div>
 
@@ -637,7 +637,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
               >
                 <div className="grid grid-cols-2 gap-4 mt-3">
                   <div className="space-y-1">
-                    <label className="text-sm font-medium text-slate-700">When</label>
+                    <label className="text-sm font-medium text-obsidian-700">When</label>
                     <div className="flex gap-1.5">
                       {(['am', 'pm', 'both'] as const).map((step) => (
                         <button
@@ -648,7 +648,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                             'flex-1 rounded-lg px-3 py-2 text-sm font-medium border transition-colors',
                             routineStep === step
                               ? 'bg-rose-100 text-rose-700 border-rose-200'
-                              : 'bg-white text-slate-500 border-slate-200 hover:border-rose-200'
+                              : 'bg-white text-obsidian-500 border-ivory-darker hover:border-rose-200'
                           )}
                         >
                           {step === 'am' ? 'AM' : step === 'pm' ? 'PM' : 'Both'}
@@ -671,7 +671,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
       </div>
 
       {/* ── Footer ── */}
-      <div className="flex justify-end gap-3 pt-4 mt-4 border-t border-slate-100">
+      <div className="flex justify-end gap-3 pt-4 mt-4 border-t border-ivory-darker">
         <Button variant="secondary" onClick={onClose}>
           Cancel
         </Button>

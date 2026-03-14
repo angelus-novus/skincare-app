@@ -53,7 +53,7 @@ function IngredientBadge({
     moderate: 'bg-blue-100 text-blue-700 border-blue-200',
     emerging: 'bg-amber-100 text-amber-700 border-amber-200',
     limited: 'bg-orange-100 text-orange-700 border-orange-200',
-    anecdotal: 'bg-slate-100 text-slate-600 border-slate-200',
+    anecdotal: 'bg-ivory-darker text-obsidian-600 border-ivory-darker',
   };
 
   return (
@@ -65,7 +65,7 @@ function IngredientBadge({
             'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border transition-colors hover:opacity-80',
             isKey
               ? 'bg-rose-100 text-rose-700 border-rose-200'
-              : 'bg-slate-100 text-slate-600 border-slate-200'
+              : 'bg-ivory-darker text-obsidian-600 border-ivory-darker'
           )}
         >
           {isKey && <Sparkles className="w-2.5 h-2.5 mr-1" />}
@@ -74,15 +74,15 @@ function IngredientBadge({
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
-          className="z-50 bg-white rounded-xl shadow-lg border border-slate-100 p-4 max-w-xs w-72"
+          className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker p-4 max-w-xs w-72"
           sideOffset={6}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <p className="font-semibold text-sm text-slate-800">{ingredient.name}</p>
-                <p className="text-xs text-slate-400 italic">{ingredient.inci}</p>
+                <p className="font-semibold text-sm text-obsidian-800">{ingredient.name}</p>
+                <p className="text-xs text-obsidian-400 italic">{ingredient.inci}</p>
               </div>
               <span
                 className={cn(
@@ -93,7 +93,7 @@ function IngredientBadge({
                 {ingredient.evidenceLevel}
               </span>
             </div>
-            <p className="text-xs text-slate-600 leading-relaxed">{ingredient.whatItDoes}</p>
+            <p className="text-xs text-obsidian-600 leading-relaxed">{ingredient.whatItDoes}</p>
             {ingredient.benefits.length > 0 && (
               <div className="flex flex-wrap gap-1 pt-1">
                 {ingredient.benefits.slice(0, 4).map((b) => (
@@ -132,10 +132,10 @@ function ProductCard({
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.2 }}
       onClick={onClick}
-      className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group overflow-hidden"
+      className="bg-white rounded-2xl border border-ivory-darker shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer group overflow-hidden"
     >
       {/* Image */}
-      <div className="relative h-40 bg-slate-50 overflow-hidden">
+      <div className="relative h-40 bg-ivory-dark overflow-hidden">
         {product.imageUrl ? (
           <img
             src={product.imageUrl}
@@ -170,15 +170,15 @@ function ProductCard({
       </div>
 
       <div className="p-4">
-        <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">{product.brand}</p>
-        <h3 className="font-semibold text-slate-800 text-sm mt-0.5 leading-tight line-clamp-2">
+        <p className="text-xs text-obsidian-400 font-medium uppercase tracking-wide">{product.brand}</p>
+        <h3 className="font-semibold text-obsidian-800 text-sm mt-0.5 leading-tight line-clamp-2">
           {product.name}
         </h3>
 
         {product.rating && (
           <div className="flex items-center gap-1.5 mt-2">
             <StarRating value={product.rating.overall} size="sm" />
-            <span className="text-xs text-slate-500">{product.rating.overall.toFixed(1)}</span>
+            <span className="text-xs text-obsidian-500">{product.rating.overall.toFixed(1)}</span>
           </div>
         )}
 
@@ -191,7 +191,7 @@ function ProductCard({
               ) : null;
             })}
             {product.keyIngredients.length > 3 && (
-              <span className="text-xs text-slate-400 self-center">
+              <span className="text-xs text-obsidian-400 self-center">
                 +{product.keyIngredients.length - 3} more
               </span>
             )}
@@ -203,7 +203,7 @@ function ProductCard({
             {product.concerns.slice(0, 2).map((c) => (
               <span
                 key={c}
-                className="bg-slate-50 text-slate-500 text-xs rounded-full px-2 py-0.5 border border-slate-100"
+                className="bg-ivory-dark text-obsidian-500 text-xs rounded-full px-2 py-0.5 border border-ivory-darker"
               >
                 {concernLabel(c)}
               </span>
@@ -314,7 +314,7 @@ export default function ProductsPage() {
   }
 
   function SortIcon({ col }: { col: SortKey }) {
-    if (sortKey !== col) return <ArrowUpDown className="w-3.5 h-3.5 text-slate-300" />;
+    if (sortKey !== col) return <ArrowUpDown className="w-3.5 h-3.5 text-obsidian-300" />;
     return sortDir === 'asc' ? (
       <ChevronUp className="w-3.5 h-3.5 text-rose-500" />
     ) : (
@@ -323,13 +323,13 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-ivory-dark">
       {/* Header */}
-      <div className="bg-white border-b border-slate-100 px-8 py-6">
+      <div className="bg-white border-b border-ivory-darker px-8 py-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Products</h1>
-            <p className="text-slate-500 text-sm mt-0.5">
+            <h1 className="text-2xl font-bold text-obsidian-800">Products</h1>
+            <p className="text-obsidian-500 text-sm mt-0.5">
               {products.length} product{products.length !== 1 ? 's' : ''} on your shelf
             </p>
           </div>
@@ -352,7 +352,7 @@ export default function ProductsPage() {
                   'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium border transition-all',
                   filterCategory === cat
                     ? cn(categoryColor(cat), 'border-current')
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                    : 'bg-white text-obsidian-600 border-ivory-darker hover:border-slate-300'
                 )}
               >
                 <span
@@ -366,14 +366,14 @@ export default function ProductsPage() {
                 <span
                   className={cn(
                     'rounded-full px-1.5 py-0.5 text-xs font-bold',
-                    filterCategory === cat ? 'bg-white/50' : 'bg-slate-100'
+                    filterCategory === cat ? 'bg-white/50' : 'bg-ivory-darker'
                   )}
                 >
                   {count}
                 </span>
               </button>
             ))}
-            <span className="inline-flex items-center text-xs text-slate-400 px-2">
+            <span className="inline-flex items-center text-xs text-obsidian-400 px-2">
               {products.length} total
             </span>
           </div>
@@ -385,17 +385,17 @@ export default function ProductsPage() {
         <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
           <div className="relative flex-1 min-w-56">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-obsidian-400" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search products, brands, tags..."
-              className="w-full rounded-lg border border-slate-200 pl-9 pr-4 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white"
+              className="w-full rounded-lg border border-ivory-darker pl-9 pr-4 py-2 text-sm text-obsidian-800 placeholder:text-obsidian-400 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white"
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-obsidian-400 hover:text-obsidian-600"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -419,13 +419,13 @@ export default function ProductsPage() {
 
           {/* Sort */}
           <Select.Root value={sortKey} onValueChange={(v) => setSortKey(v as SortKey)}>
-            <Select.Trigger className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-rose-300">
-              <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+            <Select.Trigger className="flex items-center gap-2 rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-700 bg-white hover:bg-ivory-dark focus:outline-none focus:ring-2 focus:ring-rose-300">
+              <ArrowUpDown className="w-3.5 h-3.5 text-obsidian-400" />
               <Select.Value />
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+              <ChevronDown className="w-3.5 h-3.5 text-obsidian-400" />
             </Select.Trigger>
             <Select.Portal>
-              <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-slate-100">
+              <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker">
                 <Select.Viewport className="p-1">
                   {[
                     { value: 'name', label: 'Sort by Name' },
@@ -437,7 +437,7 @@ export default function ProductsPage() {
                     <Select.Item
                       key={opt.value}
                       value={opt.value}
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                     >
                       <Select.ItemText>{opt.label}</Select.ItemText>
                       <Select.ItemIndicator className="ml-auto">
@@ -452,7 +452,7 @@ export default function ProductsPage() {
 
           <button
             onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
-            className="p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 transition-colors"
+            className="p-2 rounded-lg border border-ivory-darker bg-white hover:bg-ivory-dark text-obsidian-600 transition-colors"
             title={sortDir === 'asc' ? 'Ascending' : 'Descending'}
           >
             {sortDir === 'asc' ? (
@@ -463,14 +463,14 @@ export default function ProductsPage() {
           </button>
 
           {/* View toggle */}
-          <div className="flex bg-white border border-slate-200 rounded-lg overflow-hidden ml-auto">
+          <div className="flex bg-white border border-ivory-darker rounded-lg overflow-hidden ml-auto">
             <button
               onClick={() => setViewMode('table')}
               className={cn(
                 'p-2 transition-colors',
                 viewMode === 'table'
                   ? 'bg-rose-500 text-white'
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                  : 'text-obsidian-500 hover:text-obsidian-700 hover:bg-ivory-dark'
               )}
               title="Table view"
             >
@@ -482,7 +482,7 @@ export default function ProductsPage() {
                 'p-2 transition-colors',
                 viewMode === 'grid'
                   ? 'bg-rose-500 text-white'
-                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                  : 'text-obsidian-500 hover:text-obsidian-700 hover:bg-ivory-dark'
               )}
               title="Grid view"
             >
@@ -501,9 +501,9 @@ export default function ProductsPage() {
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-4">
+              <div className="bg-white rounded-2xl border border-ivory-darker shadow-sm p-5 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-slate-700 flex items-center gap-2">
+                  <h3 className="font-semibold text-obsidian-700 flex items-center gap-2">
                     <SlidersHorizontal className="w-4 h-4" />
                     Filters
                   </h3>
@@ -521,23 +521,23 @@ export default function ProductsPage() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {/* Category filter */}
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <label className="text-xs font-medium text-obsidian-500 uppercase tracking-wide">
                       Category
                     </label>
                     <Select.Root
                       value={filterCategory}
                       onValueChange={(v) => setFilterCategory(v as ProductCategory | 'all')}
                     >
-                      <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-rose-300">
+                      <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-700 bg-white focus:outline-none focus:ring-2 focus:ring-rose-300">
                         <Select.Value />
-                        <ChevronDown className="w-4 h-4 text-slate-400" />
+                        <ChevronDown className="w-4 h-4 text-obsidian-400" />
                       </Select.Trigger>
                       <Select.Portal>
-                        <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-slate-100 max-h-64 overflow-y-auto">
+                        <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker max-h-64 overflow-y-auto">
                           <Select.Viewport className="p-1">
                             <Select.Item
                               value="all"
-                              className="flex items-center px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                              className="flex items-center px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                             >
                               <Select.ItemText>All Categories</Select.ItemText>
                             </Select.Item>
@@ -545,7 +545,7 @@ export default function ProductsPage() {
                               <Select.Item
                                 key={cat}
                                 value={cat}
-                                className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                                className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                               >
                                 <Select.ItemText>{categoryLabel(cat)}</Select.ItemText>
                                 <Select.ItemIndicator className="ml-auto">
@@ -561,23 +561,23 @@ export default function ProductsPage() {
 
                   {/* Concern filter */}
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <label className="text-xs font-medium text-obsidian-500 uppercase tracking-wide">
                       Concern
                     </label>
                     <Select.Root
                       value={filterConcern}
                       onValueChange={(v) => setFilterConcern(v as SkinConcern | 'all')}
                     >
-                      <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-rose-300">
+                      <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-700 bg-white focus:outline-none focus:ring-2 focus:ring-rose-300">
                         <Select.Value />
-                        <ChevronDown className="w-4 h-4 text-slate-400" />
+                        <ChevronDown className="w-4 h-4 text-obsidian-400" />
                       </Select.Trigger>
                       <Select.Portal>
-                        <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-slate-100 max-h-64 overflow-y-auto">
+                        <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker max-h-64 overflow-y-auto">
                           <Select.Viewport className="p-1">
                             <Select.Item
                               value="all"
-                              className="flex items-center px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                              className="flex items-center px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                             >
                               <Select.ItemText>All Concerns</Select.ItemText>
                             </Select.Item>
@@ -585,7 +585,7 @@ export default function ProductsPage() {
                               <Select.Item
                                 key={c}
                                 value={c}
-                                className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                                className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                               >
                                 <Select.ItemText>{concernLabel(c)}</Select.ItemText>
                                 <Select.ItemIndicator className="ml-auto">
@@ -601,19 +601,19 @@ export default function ProductsPage() {
 
                   {/* Rating filter */}
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <label className="text-xs font-medium text-obsidian-500 uppercase tracking-wide">
                       Min Rating
                     </label>
                     <Select.Root
                       value={String(filterRating)}
                       onValueChange={(v) => setFilterRating(Number(v))}
                     >
-                      <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-rose-300">
+                      <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-700 bg-white focus:outline-none focus:ring-2 focus:ring-rose-300">
                         <Select.Value />
-                        <ChevronDown className="w-4 h-4 text-slate-400" />
+                        <ChevronDown className="w-4 h-4 text-obsidian-400" />
                       </Select.Trigger>
                       <Select.Portal>
-                        <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-slate-100">
+                        <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker">
                           <Select.Viewport className="p-1">
                             {[
                               { value: '0', label: 'Any Rating' },
@@ -626,7 +626,7 @@ export default function ProductsPage() {
                               <Select.Item
                                 key={opt.value}
                                 value={opt.value}
-                                className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                                className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                               >
                                 <Select.ItemText>{opt.label}</Select.ItemText>
                                 <Select.ItemIndicator className="ml-auto">
@@ -642,19 +642,19 @@ export default function ProductsPage() {
 
                   {/* In routine filter */}
                   <div className="space-y-1">
-                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+                    <label className="text-xs font-medium text-obsidian-500 uppercase tracking-wide">
                       In Routine
                     </label>
                     <Select.Root
                       value={filterInRoutine}
                       onValueChange={(v) => setFilterInRoutine(v as 'all' | 'yes' | 'no')}
                     >
-                      <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-rose-300">
+                      <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-700 bg-white focus:outline-none focus:ring-2 focus:ring-rose-300">
                         <Select.Value />
-                        <ChevronDown className="w-4 h-4 text-slate-400" />
+                        <ChevronDown className="w-4 h-4 text-obsidian-400" />
                       </Select.Trigger>
                       <Select.Portal>
-                        <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-slate-100">
+                        <Select.Content className="z-50 bg-white rounded-xl shadow-lg border border-ivory-darker">
                           <Select.Viewport className="p-1">
                             {[
                               { value: 'all', label: 'All Products' },
@@ -664,7 +664,7 @@ export default function ProductsPage() {
                               <Select.Item
                                 key={opt.value}
                                 value={opt.value}
-                                className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
+                                className="flex items-center gap-2 px-3 py-2 text-sm text-obsidian-700 rounded-lg cursor-pointer outline-none data-[highlighted]:bg-rose-50 data-[highlighted]:text-rose-700"
                               >
                                 <Select.ItemText>{opt.label}</Select.ItemText>
                                 <Select.ItemIndicator className="ml-auto">
@@ -685,8 +685,8 @@ export default function ProductsPage() {
 
         {/* Results count */}
         <div className="flex items-center justify-between">
-          <p className="text-sm text-slate-500">
-            Showing <span className="font-semibold text-slate-700">{filtered.length}</span> of{' '}
+          <p className="text-sm text-obsidian-500">
+            Showing <span className="font-semibold text-obsidian-700">{filtered.length}</span> of{' '}
             {products.length} products
           </p>
           {activeFilterCount > 0 && (
@@ -704,11 +704,11 @@ export default function ProductsPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-20 bg-white rounded-2xl border border-slate-100"
+            className="text-center py-20 bg-white rounded-2xl border border-ivory-darker"
           >
             <Package className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-            <h3 className="font-semibold text-slate-700 mb-1">No products found</h3>
-            <p className="text-sm text-slate-400 mb-4">
+            <h3 className="font-semibold text-obsidian-700 mb-1">No products found</h3>
+            <p className="text-sm text-obsidian-400 mb-4">
               {search || activeFilterCount > 0
                 ? 'Try adjusting your search or filters'
                 : 'Add your first product to get started'}
@@ -731,16 +731,16 @@ export default function ProductsPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden"
+            className="bg-white rounded-2xl border border-ivory-darker shadow-sm overflow-hidden"
           >
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/50">
+                  <tr className="border-b border-ivory-darker bg-ivory-dark/50">
                     <th className="text-left px-5 py-3">
                       <button
                         onClick={() => toggleSort('name')}
-                        className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wide hover:text-slate-700 transition-colors"
+                        className="flex items-center gap-1.5 text-xs font-semibold text-obsidian-500 uppercase tracking-wide hover:text-obsidian-700 transition-colors"
                       >
                         Product
                         <SortIcon col="name" />
@@ -749,33 +749,33 @@ export default function ProductsPage() {
                     <th className="text-left px-4 py-3">
                       <button
                         onClick={() => toggleSort('category')}
-                        className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wide hover:text-slate-700 transition-colors"
+                        className="flex items-center gap-1.5 text-xs font-semibold text-obsidian-500 uppercase tracking-wide hover:text-obsidian-700 transition-colors"
                       >
                         Category
                         <SortIcon col="category" />
                       </button>
                     </th>
                     <th className="text-left px-4 py-3">
-                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                      <span className="text-xs font-semibold text-obsidian-500 uppercase tracking-wide">
                         Key Ingredients
                       </span>
                     </th>
                     <th className="text-left px-4 py-3">
-                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                      <span className="text-xs font-semibold text-obsidian-500 uppercase tracking-wide">
                         Concerns
                       </span>
                     </th>
                     <th className="text-left px-4 py-3">
                       <button
                         onClick={() => toggleSort('rating')}
-                        className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wide hover:text-slate-700 transition-colors"
+                        className="flex items-center gap-1.5 text-xs font-semibold text-obsidian-500 uppercase tracking-wide hover:text-obsidian-700 transition-colors"
                       >
                         Rating
                         <SortIcon col="rating" />
                       </button>
                     </th>
                     <th className="text-left px-4 py-3">
-                      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+                      <span className="text-xs font-semibold text-obsidian-500 uppercase tracking-wide">
                         In Routine
                       </span>
                     </th>
@@ -796,7 +796,7 @@ export default function ProductsPage() {
                         {/* Product */}
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-ivory-darker flex-shrink-0">
                               {product.imageUrl ? (
                                 <img
                                   src={product.imageUrl}
@@ -813,10 +813,10 @@ export default function ProductsPage() {
                               )}
                             </div>
                             <div className="min-w-0">
-                              <p className="font-semibold text-sm text-slate-800 truncate max-w-40">
+                              <p className="font-semibold text-sm text-obsidian-800 truncate max-w-40">
                                 {product.name}
                               </p>
-                              <p className="text-xs text-slate-400">{product.brand}</p>
+                              <p className="text-xs text-obsidian-400">{product.brand}</p>
                             </div>
                           </div>
                         </td>
@@ -846,7 +846,7 @@ export default function ProductsPage() {
                                 <IngredientBadge key={id} ingredientId={id} isKey={false} />
                               ))}
                             {product.keyIngredients.length > 3 && (
-                              <span className="text-xs text-slate-400">
+                              <span className="text-xs text-obsidian-400">
                                 +{product.keyIngredients.length - 3}
                               </span>
                             )}
@@ -859,13 +859,13 @@ export default function ProductsPage() {
                             {product.concerns.slice(0, 2).map((c) => (
                               <span
                                 key={c}
-                                className="bg-slate-100 text-slate-600 text-xs rounded-full px-2 py-0.5"
+                                className="bg-ivory-darker text-obsidian-600 text-xs rounded-full px-2 py-0.5"
                               >
                                 {concernLabel(c)}
                               </span>
                             ))}
                             {product.concerns.length > 2 && (
-                              <span className="text-xs text-slate-400">
+                              <span className="text-xs text-obsidian-400">
                                 +{product.concerns.length - 2}
                               </span>
                             )}
@@ -877,12 +877,12 @@ export default function ProductsPage() {
                           {product.rating ? (
                             <div className="flex items-center gap-1.5">
                               <StarRating value={product.rating.overall} size="sm" />
-                              <span className="text-xs font-medium text-slate-600">
+                              <span className="text-xs font-medium text-obsidian-600">
                                 {product.rating.overall.toFixed(1)}
                               </span>
                             </div>
                           ) : (
-                            <span className="text-xs text-slate-300 italic">Unrated</span>
+                            <span className="text-xs text-obsidian-300 italic">Unrated</span>
                           )}
                         </td>
 
@@ -893,7 +893,7 @@ export default function ProductsPage() {
                               'text-xs rounded-full px-2.5 py-0.5 font-medium',
                               product.inRoutine
                                 ? 'bg-emerald-100 text-emerald-700'
-                                : 'bg-slate-100 text-slate-500'
+                                : 'bg-ivory-darker text-obsidian-500'
                             )}
                           >
                             {product.inRoutine ? 'Yes' : 'No'}

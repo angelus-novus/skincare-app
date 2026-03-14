@@ -30,34 +30,36 @@ export function getExpiryStatus(days: number | null): 'expired' | 'warning' | 'o
 }
 
 export function evidenceLevelColor(level: EvidenceLevel) {
+  // sage = positive/good evidence, gold = moderate, blush = emerging/limited
   const colors: Record<EvidenceLevel, string> = {
-    strong: 'text-emerald-600 bg-emerald-50',
-    moderate: 'text-blue-600 bg-blue-50',
-    emerging: 'text-amber-600 bg-amber-50',
-    limited: 'text-orange-500 bg-orange-50',
-    anecdotal: 'text-slate-500 bg-slate-100',
+    strong:    'text-sage-700 bg-sage-50 border border-sage-100',
+    moderate:  'text-gold-700 bg-gold-50 border border-gold-100',
+    emerging:  'text-brand-600 bg-brand-50 border border-brand-100',
+    limited:   'text-blush-500 bg-blush-50 border border-blush-100',
+    anecdotal: 'text-obsidian-400 bg-ivory-dark border border-ivory-darker',
   };
   return colors[level];
 }
 
 export function categoryColor(category: ProductCategory) {
+  // All use the unified palette — varied by lightness
   const colors: Record<ProductCategory, string> = {
-    cleanser: 'bg-sky-100 text-sky-700',
-    toner: 'bg-violet-100 text-violet-700',
-    essence: 'bg-pink-100 text-pink-700',
-    serum: 'bg-amber-100 text-amber-700',
-    moisturizer: 'bg-emerald-100 text-emerald-700',
-    'eye-cream': 'bg-indigo-100 text-indigo-700',
-    spf: 'bg-yellow-100 text-yellow-700',
-    mask: 'bg-purple-100 text-purple-700',
-    exfoliant: 'bg-red-100 text-red-700',
-    oil: 'bg-orange-100 text-orange-700',
-    mist: 'bg-cyan-100 text-cyan-700',
-    treatment: 'bg-rose-100 text-rose-700',
-    'lip-care': 'bg-fuchsia-100 text-fuchsia-700',
-    'body-care': 'bg-teal-100 text-teal-700',
+    cleanser:    'bg-gold-50 text-gold-700',
+    toner:       'bg-blush-50 text-blush-500',
+    essence:     'bg-brand-50 text-brand-600',
+    serum:       'bg-gold-100 text-gold-600',
+    moisturizer: 'bg-sage-50 text-sage-700',
+    'eye-cream': 'bg-blush-100 text-blush-500',
+    spf:         'bg-gold-50 text-gold-600',
+    mask:        'bg-brand-100 text-brand-700',
+    exfoliant:   'bg-brand-50 text-brand-500',
+    oil:         'bg-gold-100 text-gold-700',
+    mist:        'bg-sage-50 text-sage-600',
+    treatment:   'bg-brand-100 text-brand-600',
+    'lip-care':  'bg-blush-50 text-blush-500',
+    'body-care': 'bg-sage-100 text-sage-700',
   };
-  return colors[category] || 'bg-slate-100 text-slate-700';
+  return colors[category] || 'bg-ivory-dark text-obsidian-500';
 }
 
 export function concernLabel(concern: SkinConcern) {

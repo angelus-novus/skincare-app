@@ -39,7 +39,7 @@ const CATEGORY_COLORS: Record<ProcedureCategory, string> = {
   microneedling: 'bg-rose-100 text-rose-700',
   'light-therapy': 'bg-yellow-100 text-yellow-700',
   body: 'bg-teal-100 text-teal-700',
-  other: 'bg-slate-100 text-slate-700',
+  other: 'bg-ivory-darker text-obsidian-700',
 };
 
 const CATEGORY_LABELS: Record<ProcedureCategory, string> = {
@@ -466,8 +466,8 @@ function PrePostCarePanel({ procedure, products }: { procedure: Procedure; produ
                       <span className="text-xs">✕</span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="text-xs font-medium text-slate-700 truncate">{product.name}</div>
-                      <div className="text-xs text-slate-500">{product.brand}</div>
+                      <div className="text-xs font-medium text-obsidian-700 truncate">{product.name}</div>
+                      <div className="text-xs text-obsidian-500">{product.brand}</div>
                       <div className="text-xs text-red-600 mt-0.5">Stop {days} days before · {reason}</div>
                     </div>
                     <Badge variant="destructive" className="flex-shrink-0">{days}d before</Badge>
@@ -509,7 +509,7 @@ function PrePostCarePanel({ procedure, products }: { procedure: Procedure; produ
             </div>
             <ul className="space-y-1">
               {config.preNotes.map((note, i) => (
-                <li key={i} className="text-xs text-slate-600 flex items-start gap-2">
+                <li key={i} className="text-xs text-obsidian-600 flex items-start gap-2">
                   <span className="text-violet-400 mt-0.5 flex-shrink-0">•</span>
                   {note}
                 </li>
@@ -565,7 +565,7 @@ function PrePostCarePanel({ procedure, products }: { procedure: Procedure; produ
                   </div>
                   <div>
                     <span className="text-xs font-semibold text-rose-700">{phase.range}: </span>
-                    <span className="text-xs text-slate-600">{phase.instructions}</span>
+                    <span className="text-xs text-obsidian-600">{phase.instructions}</span>
                   </div>
                 </div>
               ))}
@@ -608,7 +608,7 @@ function PrePostCarePanel({ procedure, products }: { procedure: Procedure; produ
                   <div key={product.id} className="flex items-center gap-3 bg-white rounded-lg p-2.5 border border-red-100">
                     <div className="w-8 h-8 rounded-lg flex-shrink-0" style={{ backgroundColor: product.imageColor }} />
                     <div className="min-w-0 flex-1">
-                      <div className="text-xs font-medium text-slate-700 truncate">{product.name}</div>
+                      <div className="text-xs font-medium text-obsidian-700 truncate">{product.name}</div>
                       <div className="text-xs text-red-600">{reason}</div>
                     </div>
                     <Badge variant="destructive">{avoidDays}d wait</Badge>
@@ -626,7 +626,7 @@ function PrePostCarePanel({ procedure, products }: { procedure: Procedure; produ
             </div>
             <ul className="space-y-1">
               {config.postNotes.map((note, i) => (
-                <li key={i} className="text-xs text-slate-600 flex items-start gap-2">
+                <li key={i} className="text-xs text-obsidian-600 flex items-start gap-2">
                   <span className="text-rose-400 mt-0.5 flex-shrink-0">•</span>
                   {note}
                 </li>
@@ -645,7 +645,7 @@ function PrePostCarePanel({ procedure, products }: { procedure: Procedure; produ
                 {missingEssentials.map((item, i) => (
                   <div key={i} className="bg-white rounded-lg p-2.5 border border-amber-100">
                     <div className="text-xs font-semibold text-amber-800">{item.name}</div>
-                    <div className="text-xs text-slate-500 mt-0.5">{item.why}</div>
+                    <div className="text-xs text-obsidian-500 mt-0.5">{item.why}</div>
                     <div className="text-xs text-amber-700 mt-1">
                       <span className="font-medium">Recommended: </span>{item.examples}
                     </div>
@@ -689,10 +689,10 @@ function ProcedureCard({ procedure, products }: { procedure: Procedure; products
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <h3 className="font-semibold text-slate-800">{procedure.name}</h3>
+                <h3 className="font-semibold text-obsidian-800">{procedure.name}</h3>
                 <div className="flex items-center gap-2 mt-0.5">
                   <Badge className={cn('text-xs', colorClass)}>{CATEGORY_LABELS[procedure.category]}</Badge>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                  <span className="text-xs text-obsidian-400 flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     {formatDate(procedure.date)}
                   </span>
@@ -708,32 +708,32 @@ function ProcedureCard({ procedure, products }: { procedure: Procedure; products
         {/* Details grid */}
         <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
           {procedure.provider && (
-            <div className="flex items-center gap-1.5 text-slate-600">
-              <User2 className="w-3 h-3 text-slate-400 flex-shrink-0" />
+            <div className="flex items-center gap-1.5 text-obsidian-600">
+              <User2 className="w-3 h-3 text-obsidian-400 flex-shrink-0" />
               {procedure.provider}
             </div>
           )}
           {procedure.clinic && (
-            <div className="flex items-center gap-1.5 text-slate-600">
-              <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
+            <div className="flex items-center gap-1.5 text-obsidian-600">
+              <MapPin className="w-3 h-3 text-obsidian-400 flex-shrink-0" />
               {procedure.clinic}
             </div>
           )}
           {procedure.cost !== undefined && (
-            <div className="flex items-center gap-1.5 text-slate-600">
-              <DollarSign className="w-3 h-3 text-slate-400 flex-shrink-0" />
+            <div className="flex items-center gap-1.5 text-obsidian-600">
+              <DollarSign className="w-3 h-3 text-obsidian-400 flex-shrink-0" />
               ${procedure.cost.toLocaleString()}
             </div>
           )}
           {procedure.downtime && (
-            <div className="flex items-center gap-1.5 text-slate-600">
-              <Clock className="w-3 h-3 text-slate-400 flex-shrink-0" />
+            <div className="flex items-center gap-1.5 text-obsidian-600">
+              <Clock className="w-3 h-3 text-obsidian-400 flex-shrink-0" />
               {procedure.downtime} downtime
             </div>
           )}
           {procedure.recommendedIntervalMonths && (
-            <div className="flex items-center gap-1.5 text-slate-600 col-span-2">
-              <Calendar className="w-3 h-3 text-slate-400 flex-shrink-0" />
+            <div className="flex items-center gap-1.5 text-obsidian-600 col-span-2">
+              <Calendar className="w-3 h-3 text-obsidian-400 flex-shrink-0" />
               Recommended every {procedure.recommendedIntervalMonths} month{procedure.recommendedIntervalMonths !== 1 ? 's' : ''}
             </div>
           )}
@@ -741,8 +741,8 @@ function ProcedureCard({ procedure, products }: { procedure: Procedure; products
 
         {/* Results */}
         {procedure.results && (
-          <div className="mt-3 text-xs text-slate-600 bg-slate-50 rounded-lg p-2.5 border border-slate-100">
-            <span className="font-medium text-slate-700">Results: </span>{procedure.results}
+          <div className="mt-3 text-xs text-obsidian-600 bg-ivory-dark rounded-lg p-2.5 border border-ivory-darker">
+            <span className="font-medium text-obsidian-700">Results: </span>{procedure.results}
           </div>
         )}
 
@@ -777,12 +777,12 @@ function ProcedureCard({ procedure, products }: { procedure: Procedure; products
                 <Calendar className={cn('w-5 h-5 flex-shrink-0', daysUntilNext < 14 ? 'text-rose-400' : 'text-blue-400')} />
               </div>
             ) : (
-              <div className="rounded-xl px-3.5 py-2.5 flex items-center justify-between bg-slate-50 border border-slate-100">
+              <div className="rounded-xl px-3.5 py-2.5 flex items-center justify-between bg-ivory-dark border border-ivory-darker">
                 <div>
-                  <div className="text-xs font-medium text-slate-600">
+                  <div className="text-xs font-medium text-obsidian-600">
                     Past appointment: {format(parseISO(procedure.nextAppointment), 'MMM d, yyyy')}
                   </div>
-                  <div className="text-xs text-slate-400 mt-0.5">
+                  <div className="text-xs text-obsidian-400 mt-0.5">
                     {Math.abs(daysUntilNext)} days ago
                   </div>
                 </div>
@@ -903,11 +903,11 @@ function LogProcedureModal({
             <Input label="Procedure Name *" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g., Clear + Brilliant Laser" required />
           </div>
           <div>
-            <label className="text-sm font-medium text-slate-700 block mb-1">Category *</label>
+            <label className="text-sm font-medium text-obsidian-700 block mb-1">Category *</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as ProcedureCategory)}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-rose-300"
+              className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 focus:outline-none focus:ring-2 focus:ring-rose-300"
             >
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>{CATEGORY_LABELS[c]}</option>
@@ -922,7 +922,7 @@ function LogProcedureModal({
         </div>
 
         <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700 block">Your Rating</label>
+          <label className="text-sm font-medium text-obsidian-700 block">Your Rating</label>
           <StarRating value={rating} interactive onChange={setRating} size="lg" />
         </div>
 
@@ -936,7 +936,7 @@ function LogProcedureModal({
         </div>
 
         <div>
-          <label className="text-sm font-medium text-slate-700 block mb-2">Skin Concerns Addressed</label>
+          <label className="text-sm font-medium text-obsidian-700 block mb-2">Skin Concerns Addressed</label>
           <div className="flex flex-wrap gap-1.5">
             {SKIN_CONCERNS_LIST.map((c) => (
               <button
@@ -947,7 +947,7 @@ function LogProcedureModal({
                   'text-xs px-2.5 py-1 rounded-full border transition-colors',
                   selectedConcerns.includes(c)
                     ? 'bg-rose-100 border-rose-300 text-rose-700'
-                    : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                    : 'bg-ivory-dark border-ivory-darker text-obsidian-600 hover:bg-ivory-darker'
                 )}
               >
                 {concernLabel(c)}
@@ -999,8 +999,8 @@ export default function ProceduresPage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Procedures</h1>
-          <p className="text-slate-500 mt-1">
+          <h1 className="text-3xl font-bold text-obsidian-800">Procedures</h1>
+          <p className="text-obsidian-500 mt-1">
             {procedures.length} procedures logged · ${totalSpent.toLocaleString()} total invested
           </p>
         </div>
@@ -1028,8 +1028,8 @@ export default function ProceduresPage() {
           <Card key={i}>
             <CardBody className="p-4">
               <div className={cn('text-2xl font-bold', s.color.split(' ')[1])}>{s.value}</div>
-              <div className="text-xs font-medium text-slate-600 mt-0.5">{s.label}</div>
-              <div className="text-xs text-slate-400">{s.sub}</div>
+              <div className="text-xs font-medium text-obsidian-600 mt-0.5">{s.label}</div>
+              <div className="text-xs text-obsidian-400">{s.sub}</div>
             </CardBody>
           </Card>
         ))}
@@ -1040,7 +1040,7 @@ export default function ProceduresPage() {
           {/* Upcoming appointments */}
           {upcoming.length > 0 && (
             <div>
-              <h2 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <h2 className="text-base font-bold text-obsidian-800 mb-3 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-rose-400" />
                 Upcoming Appointments
               </h2>
@@ -1055,8 +1055,8 @@ export default function ProceduresPage() {
                           <Icon className="w-5 h-5" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-medium text-slate-800 text-sm">{p.name}</div>
-                          <div className="text-xs text-slate-500 mt-0.5">
+                          <div className="font-medium text-obsidian-800 text-sm">{p.name}</div>
+                          <div className="text-xs text-obsidian-500 mt-0.5">
                             {format(parseISO(p.nextAppointment!), 'EEEE, MMMM d, yyyy')}
                             {p.clinic && ` · ${p.clinic}`}
                           </div>
@@ -1080,16 +1080,16 @@ export default function ProceduresPage() {
 
           {/* Procedure history */}
           <div>
-            <h2 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-slate-400" />
+            <h2 className="text-base font-bold text-obsidian-800 mb-3 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-obsidian-400" />
               Procedure History
             </h2>
             {sorted.length === 0 ? (
               <Card>
                 <CardBody className="py-12 text-center">
                   <div className="text-4xl mb-3">✨</div>
-                  <div className="text-slate-600 font-medium">No procedures logged yet</div>
-                  <div className="text-slate-400 text-sm mt-1">Log your first procedure to get personalized pre & post care guidance</div>
+                  <div className="text-obsidian-600 font-medium">No procedures logged yet</div>
+                  <div className="text-obsidian-400 text-sm mt-1">Log your first procedure to get personalized pre & post care guidance</div>
                   <Button className="mt-4" onClick={() => setLogOpen(true)}>
                     <Plus className="w-4 h-4" />
                     Log Procedure
@@ -1115,7 +1115,7 @@ export default function ProceduresPage() {
                 <Sparkles className="w-4 h-4 text-rose-400" />
                 Suggested for Your Concerns
               </CardTitle>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-obsidian-400 mt-0.5">
                 Based on: {userProfile.skinConcerns.slice(0, 3).map(concernLabel).join(', ')}
               </p>
             </CardHeader>
@@ -1123,20 +1123,20 @@ export default function ProceduresPage() {
               {suggestions.slice(0, 5).map((s, i) => {
                 const Icon = CATEGORY_ICONS[s.category];
                 return (
-                  <div key={i} className="border border-slate-100 rounded-xl p-3">
+                  <div key={i} className="border border-ivory-darker rounded-xl p-3">
                     <div className="flex items-center gap-2 mb-1.5">
                       <div className={cn('w-6 h-6 rounded-lg flex items-center justify-center', CATEGORY_COLORS[s.category])}>
                         <Icon className="w-3.5 h-3.5" />
                       </div>
-                      <span className="text-sm font-medium text-slate-800">{s.name}</span>
+                      <span className="text-sm font-medium text-obsidian-800">{s.name}</span>
                     </div>
-                    <p className="text-xs text-slate-500 mb-2">{s.description}</p>
+                    <p className="text-xs text-obsidian-500 mb-2">{s.description}</p>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                      <div className="text-slate-500"><span className="text-slate-400">Cost: </span>{s.typicalCost}</div>
-                      <div className="text-slate-500"><span className="text-slate-400">Downtime: </span>{s.downtime}</div>
+                      <div className="text-obsidian-500"><span className="text-obsidian-400">Cost: </span>{s.typicalCost}</div>
+                      <div className="text-obsidian-500"><span className="text-obsidian-400">Downtime: </span>{s.downtime}</div>
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">
-                      <span className="text-slate-400">Frequency: </span>{s.frequency}
+                    <div className="text-xs text-obsidian-500 mt-1">
+                      <span className="text-obsidian-400">Frequency: </span>{s.frequency}
                     </div>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {s.bestFor.filter(c => userProfile.skinConcerns.includes(c as Procedure['concerns'][number])).map((c) => (
@@ -1147,7 +1147,7 @@ export default function ProceduresPage() {
                 );
               })}
               {suggestions.length === 0 && (
-                <p className="text-xs text-slate-400 py-2 text-center">Add skin concerns in your profile to see suggestions</p>
+                <p className="text-xs text-obsidian-400 py-2 text-center">Add skin concerns in your profile to see suggestions</p>
               )}
             </CardBody>
           </Card>
@@ -1175,8 +1175,8 @@ export default function ProceduresPage() {
                         <Icon className="w-3 h-3" />
                       </div>
                       <div>
-                        <span className="font-medium text-slate-700">{CATEGORY_LABELS[cat]}: </span>
-                        <span className="text-slate-500">Stop {rule}</span>
+                        <span className="font-medium text-obsidian-700">{CATEGORY_LABELS[cat]}: </span>
+                        <span className="text-obsidian-500">Stop {rule}</span>
                       </div>
                     </div>
                   );
@@ -1201,10 +1201,10 @@ export default function ProceduresPage() {
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between items-center mb-0.5">
-                        <span className="text-xs font-medium text-slate-700">{CATEGORY_LABELS[cat]}</span>
-                        <span className="text-xs text-slate-400">{count}</span>
+                        <span className="text-xs font-medium text-obsidian-700">{CATEGORY_LABELS[cat]}</span>
+                        <span className="text-xs text-obsidian-400">{count}</span>
                       </div>
-                      <div className="h-1.5 bg-slate-100 rounded-full">
+                      <div className="h-1.5 bg-ivory-darker rounded-full">
                         <div
                           className="h-1.5 bg-rose-400 rounded-full"
                           style={{ width: `${(count / procedures.length) * 100}%` }}

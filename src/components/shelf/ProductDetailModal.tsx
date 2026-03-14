@@ -68,7 +68,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
     moderate: 'bg-blue-100 text-blue-700',
     emerging: 'bg-amber-100 text-amber-700',
     limited: 'bg-orange-100 text-orange-700',
-    anecdotal: 'bg-slate-100 text-slate-600',
+    anecdotal: 'bg-ivory-darker text-obsidian-600',
   };
 
   return (
@@ -76,7 +76,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
       <div className="flex gap-6">
         {/* Left: Product image and quick info */}
         <div className="w-48 flex-shrink-0">
-          <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-slate-50 mb-4 border border-slate-100">
+          <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-ivory-dark mb-4 border border-ivory-darker">
             {product.imageUrl ? (
               <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
             ) : (
@@ -89,20 +89,20 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
           {/* Quick stats */}
           <div className="space-y-2 text-sm">
             {product.price && (
-              <div className="flex items-center gap-2 text-slate-600">
-                <DollarSign className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-2 text-obsidian-600">
+                <DollarSign className="w-3.5 h-3.5 text-obsidian-400" />
                 <span>${product.price}</span>
               </div>
             )}
             {product.size && (
-              <div className="flex items-center gap-2 text-slate-600">
-                <Package className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-2 text-obsidian-600">
+                <Package className="w-3.5 h-3.5 text-obsidian-400" />
                 <span>{product.size}</span>
               </div>
             )}
             {product.purchaseDate && (
-              <div className="flex items-center gap-2 text-slate-600">
-                <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-2 text-obsidian-600">
+                <Calendar className="w-3.5 h-3.5 text-obsidian-400" />
                 <span>Bought {formatDate(product.purchaseDate)}</span>
               </div>
             )}
@@ -110,7 +110,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
               <div className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 ${
                 expiryStatus === 'expired' ? 'bg-red-50 text-red-600' :
                 expiryStatus === 'warning' ? 'bg-amber-50 text-amber-600' :
-                'bg-slate-50 text-slate-600'
+                'bg-ivory-dark text-obsidian-600'
               }`}>
                 <Clock className="w-3.5 h-3.5" />
                 <span className="text-xs font-medium">
@@ -150,12 +150,12 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                 <span className={`inline-block text-xs rounded-full px-2 py-0.5 font-medium mb-1 ${categoryColor(product.category)}`}>
                   {categoryLabel(product.category)}
                 </span>
-                <h2 className="text-xl font-bold text-slate-800">{product.name}</h2>
-                <p className="text-slate-500 text-sm mt-0.5">{product.brand}</p>
+                <h2 className="text-xl font-bold text-obsidian-800">{product.name}</h2>
+                <p className="text-obsidian-500 text-sm mt-0.5">{product.brand}</p>
               </div>
               {product.rating && (
                 <div className="text-right flex-shrink-0">
-                  <div className="text-2xl font-bold text-slate-800">{product.rating.overall.toFixed(1)}</div>
+                  <div className="text-2xl font-bold text-obsidian-800">{product.rating.overall.toFixed(1)}</div>
                   <StarRating value={product.rating.overall} size="sm" />
                 </div>
               )}
@@ -172,13 +172,13 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-1 border-b border-slate-100 mb-4">
+          <div className="flex gap-1 border-b border-ivory-darker mb-4">
             {(['overview', 'ingredients', 'review'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
                 className={`px-4 py-2 text-sm font-medium capitalize rounded-t-lg transition-colors ${
-                  tab === t ? 'text-rose-600 border-b-2 border-rose-500' : 'text-slate-500 hover:text-slate-700'
+                  tab === t ? 'text-rose-600 border-b-2 border-rose-500' : 'text-obsidian-500 hover:text-obsidian-700'
                 }`}
               >
                 {t}
@@ -192,7 +192,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
               {product.rating && !editing && (
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-sm font-semibold text-slate-700">Rating Breakdown</h4>
+                    <h4 className="text-sm font-semibold text-obsidian-700">Rating Breakdown</h4>
                     <button onClick={() => setEditing(true)} className="text-xs text-rose-500 flex items-center gap-1 hover:text-rose-600">
                       <Edit2 className="w-3 h-3" /> Edit Review
                     </button>
@@ -204,9 +204,9 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                       { label: 'Efficacy', value: product.rating.efficacy },
                       { label: 'Value', value: product.rating.value },
                     ].map(({ label, value }) => (
-                      <div key={label} className="bg-slate-50 rounded-xl p-2.5 text-center">
-                        <div className="text-lg font-bold text-slate-800">{value.toFixed(1)}</div>
-                        <div className="text-xs text-slate-500">{label}</div>
+                      <div key={label} className="bg-ivory-dark rounded-xl p-2.5 text-center">
+                        <div className="text-lg font-bold text-obsidian-800">{value.toFixed(1)}</div>
+                        <div className="text-xs text-obsidian-500">{label}</div>
                         <StarRating value={value} size="sm" className="justify-center mt-1" />
                       </div>
                     ))}
@@ -214,7 +214,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                       {product.rating.wouldRepurchase
                         ? <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
                         : <AlertTriangle className="w-5 h-5 text-red-400 mx-auto" />}
-                      <div className="text-xs text-slate-600 mt-1">
+                      <div className="text-xs text-obsidian-600 mt-1">
                         {product.rating.wouldRepurchase ? 'Would repurchase' : 'Won\'t repurchase'}
                       </div>
                     </div>
@@ -257,7 +257,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                     </div>
                   )}
                   {product.rating.notes && (
-                    <div className="mt-3 bg-slate-50 rounded-xl p-3 text-sm text-slate-600 italic">
+                    <div className="mt-3 bg-ivory-dark rounded-xl p-3 text-sm text-obsidian-600 italic">
                       "{product.rating.notes}"
                     </div>
                   )}
@@ -265,9 +265,9 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
               )}
 
               {!product.rating && !editing && (
-                <div className="text-center py-8 bg-slate-50 rounded-2xl">
+                <div className="text-center py-8 bg-ivory-dark rounded-2xl">
                   <Star className="w-8 h-8 text-slate-200 mx-auto mb-2" />
-                  <p className="text-slate-500 text-sm mb-3">No review yet</p>
+                  <p className="text-obsidian-500 text-sm mb-3">No review yet</p>
                   <Button size="sm" onClick={() => setEditing(true)}>Add Your Review</Button>
                 </div>
               )}
@@ -276,22 +276,22 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
 
           {tab === 'ingredients' && (
             <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-slate-700">Key Active Ingredients</h4>
+              <h4 className="text-sm font-semibold text-obsidian-700">Key Active Ingredients</h4>
               {keyIngredients.map((ing) => (
                 <div key={ing.id} className="bg-rose-50/50 border border-rose-100 rounded-xl p-3">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="font-semibold text-sm text-slate-800">{ing.name}</div>
-                      <div className="text-xs text-slate-500 mt-0.5">{ing.inci}</div>
+                      <div className="font-semibold text-sm text-obsidian-800">{ing.name}</div>
+                      <div className="text-xs text-obsidian-500 mt-0.5">{ing.inci}</div>
                     </div>
                     <span className={`text-xs rounded-full px-2 py-0.5 font-medium flex-shrink-0 ${evidenceColors[ing.evidenceLevel]}`}>
                       {ing.evidenceLevel} evidence
                     </span>
                   </div>
-                  <p className="text-xs text-slate-600 mt-2">{ing.whatItDoes}</p>
+                  <p className="text-xs text-obsidian-600 mt-2">{ing.whatItDoes}</p>
                   <div className="flex flex-wrap gap-1 mt-2">
                     {ing.benefits.slice(0, 4).map((b) => (
-                      <span key={b} className="bg-white text-slate-600 text-xs rounded-full px-2 py-0.5 border border-rose-100">{b}</span>
+                      <span key={b} className="bg-white text-obsidian-600 text-xs rounded-full px-2 py-0.5 border border-rose-100">{b}</span>
                     ))}
                   </div>
                 </div>
@@ -299,16 +299,16 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
 
               {productIngredients.filter(i => !product.keyIngredients.includes(i.id)).length > 0 && (
                 <>
-                  <h4 className="text-sm font-semibold text-slate-700 mt-4">Other Tracked Ingredients</h4>
+                  <h4 className="text-sm font-semibold text-obsidian-700 mt-4">Other Tracked Ingredients</h4>
                   {productIngredients.filter(i => !product.keyIngredients.includes(i.id)).map((ing) => (
-                    <div key={ing.id} className="bg-slate-50 rounded-xl p-3">
+                    <div key={ing.id} className="bg-ivory-dark rounded-xl p-3">
                       <div className="flex items-center justify-between">
-                        <div className="font-medium text-sm text-slate-700">{ing.name}</div>
+                        <div className="font-medium text-sm text-obsidian-700">{ing.name}</div>
                         <span className={`text-xs rounded-full px-2 py-0.5 font-medium ${evidenceColors[ing.evidenceLevel]}`}>
                           {ing.evidenceLevel}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-1">{ing.whatItDoes}</p>
+                      <p className="text-xs text-obsidian-500 mt-1">{ing.whatItDoes}</p>
                     </div>
                   ))}
                 </>
@@ -326,7 +326,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                   { label: 'Value for Money', field: 'value' as const },
                 ].map(({ label, field }) => (
                   <div key={field}>
-                    <label className="text-xs font-medium text-slate-600 block mb-1">{label}</label>
+                    <label className="text-xs font-medium text-obsidian-600 block mb-1">{label}</label>
                     <StarRating
                       value={draft[field]}
                       interactive
@@ -346,7 +346,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
 
               {/* Pros */}
               <div>
-                <label className="text-xs font-medium text-slate-600 block mb-1">Pros</label>
+                <label className="text-xs font-medium text-obsidian-600 block mb-1">Pros</label>
                 <div className="flex gap-2">
                   <Input
                     placeholder="Add a pro..."
@@ -368,7 +368,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
 
               {/* Cons */}
               <div>
-                <label className="text-xs font-medium text-slate-600 block mb-1">Cons</label>
+                <label className="text-xs font-medium text-obsidian-600 block mb-1">Cons</label>
                 <div className="flex gap-2">
                   <Input
                     placeholder="Add a con..."
@@ -390,7 +390,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
 
               {/* Adverse reactions */}
               <div>
-                <label className="text-xs font-medium text-slate-600 block mb-1">Adverse Reactions</label>
+                <label className="text-xs font-medium text-obsidian-600 block mb-1">Adverse Reactions</label>
                 <div className="flex gap-2">
                   <Input
                     placeholder="e.g. redness, breakout..."
@@ -418,7 +418,7 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
                     onChange={(e) => setDraft((d) => ({ ...d, wouldRepurchase: e.target.checked }))}
                     className="w-4 h-4 accent-rose-500"
                   />
-                  <span className="text-sm text-slate-700">Would repurchase</span>
+                  <span className="text-sm text-obsidian-700">Would repurchase</span>
                 </label>
               </div>
 

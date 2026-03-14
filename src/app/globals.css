@@ -1,67 +1,187 @@
 @import "tailwindcss";
 
+@theme {
+  /* ── Fonts ── */
+  --font-display: var(--font-display), "Georgia", serif;
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+
+  /* ── Cognac (primary brand accent) ── */
+  --color-brand-50:  #FBF5EF;
+  --color-brand-100: #F5E6D4;
+  --color-brand-200: #EACBAA;
+  --color-brand-300: #D9A070;
+  --color-brand-400: #C97E48;
+  --color-brand-500: #B5622A;
+  --color-brand-600: #9E5224;
+  --color-brand-700: #86421C;
+  --color-brand-800: #6E3416;
+  --color-brand-900: #56270F;
+
+  /* ── Champagne Gold (secondary) ── */
+  --color-gold-50:  #FBF8EE;
+  --color-gold-100: #F5EDCF;
+  --color-gold-200: #ECD99E;
+  --color-gold-300: #DEC46C;
+  --color-gold-400: #D4B46A;
+  --color-gold-500: #C9A96E;
+  --color-gold-600: #B8923A;
+  --color-gold-700: #9A7A2E;
+
+  /* ── Powder Blush (tertiary — soft fills) ── */
+  --color-blush-50:  #FDF6F3;
+  --color-blush-100: #F8EAE4;
+  --color-blush-200: #F0D4C8;
+  --color-blush-300: #E8C4B8;
+  --color-blush-400: #DCAA98;
+  --color-blush-500: #CC8E78;
+
+  /* ── Dusty Sage (positive indicators only) ── */
+  --color-sage-50:  #EEF5F2;
+  --color-sage-100: #D6EAE3;
+  --color-sage-200: #B0D2C7;
+  --color-sage-300: #8EBDAF;
+  --color-sage-400: #7AAE9E;
+  --color-sage-500: #7A9E8E;
+  --color-sage-600: #688C7C;
+  --color-sage-700: #567A6A;
+
+  /* ── Obsidian (sidebar, dark text) ── */
+  --color-obsidian-50:  #F4F2F0;
+  --color-obsidian-100: #E2DFDB;
+  --color-obsidian-200: #C4BEB7;
+  --color-obsidian-300: #A09790;
+  --color-obsidian-400: #7D7068;
+  --color-obsidian-500: #5A5048;
+  --color-obsidian-600: #3D3630;
+  --color-obsidian-700: #2A2420;
+  --color-obsidian-800: #1C1917;
+  --color-obsidian-900: #110F0D;
+
+  /* ── Ivory (backgrounds) ── */
+  --color-ivory:        #FAF7F2;
+  --color-ivory-dark:   #F2EDE4;
+  --color-ivory-darker: #E8E0D5;
+
+  /* ── Override Tailwind defaults to match palette ── */
+  /* rose → brand (cognac) */
+  --color-rose-50:  var(--color-brand-50);
+  --color-rose-100: var(--color-brand-100);
+  --color-rose-200: var(--color-brand-200);
+  --color-rose-300: var(--color-brand-300);
+  --color-rose-400: var(--color-brand-400);
+  --color-rose-500: var(--color-brand-500);
+  --color-rose-600: var(--color-brand-600);
+  --color-rose-700: var(--color-brand-700);
+
+  /* amber → gold (champagne) */
+  --color-amber-50:  var(--color-gold-50);
+  --color-amber-100: var(--color-gold-100);
+  --color-amber-200: var(--color-gold-200);
+  --color-amber-300: var(--color-gold-300);
+  --color-amber-400: var(--color-gold-400);
+  --color-amber-500: var(--color-gold-500);
+  --color-amber-600: var(--color-gold-600);
+
+  /* emerald → sage (positive signals) */
+  --color-emerald-50:  var(--color-sage-50);
+  --color-emerald-100: var(--color-sage-100);
+  --color-emerald-200: var(--color-sage-200);
+  --color-emerald-500: var(--color-sage-500);
+  --color-emerald-600: var(--color-sage-600);
+  --color-emerald-700: var(--color-sage-700);
+
+  /* pink → blush */
+  --color-pink-50:  var(--color-blush-50);
+  --color-pink-100: var(--color-blush-100);
+  --color-pink-200: var(--color-blush-200);
+  --color-pink-300: var(--color-blush-300);
+  --color-pink-400: var(--color-blush-400);
+  --color-pink-500: var(--color-blush-500);
+}
+
+/* ── Base styles ── */
 :root {
-  --background: #f8fafc;
-  --foreground: #1e293b;
+  --background: #FAF7F2;
+  --foreground: #1C1917;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: system-ui, -apple-system, sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: 0.01em;
+}
+
+/* Editorial heading style */
+.heading-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* ── Scrollbar ── */
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: #e2e8f0 transparent;
+  scrollbar-color: #E8E0D5 transparent;
 }
+.scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: #E8E0D5; border-radius: 2px; }
 
-.scrollbar-thin::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-.scrollbar-thin::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: #e2e8f0;
-  border-radius: 2px;
-}
-
-/* Shelf wood texture */
+/* ── Shelf board (warm walnut tone to match new palette) ── */
 .shelf-board {
   background: linear-gradient(
     180deg,
-    #c8956b 0%,
-    #b8845a 40%,
-    #a8744a 60%,
-    #c8956b 100%
+    #8B6340 0%,
+    #7A5530 40%,
+    #6B4828 60%,
+    #8B6340 100%
   );
   box-shadow:
-    0 4px 12px rgba(0,0,0,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.2),
+    0 4px 12px rgba(28, 25, 23, 0.18),
+    inset 0 1px 0 rgba(255,255,255,0.15),
     inset 0 -1px 0 rgba(0,0,0,0.1);
 }
 
-/* Gradient text */
+/* ── Gradient text ── */
 .gradient-text {
-  background: linear-gradient(135deg, #f43f5e, #ec4899);
+  background: linear-gradient(135deg, #B5622A, #C9A96E);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* ── Luxury divider ── */
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #C9A96E;
+  font-family: var(--font-display);
+  font-style: italic;
+}
+.divider-ornament::before,
+.divider-ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #C9A96E, transparent);
+}
+
+/* ── Page background tint ── */
+.bg-ivory { background-color: #FAF7F2; }
+.bg-ivory-dark { background-color: #F2EDE4; }
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
 }
-
-.float-animation {
-  animation: float 3s ease-in-out infinite;
-}
+.float-animation { animation: float 3s ease-in-out infinite; }

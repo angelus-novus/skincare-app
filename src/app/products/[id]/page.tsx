@@ -56,13 +56,13 @@ export default function ProductDetailPage() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="min-h-screen bg-slate-50 flex items-center justify-center"
+        className="min-h-screen bg-ivory-dark flex items-center justify-center"
       >
         <Card className="max-w-md w-full mx-4">
           <CardBody className="text-center py-12">
             <Package className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-slate-800 mb-2">Product Not Found</h2>
-            <p className="text-slate-500 text-sm mb-6">
+            <h2 className="text-xl font-bold text-obsidian-800 mb-2">Product Not Found</h2>
+            <p className="text-obsidian-500 text-sm mb-6">
               This product may have been removed or the link is invalid.
             </p>
             <Link href="/products">
@@ -118,14 +118,14 @@ export default function ProductDetailPage() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="min-h-screen bg-slate-50"
+      className="min-h-screen bg-ivory-dark"
     >
       {/* Top bar */}
-      <div className="bg-white border-b border-slate-100 px-8 py-4">
+      <div className="bg-white border-b border-ivory-darker px-8 py-4">
         <div className="flex items-center justify-between max-w-5xl mx-auto">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-rose-500 transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-obsidian-500 hover:text-rose-500 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Products
@@ -195,29 +195,29 @@ export default function ProductDetailPage() {
             <Card>
               <CardBody className="space-y-3">
                 {product.price !== undefined && (
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
-                    <DollarSign className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  <div className="flex items-center gap-3 text-sm text-obsidian-600">
+                    <DollarSign className="w-4 h-4 text-obsidian-400 flex-shrink-0" />
                     <span className="font-medium">${product.price.toFixed(2)}</span>
                     {product.size && (
-                      <span className="text-slate-400">/ {product.size}</span>
+                      <span className="text-obsidian-400">/ {product.size}</span>
                     )}
                   </div>
                 )}
                 {!product.price && product.size && (
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
-                    <Package className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  <div className="flex items-center gap-3 text-sm text-obsidian-600">
+                    <Package className="w-4 h-4 text-obsidian-400 flex-shrink-0" />
                     <span>{product.size}</span>
                   </div>
                 )}
                 {product.purchaseDate && (
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
-                    <Calendar className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  <div className="flex items-center gap-3 text-sm text-obsidian-600">
+                    <Calendar className="w-4 h-4 text-obsidian-400 flex-shrink-0" />
                     <span>Purchased {formatDate(product.purchaseDate)}</span>
                   </div>
                 )}
                 {product.openedDate && (
-                  <div className="flex items-center gap-3 text-sm text-slate-600">
-                    <Calendar className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  <div className="flex items-center gap-3 text-sm text-obsidian-600">
+                    <Calendar className="w-4 h-4 text-obsidian-400 flex-shrink-0" />
                     <span>Opened {formatDate(product.openedDate)}</span>
                   </div>
                 )}
@@ -241,8 +241,8 @@ export default function ProductDetailPage() {
                   </div>
                 )}
                 {product.paoMonths && (
-                  <div className="flex items-center gap-3 text-sm text-slate-500">
-                    <Clock className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                  <div className="flex items-center gap-3 text-sm text-obsidian-500">
+                    <Clock className="w-4 h-4 text-obsidian-400 flex-shrink-0" />
                     <span>PAO: {product.paoMonths} months</span>
                   </div>
                 )}
@@ -261,7 +261,7 @@ export default function ProductDetailPage() {
                   </a>
                 )}
 
-                <div className="pt-2 border-t border-slate-100">
+                <div className="pt-2 border-t border-ivory-darker">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -285,8 +285,8 @@ export default function ProductDetailPage() {
           >
             {/* Product header */}
             <div>
-              <h1 className="text-2xl font-bold text-slate-800">{product.name}</h1>
-              <p className="text-slate-500 mt-1">{product.brand}</p>
+              <h1 className="text-2xl font-bold text-obsidian-800">{product.name}</h1>
+              <p className="text-obsidian-500 mt-1">{product.brand}</p>
 
               {/* Concerns & tags */}
               <div className="flex flex-wrap gap-1.5 mt-4">
@@ -307,7 +307,7 @@ export default function ProductDetailPage() {
                 {product.rating && !editing && (
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-slate-700 flex items-center gap-2">
+                      <h3 className="font-semibold text-obsidian-700 flex items-center gap-2">
                         <Star className="w-4 h-4 text-amber-400" />
                         Your Review
                       </h3>
@@ -319,12 +319,12 @@ export default function ProductDetailPage() {
 
                     {/* Overall rating large */}
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="text-4xl font-bold text-slate-800">
+                      <div className="text-4xl font-bold text-obsidian-800">
                         {product.rating.overall.toFixed(1)}
                       </div>
                       <div>
                         <StarRating value={product.rating.overall} size="lg" />
-                        <p className="text-xs text-slate-400 mt-1">
+                        <p className="text-xs text-obsidian-400 mt-1">
                           Reviewed {formatDate(product.rating.reviewDate)}
                         </p>
                       </div>
@@ -338,9 +338,9 @@ export default function ProductDetailPage() {
                         { label: 'Efficacy', value: product.rating.efficacy },
                         { label: 'Value', value: product.rating.value },
                       ].map(({ label, value }) => (
-                        <div key={label} className="bg-slate-50 rounded-xl p-3 text-center">
-                          <div className="text-lg font-bold text-slate-800">{value.toFixed(1)}</div>
-                          <div className="text-xs text-slate-500 mb-1">{label}</div>
+                        <div key={label} className="bg-ivory-dark rounded-xl p-3 text-center">
+                          <div className="text-lg font-bold text-obsidian-800">{value.toFixed(1)}</div>
+                          <div className="text-xs text-obsidian-500 mb-1">{label}</div>
                           <StarRating value={value} size="sm" className="justify-center" />
                         </div>
                       ))}
@@ -358,7 +358,7 @@ export default function ProductDetailPage() {
                       ) : (
                         <AlertTriangle className="w-5 h-5 text-red-400" />
                       )}
-                      <span className="text-sm font-medium text-slate-700">
+                      <span className="text-sm font-medium text-obsidian-700">
                         {product.rating.wouldRepurchase ? 'Would repurchase' : 'Would not repurchase'}
                       </span>
                     </div>
@@ -416,7 +416,7 @@ export default function ProductDetailPage() {
 
                     {/* Notes */}
                     {product.rating.notes && (
-                      <div className="bg-slate-50 rounded-xl p-4 text-sm text-slate-600 italic">
+                      <div className="bg-ivory-dark rounded-xl p-4 text-sm text-obsidian-600 italic">
                         &ldquo;{product.rating.notes}&rdquo;
                       </div>
                     )}
@@ -427,7 +427,7 @@ export default function ProductDetailPage() {
                 {!product.rating && !editing && (
                   <div className="text-center py-10">
                     <Star className="w-10 h-10 text-slate-200 mx-auto mb-3" />
-                    <p className="text-slate-500 mb-4">You haven&apos;t reviewed this product yet</p>
+                    <p className="text-obsidian-500 mb-4">You haven&apos;t reviewed this product yet</p>
                     <Button onClick={startEditing}>
                       <Edit2 className="w-4 h-4" />
                       Write a Review
@@ -442,7 +442,7 @@ export default function ProductDetailPage() {
                     animate={{ opacity: 1 }}
                     className="space-y-5"
                   >
-                    <h3 className="font-semibold text-slate-700">
+                    <h3 className="font-semibold text-obsidian-700">
                       {product.rating ? 'Edit Your Review' : 'Write Your Review'}
                     </h3>
 
@@ -454,7 +454,7 @@ export default function ProductDetailPage() {
                         { label: 'Value for Money', field: 'value' as const },
                       ].map(({ label, field }) => (
                         <div key={field}>
-                          <label className="text-xs font-medium text-slate-600 block mb-1">{label}</label>
+                          <label className="text-xs font-medium text-obsidian-600 block mb-1">{label}</label>
                           <StarRating
                             value={draft[field]}
                             interactive
@@ -474,7 +474,7 @@ export default function ProductDetailPage() {
 
                     {/* Pros */}
                     <div>
-                      <label className="text-xs font-medium text-slate-600 block mb-1">Pros</label>
+                      <label className="text-xs font-medium text-obsidian-600 block mb-1">Pros</label>
                       <div className="flex gap-2">
                         <Input
                           placeholder="Add a pro..."
@@ -496,7 +496,7 @@ export default function ProductDetailPage() {
 
                     {/* Cons */}
                     <div>
-                      <label className="text-xs font-medium text-slate-600 block mb-1">Cons</label>
+                      <label className="text-xs font-medium text-obsidian-600 block mb-1">Cons</label>
                       <div className="flex gap-2">
                         <Input
                           placeholder="Add a con..."
@@ -518,7 +518,7 @@ export default function ProductDetailPage() {
 
                     {/* Adverse reactions */}
                     <div>
-                      <label className="text-xs font-medium text-slate-600 block mb-1">Adverse Reactions</label>
+                      <label className="text-xs font-medium text-obsidian-600 block mb-1">Adverse Reactions</label>
                       <div className="flex gap-2">
                         <Input
                           placeholder="e.g. redness, breakout..."
@@ -545,7 +545,7 @@ export default function ProductDetailPage() {
                         onChange={(e) => setDraft((d) => ({ ...d, wouldRepurchase: e.target.checked }))}
                         className="w-4 h-4 accent-rose-500"
                       />
-                      <span className="text-sm text-slate-700">Would repurchase</span>
+                      <span className="text-sm text-obsidian-700">Would repurchase</span>
                     </label>
 
                     <div className="flex gap-2 justify-end pt-2">
@@ -563,17 +563,17 @@ export default function ProductDetailPage() {
             {/* ── Ingredients Section ── */}
             <Card>
               <CardBody>
-                <h3 className="font-semibold text-slate-700 flex items-center gap-2 mb-4">
+                <h3 className="font-semibold text-obsidian-700 flex items-center gap-2 mb-4">
                   <FlaskConical className="w-4 h-4 text-rose-400" />
                   Ingredients
-                  <span className="text-xs text-slate-400 font-normal ml-1">
+                  <span className="text-xs text-obsidian-400 font-normal ml-1">
                     {productIngredients.length} tracked
                   </span>
                 </h3>
 
                 {keyIngredients.length > 0 && (
                   <div className="mb-4">
-                    <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2 flex items-center gap-1">
+                    <h4 className="text-xs font-semibold text-obsidian-500 uppercase tracking-wide mb-2 flex items-center gap-1">
                       <Sparkles className="w-3 h-3 text-rose-400" />
                       Key Ingredients
                     </h4>
@@ -586,10 +586,10 @@ export default function ProductDetailPage() {
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div>
-                              <div className="font-semibold text-sm text-slate-800 group-hover:text-rose-700 transition-colors">
+                              <div className="font-semibold text-sm text-obsidian-800 group-hover:text-rose-700 transition-colors">
                                 {ing.name}
                               </div>
-                              <div className="text-xs text-slate-500 mt-0.5">{ing.inci}</div>
+                              <div className="text-xs text-obsidian-500 mt-0.5">{ing.inci}</div>
                             </div>
                             <span
                               className={cn(
@@ -600,11 +600,11 @@ export default function ProductDetailPage() {
                               {ing.evidenceLevel} evidence
                             </span>
                           </div>
-                          <p className="text-xs text-slate-600 mt-2">{ing.whatItDoes}</p>
+                          <p className="text-xs text-obsidian-600 mt-2">{ing.whatItDoes}</p>
                           {ing.benefits.length > 0 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                               {ing.benefits.slice(0, 4).map((b) => (
-                                <span key={b} className="bg-white text-slate-600 text-xs rounded-full px-2 py-0.5 border border-rose-100">
+                                <span key={b} className="bg-white text-obsidian-600 text-xs rounded-full px-2 py-0.5 border border-rose-100">
                                   {b}
                                 </span>
                               ))}
@@ -619,7 +619,7 @@ export default function ProductDetailPage() {
                 {otherIngredients.length > 0 && (
                   <div>
                     {keyIngredients.length > 0 && (
-                      <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                      <h4 className="text-xs font-semibold text-obsidian-500 uppercase tracking-wide mb-2">
                         Other Tracked Ingredients
                       </h4>
                     )}
@@ -628,10 +628,10 @@ export default function ProductDetailPage() {
                         <Link
                           key={ing.id}
                           href={`/ingredients/${ing.id}`}
-                          className="block bg-slate-50 rounded-xl p-3 hover:bg-slate-100 transition-colors group"
+                          className="block bg-ivory-dark rounded-xl p-3 hover:bg-ivory-darker transition-colors group"
                         >
                           <div className="flex items-center justify-between">
-                            <div className="font-medium text-sm text-slate-700 group-hover:text-rose-600 transition-colors">
+                            <div className="font-medium text-sm text-obsidian-700 group-hover:text-rose-600 transition-colors">
                               {ing.name}
                             </div>
                             <span
@@ -643,7 +643,7 @@ export default function ProductDetailPage() {
                               {ing.evidenceLevel}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-500 mt-1">{ing.whatItDoes}</p>
+                          <p className="text-xs text-obsidian-500 mt-1">{ing.whatItDoes}</p>
                         </Link>
                       ))}
                     </div>
@@ -653,7 +653,7 @@ export default function ProductDetailPage() {
                 {productIngredients.length === 0 && (
                   <div className="text-center py-6">
                     <FlaskConical className="w-8 h-8 text-slate-200 mx-auto mb-2" />
-                    <p className="text-sm text-slate-400">No tracked ingredients</p>
+                    <p className="text-sm text-obsidian-400">No tracked ingredients</p>
                   </div>
                 )}
               </CardBody>
@@ -671,7 +671,7 @@ export default function ProductDetailPage() {
         size="sm"
       >
         <div className="space-y-4">
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-obsidian-600">
             Are you sure you want to delete <strong>{product.name}</strong> by {product.brand}?
             This will permanently remove it from your shelf.
           </p>

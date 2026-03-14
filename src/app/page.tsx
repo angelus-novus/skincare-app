@@ -5,11 +5,14 @@ import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar } from 'lucide-
 import { useProducts, useUserProfile, useProcedures } from '@/lib/store';
 import { ProductBottle } from '@/components/shelf/ProductBottle';
 import { ProductDetailModal } from '@/components/shelf/ProductDetailModal';
+import { AddProductModal } from '@/components/products/AddProductModal';
 import type { Product, ProductCategory } from '@/lib/types';
 import { categoryLabel, categoryColor, daysUntilExpiry, getExpiryStatus, concernLabel } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardBody } from '@/components/ui/card';
+import { BarcodeScanner } from '@/components/products/BarcodeScanner';
+import { ConflictBanner } from '@/components/shelf/ConflictBanner';
 import { addMonths, differenceInDays, parseISO, format } from 'date-fns';
 
 function ShelfSection({ category, products, onProductClick }: {
@@ -74,6 +77,7 @@ export default function HomePage() {
   const profile = useUserProfile();
   const procedures = useProcedures();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const ratedProducts = products.filter((p) => p.rating);
   const avgRating = ratedProducts.length
@@ -125,7 +129,7 @@ export default function HomePage() {
             <Sparkles className="w-4 h-4 text-rose-400" />
             AI Insights
           </Button>
-          <Button size="sm">
+          <Button size="sm" onClick={() => setShowAddModal(true)}>
             <Plus className="w-4 h-4" />
             Add Product
           </Button>
@@ -171,6 +175,9 @@ export default function HomePage() {
         <StatCard label="Procedures" value={procedures.length} sub={upcomingProcedures.length > 0 ? `${upcomingProcedures[0].name} in ${upcomingProcedures[0].daysUntil}d` : 'No upcoming'} icon={Calendar} color="bg-purple-50 text-purple-500" />
         <StatCard label="Concerns" value={profile.skinConcerns.length} sub={profile.skinConcerns.slice(0, 2).map(concernLabel).join(', ')} icon={Sparkles} color="bg-emerald-50 text-emerald-500" />
       </div>
+
+      {/* Routine Conflict Warnings */}
+      <ConflictBanner />
 
       {/* The Shelf */}
       <div className="mb-8">
@@ -261,6 +268,13 @@ export default function HomePage() {
           onClose={() => setSelectedProduct(null)}
         />
       )}
+
+      <AddProductModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+      />
+
+      <BarcodeScanner />
     </div>
   );
 }

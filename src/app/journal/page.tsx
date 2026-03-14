@@ -28,6 +28,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Modal } from '@/components/ui/modal';
 import { Input, Textarea } from '@/components/ui/input';
+import { PhotoUpload } from '@/components/ui/photo-upload';
 import type { JournalEntry, SkinConcern } from '@/lib/types';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -94,6 +95,7 @@ function AddEntryModal({
   const [weather, setWeather] = useState(editEntry?.environment?.weather ?? '');
   const [stress, setStress] = useState<'low' | 'medium' | 'high'>(editEntry?.environment?.stress ?? 'low');
   const [sleep, setSleep] = useState<string>(String(editEntry?.environment?.sleep ?? '7'));
+  const [photoUrl, setPhotoUrl] = useState<string | undefined>(editEntry?.imageUrl);
 
   const sliderColor = () => {
     if (skinCondition <= 4) return '#ef4444';
@@ -118,6 +120,7 @@ function AddEntryModal({
     const entry: JournalEntry = {
       id: editEntry?.id ?? `je-${Date.now()}`,
       date,
+      imageUrl: photoUrl,
       mood,
       skinCondition,
       notes: notes || undefined,
@@ -307,12 +310,13 @@ function AddEntryModal({
           </div>
         </div>
 
-        {/* Photo Placeholder */}
-        <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center text-slate-400 hover:border-rose-300 hover:text-rose-400 transition-colors cursor-pointer">
-          <Camera className="w-8 h-8 mx-auto mb-2" />
-          <p className="text-sm font-medium">Add Photo</p>
-          <p className="text-xs mt-0.5">Photo upload coming soon</p>
-        </div>
+        {/* Photo Upload */}
+        <PhotoUpload
+          value={photoUrl}
+          onChange={setPhotoUrl}
+          size="lg"
+          label="Skin Photo"
+        />
 
         <div className="flex gap-3 pt-2">
           <Button variant="outline" onClick={onClose} className="flex-1">

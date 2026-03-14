@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Home, Package, Beaker, Sparkles, Syringe,
-  BookOpen, Sun, Settings, Gem, Heart, Menu, X,
+  BookOpen, Sun, Settings, Gem, Heart, Menu, X, FileText, Shield,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUserProfile } from '@/lib/store';
@@ -18,6 +18,7 @@ const navItems = [
   { href: '/procedures', label: 'Procedures', icon: Syringe },
   { href: '/wishlist', label: 'Wishlist', icon: Heart },
   { href: '/journal', label: 'Skin Journal', icon: BookOpen },
+  { href: '/articles', label: 'Articles', icon: FileText },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
@@ -174,6 +175,26 @@ export function Sidebar() {
             );
           })}
         </nav>
+
+        {/* Admin link */}
+        <div className="px-3 pb-2">
+          <Link
+            href="/admin"
+            className={cn(
+              'flex items-center gap-3 px-3 py-2 rounded-xl text-xs transition-all',
+              pathname.startsWith('/admin') ? 'font-medium' : 'hover:opacity-80'
+            )}
+            style={pathname.startsWith('/admin') ? {
+              backgroundColor: 'rgba(181,98,42,0.18)',
+              color: '#C9A96E',
+            } : {
+              color: 'rgba(250,247,242,0.3)',
+            }}
+          >
+            <Shield className="w-3.5 h-3.5 flex-shrink-0" style={{ color: pathname.startsWith('/admin') ? '#C9A96E' : 'rgba(250,247,242,0.2)' }} />
+            Admin
+          </Link>
+        </div>
 
         {/* Thin gold rule */}
         <div className="mx-6" style={{ height: '1px', background: 'rgba(201,169,110,0.15)' }} />

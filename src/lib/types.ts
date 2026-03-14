@@ -177,6 +177,19 @@ export interface UserProfile {
   location?: string;
 }
 
+export interface Article {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage?: string;
+  publishedAt?: string;
+  updatedAt: string;
+  tags: string[];
+  published: boolean;
+}
+
 export interface RoutineStep {
   productId: string;
   order: number;

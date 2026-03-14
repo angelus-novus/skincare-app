@@ -11,6 +11,7 @@ import type {
   RoutineStep,
   WishlistItem,
   ProcedureWishlistItem,
+  Article,
 } from './types';
 import {
   PRODUCTS,
@@ -30,6 +31,7 @@ interface AppState {
   routine: { am: RoutineStep[]; pm: RoutineStep[]; weekly: RoutineStep[] };
   wishlist: WishlistItem[];
   procedureWishlist: ProcedureWishlistItem[];
+  articles: Article[];
   expirySnoozedUntil: string | null; // ISO date
 
   // UI State
@@ -46,6 +48,11 @@ interface AppState {
   addProcedure: (procedure: Procedure) => void;
   updateProcedure: (id: string, updates: Partial<Procedure>) => void;
   deleteProcedure: (id: string) => void;
+
+  // Article actions
+  addArticle: (article: Article) => void;
+  updateArticle: (id: string, updates: Partial<Article>) => void;
+  deleteArticle: (id: string) => void;
 
   // Journal actions
   addJournalEntry: (entry: JournalEntry) => void;
@@ -85,6 +92,7 @@ export const useAppStore = create<AppState>()(
       onboardingComplete: false,
       wishlist: [],
       procedureWishlist: [],
+      articles: [],
       expirySnoozedUntil: null,
       routine: {
         am: PRODUCTS.filter((p) => p.routineStep === 'am' || p.routineStep === 'both')
@@ -190,6 +198,15 @@ export const useAppStore = create<AppState>()(
           snoozeUntil.setDate(snoozeUntil.getDate() + 7);
           return { expirySnoozedUntil: snoozeUntil.toISOString().split('T')[0] };
         }),
+
+      addArticle: (article) =>
+        set((state) => ({ articles: [article, ...state.articles] })),
+      updateArticle: (id, updates) =>
+        set((state) => ({
+          articles: state.articles.map((a) => (a.id === id ? { ...a, ...updates } : a)),
+        })),
+      deleteArticle: (id) =>
+        set((state) => ({ articles: state.articles.filter((a) => a.id !== id) })),
     }),
     {
       name: 'skincare-app-storage',
@@ -210,3 +227,6 @@ export const useProductById = (id: string) =>
   useAppStore((s) => s.products.find((p) => p.id === id));
 export const useIngredientById = (id: string) =>
   useAppStore((s) => s.ingredients.find((i) => i.id === id));
+export const useArticles = () => useAppStore((s) => s.articles);
+export const useArticleById = (id: string) =>
+  useAppStore((s) => s.articles.find((a) => a.id === id));

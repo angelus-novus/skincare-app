@@ -482,6 +482,7 @@ function ProductAnalysisPanel({
 export function BarcodeScanner() {
   const [isOpen, setIsOpen] = useState(false);
   const [barcode, setBarcode] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState('');
   const [isScanning, setIsScanning] = useState(false);
@@ -499,28 +500,94 @@ export function BarcodeScanner() {
     setError('');
     setIsScanning(true);
 
-    // Simulate scanning delay
-    setTimeout(() => {
+    // Try local DB first, then AI fallback
+    setTimeout(async () => {
       const found = lookupBarcode(barcode.trim());
-      if (!found) {
-        setError(
-          'Product not found in database. Try another barcode or enter manually.'
+      if (found) {
+        const result = analyzeProduct(
+          found, products, ingredients,
+          userProfile.skinConcerns, userProfile.knownIrritants, userProfile.allergies
         );
+        setAnalysis(result);
         setIsScanning(false);
         return;
       }
 
-      const result = analyzeProduct(
-        found,
-        products,
-        ingredients,
-        userProfile.skinConcerns,
-        userProfile.knownIrritants,
-        userProfile.allergies
-      );
-      setAnalysis(result);
+      // AI fallback
+      try {
+        const res = await fetch('/api/product-lookup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ barcode: barcode.trim() }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.name) {
+            const aiBarcodeProduct: BarcodeProduct = {
+              upc: barcode.trim(),
+              name: data.name,
+              brand: data.brand || 'Unknown',
+              category: data.category || 'treatment',
+              description: data.description || '',
+              price: data.price || 0,
+              size: data.size || '',
+              keyIngredients: [],
+              concerns: data.concerns || [],
+            };
+            const result = analyzeProduct(
+              aiBarcodeProduct, products, ingredients,
+              userProfile.skinConcerns, userProfile.knownIrritants, userProfile.allergies
+            );
+            setAnalysis(result);
+            setIsScanning(false);
+            return;
+          }
+        }
+      } catch {}
+
+      setError('Product not found. Try a sample barcode or search by name below.');
       setIsScanning(false);
-    }, 800);
+    }, 500);
+  };
+
+  const handleNameSearch = async () => {
+    if (!searchQuery.trim()) return;
+    setError('');
+    setIsScanning(true);
+    try {
+      const res = await fetch('/api/product-lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: searchQuery.trim() }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.name) {
+          const aiProduct: BarcodeProduct = {
+            upc: 'search',
+            name: data.name,
+            brand: data.brand || 'Unknown',
+            category: data.category || 'treatment',
+            description: data.description || '',
+            price: data.price || 0,
+            size: data.size || '',
+            keyIngredients: [],
+            concerns: data.concerns || [],
+          };
+          const result = analyzeProduct(
+            aiProduct, products, ingredients,
+            userProfile.skinConcerns, userProfile.knownIrritants, userProfile.allergies
+          );
+          setAnalysis(result);
+          setIsScanning(false);
+          return;
+        }
+      }
+      setError('Could not find product. Try refining your search.');
+    } catch {
+      setError('Search failed. Try again.');
+    }
+    setIsScanning(false);
   };
 
   const handleAddToShelf = () => {
@@ -551,6 +618,7 @@ export function BarcodeScanner() {
     setIsOpen(false);
     setAnalysis(null);
     setBarcode('');
+    setSearchQuery('');
     setError('');
     setIsScanning(false);
   };
@@ -657,6 +725,31 @@ export function BarcodeScanner() {
                 </motion.p>
               )}
 
+              {/* Name search */}
+              <div className="flex items-center gap-2">
+                <div className="flex-1 h-px bg-ivory-darker" />
+                <span className="text-xs text-obsidian-400">or search by name</span>
+                <div className="flex-1 h-px bg-ivory-darker" />
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => { setSearchQuery(e.target.value); setError(''); }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleNameSearch()}
+                  placeholder="e.g. CeraVe Moisturizing Cream"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-ivory-darker text-sm text-obsidian-700 placeholder:text-obsidian-300 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-300 transition-colors"
+                />
+                <Button onClick={handleNameSearch} disabled={isScanning} variant="outline">
+                  {isScanning ? (
+                    <motion.div className="w-4 h-4 border-2 border-brand-500 border-t-transparent rounded-full" animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }} />
+                  ) : (
+                    <Search className="w-4 h-4" />
+                  )}
+                  Search
+                </Button>
+              </div>
+
               {/* Quick test barcodes */}
               <div className="space-y-1.5">
                 <p className="text-xs text-obsidian-400">Try a sample barcode:</p>
@@ -699,6 +792,7 @@ export function BarcodeScanner() {
               onClick={() => {
                 setAnalysis(null);
                 setBarcode('');
+                setSearchQuery('');
               }}
             >
               Scan another product

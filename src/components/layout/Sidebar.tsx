@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Home, Package, Beaker, Sparkles, Syringe,
-  BookOpen, Sun, Settings, Gem,
+  BookOpen, Sun, Settings, Gem, Heart,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUserProfile } from '@/lib/store';
@@ -15,6 +15,7 @@ const navItems = [
   { href: '/ingredients', label: 'Ingredients', icon: Beaker },
   { href: '/insights', label: 'AI Insights', icon: Sparkles },
   { href: '/procedures', label: 'Procedures', icon: Syringe },
+  { href: '/wishlist', label: 'Wishlist', icon: Heart },
   { href: '/journal', label: 'Skin Journal', icon: BookOpen },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];

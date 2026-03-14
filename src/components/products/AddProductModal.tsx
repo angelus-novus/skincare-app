@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import * as Select from '@radix-ui/react-select';
 import {
   Plus, X, Check, ChevronDown, Search, Sparkles, Package,
+  Upload, Loader2, Wand2, Camera,
 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import {
@@ -52,6 +53,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
   // Image
   const [imageUrl, setImageUrl] = useState('');
   const [imageColor, setImageColor] = useState('#f1a1b5');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Concerns & tags
   const [selectedConcerns, setSelectedConcerns] = useState<SkinConcern[]>([]);
@@ -63,6 +65,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
   const [ingredientDropdownOpen, setIngredientDropdownOpen] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [selectedKeyIngredients, setSelectedKeyIngredients] = useState<string[]>([]);
+  const [rawIngredientsList, setRawIngredientsList] = useState('');
   const ingredientSearchRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -75,6 +78,10 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
   const [inRoutine, setInRoutine] = useState(false);
   const [routineStep, setRoutineStep] = useState<'am' | 'pm' | 'both'>('am');
   const [routineOrder, setRoutineOrder] = useState('');
+
+  // Auto-fetch state
+  const [isFetching, setIsFetching] = useState(false);
+  const [fetchError, setFetchError] = useState('');
 
   // Validation
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -146,6 +153,108 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
     );
   }, [selectedIngredients]);
 
+  // ─── Auto-fetch product info from AI ───────────────────────────────────
+  async function autoFetchProduct() {
+    if (!name.trim() && !brand.trim()) {
+      setFetchError('Enter a product name or brand first');
+      return;
+    }
+    setIsFetching(true);
+    setFetchError('');
+    try {
+      const res = await fetch('/api/product-lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim(), brand: brand.trim() }),
+      });
+      if (!res.ok) throw new Error('Lookup failed');
+      const data = await res.json();
+
+      // Auto-fill fields (only empty ones)
+      if (data.name && !name.trim()) setName(data.name);
+      if (data.brand && !brand.trim()) setBrand(data.brand);
+      if (data.category && ALL_CATEGORIES.includes(data.category)) setCategory(data.category);
+      if (data.size && !size) setSize(data.size);
+      if (data.price && !price) setPrice(String(data.price));
+      if (data.paoMonths && !paoMonths) setPaoMonths(String(data.paoMonths));
+
+      // Auto-fill concerns
+      if (data.concerns?.length > 0 && selectedConcerns.length === 0) {
+        const validConcerns = data.concerns.filter((c: string) => ALL_CONCERNS.includes(c as SkinConcern));
+        setSelectedConcerns(validConcerns as SkinConcern[]);
+      }
+
+      // Auto-fill ingredients list
+      if (data.ingredients?.length > 0) {
+        setRawIngredientsList(data.ingredients.join(', '));
+        // Match known ingredients
+        const matched: string[] = [];
+        const keyMatched: string[] = [];
+        for (const rawName of data.ingredients) {
+          const lower = rawName.toLowerCase();
+          const found = allIngredients.find(
+            (i) => i.name.toLowerCase() === lower || i.inci.toLowerCase() === lower
+          );
+          if (found && !matched.includes(found.id)) {
+            matched.push(found.id);
+          }
+        }
+        if (data.keyIngredients) {
+          for (const rawName of data.keyIngredients) {
+            const lower = rawName.toLowerCase();
+            const found = allIngredients.find(
+              (i) => i.name.toLowerCase() === lower || i.inci.toLowerCase() === lower
+            );
+            if (found && !keyMatched.includes(found.id)) {
+              keyMatched.push(found.id);
+              if (!matched.includes(found.id)) matched.push(found.id);
+            }
+          }
+        }
+        if (matched.length > 0) setSelectedIngredients(matched);
+        if (keyMatched.length > 0) setSelectedKeyIngredients(keyMatched);
+      }
+    } catch {
+      setFetchError('Could not fetch product info. You can fill in details manually.');
+    } finally {
+      setIsFetching(false);
+    }
+  }
+
+  // ─── Image upload handler ──────────────────────────────────────────────
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxSize = 600;
+        let { width, height } = img;
+        if (width > maxSize || height > maxSize) {
+          if (width > height) {
+            height = (height / width) * maxSize;
+            width = maxSize;
+          } else {
+            width = (width / height) * maxSize;
+            height = maxSize;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        setImageUrl(dataUrl);
+      };
+      img.src = ev.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
   function validate() {
     const errs: Record<string, string> = {};
     if (!name.trim()) errs.name = 'Product name is required';
@@ -155,33 +264,22 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
   }
 
   function resetForm() {
-    setName('');
-    setBrand('');
-    setCategory('serum');
-    setPrice('');
-    setSize('');
-    setPurchaseDate(new Date().toISOString().split('T')[0]);
-    setPurchaseUrl('');
-    setImageUrl('');
-    setImageColor('#f1a1b5');
-    setSelectedConcerns([]);
-    setTags([]);
-    setTagInput('');
-    setIngredientSearch('');
-    setIngredientDropdownOpen(false);
-    setSelectedIngredients([]);
-    setSelectedKeyIngredients([]);
-    setPaoMonths('');
-    setOpenedDate('');
-    setExpiryDate('');
-    setInRoutine(false);
-    setRoutineStep('am');
-    setRoutineOrder('');
-    setErrors({});
+    setName(''); setBrand(''); setCategory('serum'); setPrice(''); setSize('');
+    setPurchaseDate(new Date().toISOString().split('T')[0]); setPurchaseUrl('');
+    setImageUrl(''); setImageColor('#f1a1b5'); setSelectedConcerns([]);
+    setTags([]); setTagInput(''); setIngredientSearch('');
+    setIngredientDropdownOpen(false); setSelectedIngredients([]);
+    setSelectedKeyIngredients([]); setRawIngredientsList('');
+    setPaoMonths(''); setOpenedDate(''); setExpiryDate('');
+    setInRoutine(false); setRoutineStep('am'); setRoutineOrder('');
+    setErrors({}); setFetchError('');
   }
 
   function handleSubmit() {
     if (!validate()) return;
+    const rawList = rawIngredientsList
+      ? rawIngredientsList.split(',').map((s) => s.trim()).filter(Boolean)
+      : undefined;
     const newProduct: Product = {
       id: `product-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       name: name.trim(),
@@ -199,6 +297,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
       concerns: selectedConcerns,
       ingredients: selectedIngredients,
       keyIngredients: selectedKeyIngredients,
+      ingredientsList: rawList,
       inRoutine,
       routineStep: inRoutine ? routineStep : undefined,
       routineOrder: inRoutine && routineOrder ? parseInt(routineOrder, 10) : undefined,
@@ -219,39 +318,70 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
       size="xl"
     >
       <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-1 -mr-1">
-        {/* ── Section: Basic Info ── */}
+        {/* ── Quick Fill: Auto-fetch ── */}
+        <div className="bg-ivory-dark rounded-xl p-4 border border-ivory-darker">
+          <div className="flex items-center gap-2 mb-3">
+            <Wand2 className="w-4 h-4 text-brand-400" />
+            <span className="text-sm font-semibold text-obsidian-700">Quick Fill</span>
+            <span className="text-xs text-obsidian-400">Enter name & brand, then auto-fill details</span>
+          </div>
+          <div className="grid grid-cols-5 gap-3">
+            <div className="col-span-2">
+              <Input
+                label="Product Name *"
+                placeholder="e.g. Advanced Night Repair"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                error={errors.name}
+              />
+            </div>
+            <div className="col-span-2">
+              <Input
+                label="Brand *"
+                placeholder="e.g. Estée Lauder"
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                error={errors.brand}
+              />
+            </div>
+            <div className="flex items-end">
+              <Button
+                variant="gold"
+                size="sm"
+                className="w-full h-[38px]"
+                onClick={autoFetchProduct}
+                disabled={isFetching}
+              >
+                {isFetching ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <><Wand2 className="w-3.5 h-3.5" /> Auto-Fill</>
+                )}
+              </Button>
+            </div>
+          </div>
+          {fetchError && <p className="text-xs text-red-500 mt-2">{fetchError}</p>}
+          {isFetching && (
+            <p className="text-xs text-obsidian-400 mt-2 flex items-center gap-1.5">
+              <Loader2 className="w-3 h-3 animate-spin" /> Looking up product details...
+            </p>
+          )}
+        </div>
+
+        {/* ── Section: Details ── */}
         <div>
           <h3 className="text-sm font-semibold text-obsidian-700 mb-3 flex items-center gap-2">
             <Package className="w-4 h-4 text-rose-400" />
-            Basic Information
+            Details
           </h3>
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Product Name *"
-              placeholder="e.g. Advanced Night Repair"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              error={errors.name}
-            />
-            <Input
-              label="Brand *"
-              placeholder="e.g. Estee Lauder"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-              error={errors.brand}
-            />
-          </div>
-
-          <div className="grid grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-3 gap-4">
             {/* Category */}
             <div className="space-y-1">
               <label className="text-sm font-medium text-obsidian-700">Category</label>
               <Select.Root value={category} onValueChange={(v) => setCategory(v as ProductCategory)}>
                 <Select.Trigger className="w-full flex items-center justify-between rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white">
                   <Select.Value />
-                  <Select.Icon>
-                    <ChevronDown className="w-4 h-4 text-obsidian-400" />
-                  </Select.Icon>
+                  <Select.Icon><ChevronDown className="w-4 h-4 text-obsidian-400" /></Select.Icon>
                 </Select.Trigger>
                 <Select.Portal>
                   <Select.Content className="z-[100] bg-white rounded-xl shadow-lg border border-ivory-darker overflow-hidden">
@@ -273,90 +403,71 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                 </Select.Portal>
               </Select.Root>
             </div>
-
-            <Input
-              label="Price"
-              type="number"
-              placeholder="29.99"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-            />
-            <Input
-              label="Size"
-              placeholder="e.g. 30ml"
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-            />
+            <Input label="Price" type="number" placeholder="29.99" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <Input label="Size" placeholder="e.g. 30ml" value={size} onChange={(e) => setSize(e.target.value)} />
           </div>
-
           <div className="grid grid-cols-2 gap-4 mt-4">
-            <Input
-              label="Purchase Date"
-              type="date"
-              value={purchaseDate}
-              onChange={(e) => setPurchaseDate(e.target.value)}
-            />
-            <Input
-              label="Purchase URL"
-              placeholder="https://..."
-              value={purchaseUrl}
-              onChange={(e) => setPurchaseUrl(e.target.value)}
-            />
+            <Input label="Purchase Date" type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} />
+            <Input label="Purchase URL" placeholder="https://..." value={purchaseUrl} onChange={(e) => setPurchaseUrl(e.target.value)} />
           </div>
         </div>
 
         {/* ── Section: Image ── */}
         <div>
-          <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Image</h3>
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Image URL"
-              placeholder="https://example.com/image.jpg"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-            />
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-obsidian-700">Bottle Color (fallback)</label>
-              <div className="flex items-center gap-2">
-                <div className="flex flex-wrap gap-1.5">
+          <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Product Image</h3>
+          <div className="flex gap-4 items-start">
+            {/* Upload / preview area */}
+            <div
+              className="w-24 h-24 rounded-xl border-2 border-dashed border-ivory-darker flex flex-col items-center justify-center cursor-pointer hover:border-brand-300 transition-colors overflow-hidden flex-shrink-0 relative group"
+              onClick={() => fileInputRef.current?.click()}
+              style={{ backgroundColor: imageUrl ? undefined : imageColor }}
+            >
+              {imageUrl ? (
+                <>
+                  <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Camera className="w-5 h-5 text-white" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-5 h-5 text-white/60" />
+                  <span className="text-[9px] text-white/50 mt-1">Upload</span>
+                </>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </div>
+            <div className="flex-1 space-y-2">
+              <Input
+                label="Or paste image URL"
+                placeholder="https://example.com/product.jpg"
+                value={imageUrl.startsWith('data:') ? '' : imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-obsidian-500">Bottle color (fallback)</label>
+                <div className="flex flex-wrap gap-1">
                   {BOTTLE_COLORS.map((color) => (
                     <button
                       key={color}
                       type="button"
                       onClick={() => setImageColor(color)}
                       className={cn(
-                        'w-6 h-6 rounded-full border-2 transition-all',
-                        imageColor === color
-                          ? 'border-rose-500 scale-110 shadow-sm'
-                          : 'border-transparent hover:border-slate-300'
+                        'w-5 h-5 rounded-full border-2 transition-all',
+                        imageColor === color ? 'border-brand-500 scale-110' : 'border-transparent hover:border-obsidian-200'
                       )}
                       style={{ backgroundColor: color }}
                     />
                   ))}
                 </div>
-                <input
-                  type="color"
-                  value={imageColor}
-                  onChange={(e) => setImageColor(e.target.value)}
-                  className="w-8 h-8 rounded-lg border border-ivory-darker cursor-pointer"
-                  title="Custom color"
-                />
               </div>
             </div>
-          </div>
-          {/* Preview */}
-          <div className="mt-3 flex items-center gap-3">
-            <div
-              className="w-12 h-12 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: imageUrl ? undefined : imageColor }}
-            >
-              {imageUrl ? (
-                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
-              ) : (
-                <Package className="w-6 h-6 text-white/60" />
-              )}
-            </div>
-            <span className="text-xs text-obsidian-400">Preview</span>
           </div>
         </div>
 
@@ -390,67 +501,59 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
               placeholder="Type a tag and press Enter..."
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  addTag();
-                }
-              }}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
             />
-            <Button type="button" variant="secondary" size="sm" onClick={addTag}>
-              Add
-            </Button>
+            <Button type="button" variant="secondary" size="sm" onClick={addTag}>Add</Button>
           </div>
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-2">
               {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex items-center gap-1 bg-ivory-darker text-obsidian-600 text-xs rounded-full px-2.5 py-1 font-medium"
-                >
+                <span key={tag} className="inline-flex items-center gap-1 bg-ivory-darker text-obsidian-600 text-xs rounded-full px-2.5 py-1 font-medium">
                   {tag}
-                  <button
-                    type="button"
-                    onClick={() => removeTag(tag)}
-                    className="hover:text-red-500 transition-colors"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
+                  <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
                 </span>
               ))}
             </div>
           )}
         </div>
 
-        {/* ── Section: Ingredient Search/Autocomplete ── */}
+        {/* ── Section: Ingredients ── */}
         <div>
           <h3 className="text-sm font-semibold text-obsidian-700 mb-3 flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-rose-400" />
             Ingredients
           </h3>
 
-          {/* Search */}
+          {/* Raw ingredients list (editable — from auto-fetch or manual) */}
+          <div className="mb-3">
+            <label className="text-xs font-medium text-obsidian-500 mb-1 block">
+              Full ingredients list (comma-separated, editable)
+            </label>
+            <textarea
+              value={rawIngredientsList}
+              onChange={(e) => setRawIngredientsList(e.target.value)}
+              placeholder="Water, Glycerin, Niacinamide, ..."
+              rows={3}
+              className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 placeholder:text-obsidian-400 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white resize-none"
+            />
+          </div>
+
+          {/* Search known ingredients */}
           <div className="relative">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-obsidian-400" />
               <input
                 ref={ingredientSearchRef}
                 value={ingredientSearch}
-                onChange={(e) => {
-                  setIngredientSearch(e.target.value);
-                  setIngredientDropdownOpen(true);
-                }}
+                onChange={(e) => { setIngredientSearch(e.target.value); setIngredientDropdownOpen(true); }}
                 onFocus={() => setIngredientDropdownOpen(true)}
-                placeholder="Search ingredients by name, INCI, or category..."
+                placeholder="Search known ingredients to link..."
                 className="w-full rounded-lg border border-ivory-darker pl-9 pr-4 py-2 text-sm text-obsidian-800 placeholder:text-obsidian-400 focus:outline-none focus:ring-2 focus:ring-rose-300 bg-white"
               />
               {ingredientSearch && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setIngredientSearch('');
-                    setIngredientDropdownOpen(false);
-                  }}
+                  onClick={() => { setIngredientSearch(''); setIngredientDropdownOpen(false); }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-obsidian-400 hover:text-obsidian-600"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -458,7 +561,6 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
               )}
             </div>
 
-            {/* Dropdown */}
             <AnimatePresence>
               {ingredientDropdownOpen && filteredIngredients.length > 0 && (
                 <motion.div
@@ -482,14 +584,10 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                         onClick={() => toggleIngredient(ing.id)}
                       >
                         <div className="flex items-center gap-2.5 flex-1 min-w-0">
-                          <div
-                            className={cn(
-                              'w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors',
-                              isSelected
-                                ? 'bg-rose-500 border-rose-500'
-                                : 'border-slate-300 hover:border-rose-400'
-                            )}
-                          >
+                          <div className={cn(
+                            'w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center transition-colors',
+                            isSelected ? 'bg-rose-500 border-rose-500' : 'border-obsidian-200 hover:border-rose-400'
+                          )}>
                             {isSelected && <Check className="w-2.5 h-2.5 text-white" />}
                           </div>
                           <div className="min-w-0 flex-1">
@@ -499,26 +597,16 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                             </div>
                             <p className="text-xs text-obsidian-400 truncate">{ing.inci}</p>
                           </div>
-                          <span
-                            className={cn(
-                              'text-xs rounded-full px-2 py-0.5 font-medium flex-shrink-0 ml-1',
-                              evidenceLevelColor(ing.evidenceLevel)
-                            )}
-                          >
+                          <span className={cn('text-xs rounded-full px-2 py-0.5 font-medium flex-shrink-0 ml-1', evidenceLevelColor(ing.evidenceLevel))}>
                             {ing.evidenceLevel}
                           </span>
                         </div>
                         <button
                           type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleKeyIngredient(ing.id);
-                          }}
+                          onClick={(e) => { e.stopPropagation(); toggleKeyIngredient(ing.id); }}
                           className={cn(
                             'text-xs rounded-full px-2 py-0.5 border font-medium ml-2 flex-shrink-0 transition-colors',
-                            isKey
-                              ? 'bg-rose-100 text-rose-700 border-rose-200'
-                              : 'bg-ivory-dark text-obsidian-400 border-ivory-darker hover:border-rose-200 hover:text-rose-600'
+                            isKey ? 'bg-rose-100 text-rose-700 border-rose-200' : 'bg-ivory-dark text-obsidian-400 border-ivory-darker hover:border-rose-200 hover:text-rose-600'
                           )}
                         >
                           {isKey ? 'Key' : 'Set key'}
@@ -531,7 +619,6 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
             </AnimatePresence>
           </div>
 
-          {/* Selected ingredients pills */}
           {selectedIngredients.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mt-3">
               {selectedIngredients.map((id) => {
@@ -543,26 +630,16 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                     key={id}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
                     className={cn(
                       'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium cursor-pointer transition-colors',
-                      isKey
-                        ? 'bg-rose-100 text-rose-700'
-                        : 'bg-ivory-darker text-obsidian-600'
+                      isKey ? 'bg-rose-100 text-rose-700' : 'bg-ivory-darker text-obsidian-600'
                     )}
                     onClick={() => toggleKeyIngredient(id)}
                     title={isKey ? 'Click to unmark as key ingredient' : 'Click to mark as key ingredient'}
                   >
                     {isKey && <Sparkles className="w-2.5 h-2.5" />}
                     {ing.name}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleIngredient(id);
-                      }}
-                      className="hover:text-red-500 ml-0.5 transition-colors"
-                    >
+                    <button type="button" onClick={(e) => { e.stopPropagation(); toggleIngredient(id); }} className="hover:text-red-500 ml-0.5 transition-colors">
                       <X className="w-3 h-3" />
                     </button>
                   </motion.span>
@@ -570,36 +647,15 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
               })}
             </div>
           )}
-          {selectedIngredients.length > 0 && (
-            <p className="text-xs text-obsidian-400 mt-1.5">
-              Click a pill to toggle key ingredient status. {selectedKeyIngredients.length} key, {selectedIngredients.length - selectedKeyIngredients.length} regular.
-            </p>
-          )}
         </div>
 
         {/* ── Section: Expiry & PAO ── */}
         <div>
           <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Expiry & Period After Opening</h3>
           <div className="grid grid-cols-3 gap-4">
-            <Input
-              label="PAO (months)"
-              type="number"
-              placeholder="12"
-              value={paoMonths}
-              onChange={(e) => setPaoMonths(e.target.value)}
-            />
-            <Input
-              label="Opened Date"
-              type="date"
-              value={openedDate}
-              onChange={(e) => setOpenedDate(e.target.value)}
-            />
-            <Input
-              label="Expiry Date"
-              type="date"
-              value={expiryDate}
-              onChange={(e) => setExpiryDate(e.target.value)}
-            />
+            <Input label="PAO (months)" type="number" placeholder="12" value={paoMonths} onChange={(e) => setPaoMonths(e.target.value)} />
+            <Input label="Opened Date" type="date" value={openedDate} onChange={(e) => setOpenedDate(e.target.value)} />
+            <Input label="Expiry Date" type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} />
           </div>
         </div>
 
@@ -609,60 +665,32 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <div
-                className={cn(
-                  'w-10 h-6 rounded-full transition-colors relative',
-                  inRoutine ? 'bg-rose-500' : 'bg-slate-200'
-                )}
+                className={cn('w-10 h-6 rounded-full transition-colors relative', inRoutine ? 'bg-rose-500' : 'bg-obsidian-200')}
                 onClick={() => setInRoutine(!inRoutine)}
               >
-                <div
-                  className={cn(
-                    'absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform',
-                    inRoutine ? 'translate-x-4' : 'translate-x-0.5'
-                  )}
-                />
+                <div className={cn('absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform', inRoutine ? 'translate-x-4' : 'translate-x-0.5')} />
               </div>
               <span className="text-sm text-obsidian-700">In routine</span>
             </label>
           </div>
-
           <AnimatePresence>
             {inRoutine && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
                 <div className="grid grid-cols-2 gap-4 mt-3">
                   <div className="space-y-1">
                     <label className="text-sm font-medium text-obsidian-700">When</label>
                     <div className="flex gap-1.5">
                       {(['am', 'pm', 'both'] as const).map((step) => (
-                        <button
-                          key={step}
-                          type="button"
-                          onClick={() => setRoutineStep(step)}
-                          className={cn(
-                            'flex-1 rounded-lg px-3 py-2 text-sm font-medium border transition-colors',
-                            routineStep === step
-                              ? 'bg-rose-100 text-rose-700 border-rose-200'
-                              : 'bg-white text-obsidian-500 border-ivory-darker hover:border-rose-200'
-                          )}
-                        >
+                        <button key={step} type="button" onClick={() => setRoutineStep(step)} className={cn(
+                          'flex-1 rounded-lg px-3 py-2 text-sm font-medium border transition-colors',
+                          routineStep === step ? 'bg-rose-100 text-rose-700 border-rose-200' : 'bg-white text-obsidian-500 border-ivory-darker hover:border-rose-200'
+                        )}>
                           {step === 'am' ? 'AM' : step === 'pm' ? 'PM' : 'Both'}
                         </button>
                       ))}
                     </div>
                   </div>
-                  <Input
-                    label="Order in routine"
-                    type="number"
-                    placeholder="e.g. 3"
-                    value={routineOrder}
-                    onChange={(e) => setRoutineOrder(e.target.value)}
-                  />
+                  <Input label="Order in routine" type="number" placeholder="e.g. 3" value={routineOrder} onChange={(e) => setRoutineOrder(e.target.value)} />
                 </div>
               </motion.div>
             )}
@@ -672,12 +700,9 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
 
       {/* ── Footer ── */}
       <div className="flex justify-end gap-3 pt-4 mt-4 border-t border-ivory-darker">
-        <Button variant="secondary" onClick={onClose}>
-          Cancel
-        </Button>
+        <Button variant="secondary" onClick={onClose}>Cancel</Button>
         <Button onClick={handleSubmit}>
-          <Plus className="w-4 h-4" />
-          Add Product
+          <Plus className="w-4 h-4" /> Add Product
         </Button>
       </div>
     </Modal>

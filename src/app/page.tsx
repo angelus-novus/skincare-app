@@ -1,8 +1,8 @@
 'use client';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar } from 'lucide-react';
-import { useProducts, useUserProfile, useProcedures } from '@/lib/store';
+import { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar, X, Heart } from 'lucide-react';
+import { useAppStore, useProducts, useUserProfile, useProcedures } from '@/lib/store';
 import { ProductBottle } from '@/components/shelf/ProductBottle';
 import { ProductDetailModal } from '@/components/shelf/ProductDetailModal';
 import { AddProductModal } from '@/components/products/AddProductModal';
@@ -13,41 +13,53 @@ import { Button } from '@/components/ui/button';
 import { Card, CardBody } from '@/components/ui/card';
 import { BarcodeScanner } from '@/components/products/BarcodeScanner';
 import { ConflictBanner } from '@/components/shelf/ConflictBanner';
-import { addMonths, differenceInDays, parseISO, format } from 'date-fns';
+import { addMonths, differenceInDays, parseISO, format, isBefore } from 'date-fns';
 
-function ShelfSection({ category, products, onProductClick }: {
+/* ─── Realistic Shelf Row ─────────────────────────────────────────────────── */
+
+function ShelfRow({ category, products, onProductClick }: {
   category: ProductCategory;
   products: Product[];
   onProductClick: (p: Product) => void;
 }) {
   if (products.length === 0) return null;
   return (
-    <div className="mb-8">
-      <div className="flex items-center gap-2 mb-2 ml-1">
-        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${categoryColor(category)}`}>
+    <div className="mb-2">
+      {/* Category label */}
+      <div className="flex items-center gap-2 mb-2 ml-2">
+        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${categoryColor(category)}`}>
           {categoryLabel(category)}
         </span>
-        <span className="text-xs text-obsidian-400">{products.length} product{products.length !== 1 ? 's' : ''}</span>
+        <span className="text-[10px] text-obsidian-400">{products.length}</span>
       </div>
+      {/* Products row sitting on the shelf */}
       <div className="relative">
-        <div className="bg-gradient-to-b from-ivory/80 to-white rounded-2xl pt-4 pb-0 px-6 border border-ivory-darker/60 min-h-[120px]">
-          <div className="flex items-end gap-4 flex-wrap pb-5">
-            {products.map((product, index) => (
-              <ProductBottle
-                key={product.id}
-                product={product}
-                onClick={() => onProductClick(product)}
-                index={index}
-              />
-            ))}
-          </div>
+        {/* Product surface area */}
+        <div className="flex items-end gap-3 px-6 pb-1 min-h-[110px]">
+          {products.map((product, index) => (
+            <ProductBottle
+              key={product.id}
+              product={product}
+              onClick={() => onProductClick(product)}
+              index={index}
+            />
+          ))}
         </div>
-        <div className="shelf-board h-4 rounded-b-xl" />
-        <div className="h-3 bg-gradient-to-b from-black/8 to-transparent rounded-b-xl" />
+        {/* The shelf board */}
+        <div className="shelf-board h-[14px] rounded-sm" />
+        {/* Shadow below shelf board */}
+        <div
+          className="h-8 rounded-b-xl"
+          style={{
+            background: 'linear-gradient(180deg, rgba(28,25,23,0.12) 0%, rgba(28,25,23,0.04) 40%, transparent 100%)',
+          }}
+        />
       </div>
     </div>
   );
 }
+
+/* ─── Stat Card ───────────────────────────────────────────────────────────── */
 
 function StatCard({ label, value, sub, icon: Icon, color }: {
   label: string;
@@ -72,10 +84,15 @@ function StatCard({ label, value, sub, icon: Icon, color }: {
   );
 }
 
+/* ─── Page ────────────────────────────────────────────────────────────────── */
+
 export default function HomePage() {
   const products = useProducts();
   const profile = useUserProfile();
   const procedures = useProcedures();
+  const expirySnoozedUntil = useAppStore((s) => s.expirySnoozedUntil);
+  const snoozeExpiryAlerts = useAppStore((s) => s.snoozeExpiryAlerts);
+  const wishlist = useAppStore((s) => s.wishlist);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -89,6 +106,12 @@ export default function HomePage() {
     return days !== null && days < 30 && days >= 0;
   });
   const expiredProducts = products.filter((p) => getExpiryStatus(daysUntilExpiry(p)) === 'expired');
+
+  // Check if expiry alerts are snoozed
+  const isExpirySnoozed = useMemo(() => {
+    if (!expirySnoozedUntil) return false;
+    return isBefore(new Date(), parseISO(expirySnoozedUntil));
+  }, [expirySnoozedUntil]);
 
   const upcomingProcedures = procedures
     .filter((p) => p.nextAppointment)
@@ -118,13 +141,17 @@ export default function HomePage() {
       <div className="flex items-start justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold text-obsidian-800">
-            {profile.name ? `Hello, ${profile.name} ✨` : 'Your Skincare Shelf ✨'}
+            {profile.name ? `Hello, ${profile.name}` : 'Your Skincare Shelf'}
           </h1>
           <p className="text-obsidian-500 mt-1">
             {products.length} products · {ratedProducts.length} reviewed · {profile.skinType} skin
           </p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => window.location.href = '/wishlist'}>
+            <Heart className="w-4 h-4 text-brand-400" />
+            Wishlist{wishlist.length > 0 && ` (${wishlist.length})`}
+          </Button>
           <Button variant="outline" size="sm" onClick={() => window.location.href = '/insights'}>
             <Sparkles className="w-4 h-4 text-rose-400" />
             AI Insights
@@ -136,13 +163,13 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Alerts */}
-      {(expiringProducts.length > 0 || expiredProducts.length > 0) && (
+      {/* Expiry Alerts (dismissable with 7-day snooze) */}
+      {!isExpirySnoozed && (expiringProducts.length > 0 || expiredProducts.length > 0) && (
         <div className="mb-6 space-y-2">
           {expiredProducts.length > 0 && (
             <div className="bg-red-50 border border-red-100 rounded-2xl p-4 flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-              <div>
+              <div className="flex-1">
                 <div className="text-sm font-semibold text-red-700">
                   {expiredProducts.length} product{expiredProducts.length > 1 ? 's' : ''} expired
                 </div>
@@ -150,12 +177,19 @@ export default function HomePage() {
                   {expiredProducts.map((p) => p.name).join(', ')}
                 </div>
               </div>
+              <button
+                onClick={snoozeExpiryAlerts}
+                className="text-xs text-obsidian-400 hover:text-obsidian-600 px-2 py-1 rounded-lg hover:bg-white/60 transition-colors flex-shrink-0"
+                title="Dismiss for 7 days"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           )}
           {expiringProducts.length > 0 && (
             <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0" />
-              <div>
+              <div className="flex-1">
                 <div className="text-sm font-semibold text-amber-700">
                   {expiringProducts.length} product{expiringProducts.length > 1 ? 's' : ''} expiring soon
                 </div>
@@ -163,6 +197,13 @@ export default function HomePage() {
                   {expiringProducts.map((p) => `${p.name} (${daysUntilExpiry(p)}d)`).join(', ')}
                 </div>
               </div>
+              <button
+                onClick={snoozeExpiryAlerts}
+                className="text-xs text-obsidian-400 hover:text-obsidian-600 px-2 py-1 rounded-lg hover:bg-white/60 transition-colors flex-shrink-0"
+                title="Dismiss for 7 days"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
           )}
         </div>
@@ -179,7 +220,7 @@ export default function HomePage() {
       {/* Routine Conflict Warnings */}
       <ConflictBanner />
 
-      {/* The Shelf */}
+      {/* ── The Shelf (realistic vanity / bathroom shelf look) ── */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-obsidian-800">Your Shelf</h2>
@@ -188,21 +229,34 @@ export default function HomePage() {
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-400" /><span>Expired</span></div>
           </div>
         </div>
+
+        {/* Shelf container — simulates a wall-mounted cabinet / open shelf unit */}
         <div
-          className="rounded-3xl p-6 min-h-96"
+          className="rounded-2xl overflow-hidden"
           style={{
-            background: 'linear-gradient(160deg, #EEE4DF 0%, #E8DDD5 30%, #EDE4DB 60%, #E8DDD6 100%)',
-            boxShadow: 'inset 0 2px 20px rgba(181, 98, 42, 0.05)',
+            background: 'linear-gradient(180deg, #F0EAE2 0%, #E8E0D5 50%, #DED5CA 100%)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 32px rgba(28,25,23,0.08)',
+            border: '1px solid rgba(201,169,110,0.15)',
           }}
         >
-          {allCategories.map((cat) => (
-            <ShelfSection
-              key={cat}
-              category={cat}
-              products={products.filter((p) => p.category === cat)}
-              onProductClick={setSelectedProduct}
-            />
-          ))}
+          <div className="px-2 pt-6 pb-2">
+            {allCategories.map((cat) => (
+              <ShelfRow
+                key={cat}
+                category={cat}
+                products={products.filter((p) => p.category === cat)}
+                onProductClick={setSelectedProduct}
+              />
+            ))}
+            {products.length === 0 && (
+              <div className="text-center py-16 text-obsidian-400">
+                <p className="text-sm">Your shelf is empty. Add your first product!</p>
+                <Button size="sm" className="mt-3" onClick={() => setShowAddModal(true)}>
+                  <Plus className="w-4 h-4" /> Add Product
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

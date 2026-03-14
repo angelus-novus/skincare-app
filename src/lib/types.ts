@@ -85,6 +85,7 @@ export interface Product {
   concerns: SkinConcern[];
   ingredients: string[]; // ingredient ids
   keyIngredients: string[]; // highlighted ingredient ids
+  ingredientsList?: string[]; // raw ingredient names (from web/user)
   rating?: ProductRating;
   inRoutine: boolean;
   routineStep?: 'am' | 'pm' | 'both';
@@ -93,6 +94,31 @@ export interface Product {
   purchaseUrl?: string;
   isWishlisted?: boolean;
   isDiscontinued?: boolean;
+}
+
+export interface WishlistItem {
+  id: string;
+  name: string;
+  brand: string;
+  category: ProductCategory;
+  imageUrl?: string;
+  price?: number;
+  purchaseUrl?: string;
+  notes?: string;
+  addedDate: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface ProcedureWishlistItem {
+  id: string;
+  name: string;
+  category: ProcedureCategory;
+  estimatedCost?: number;
+  clinic?: string;
+  notes?: string;
+  addedDate: string;
+  priority: 'high' | 'medium' | 'low';
+  concerns: SkinConcern[];
 }
 
 export interface Procedure {

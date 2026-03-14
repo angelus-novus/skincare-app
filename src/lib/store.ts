@@ -9,6 +9,8 @@ import type {
   UserProfile,
   ProductRating,
   RoutineStep,
+  WishlistItem,
+  ProcedureWishlistItem,
 } from './types';
 import {
   PRODUCTS,
@@ -26,6 +28,9 @@ interface AppState {
   journalEntries: JournalEntry[];
   userProfile: UserProfile;
   routine: { am: RoutineStep[]; pm: RoutineStep[] };
+  wishlist: WishlistItem[];
+  procedureWishlist: ProcedureWishlistItem[];
+  expirySnoozedUntil: string | null; // ISO date
 
   // UI State
   onboardingComplete: boolean;
@@ -56,6 +61,17 @@ interface AppState {
 
   // Ingredient actions
   addIngredient: (ingredient: Ingredient) => void;
+
+  // Wishlist actions
+  addWishlistItem: (item: WishlistItem) => void;
+  removeWishlistItem: (id: string) => void;
+  updateWishlistItem: (id: string, updates: Partial<WishlistItem>) => void;
+  addProcedureWishlistItem: (item: ProcedureWishlistItem) => void;
+  removeProcedureWishlistItem: (id: string) => void;
+  updateProcedureWishlistItem: (id: string, updates: Partial<ProcedureWishlistItem>) => void;
+
+  // Expiry snooze
+  snoozeExpiryAlerts: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -67,6 +83,9 @@ export const useAppStore = create<AppState>()(
       journalEntries: JOURNAL_ENTRIES,
       userProfile: DEFAULT_USER_PROFILE,
       onboardingComplete: false,
+      wishlist: [],
+      procedureWishlist: [],
+      expirySnoozedUntil: null,
       routine: {
         am: PRODUCTS.filter((p) => p.routineStep === 'am' || p.routineStep === 'both')
           .sort((a, b) => (a.routineOrder || 0) - (b.routineOrder || 0))
@@ -145,6 +164,29 @@ export const useAppStore = create<AppState>()(
 
       addIngredient: (ingredient) =>
         set((state) => ({ ingredients: [...state.ingredients, ingredient] })),
+
+      addWishlistItem: (item) =>
+        set((state) => ({ wishlist: [...state.wishlist, item] })),
+      removeWishlistItem: (id) =>
+        set((state) => ({ wishlist: state.wishlist.filter((w) => w.id !== id) })),
+      updateWishlistItem: (id, updates) =>
+        set((state) => ({
+          wishlist: state.wishlist.map((w) => (w.id === id ? { ...w, ...updates } : w)),
+        })),
+      addProcedureWishlistItem: (item) =>
+        set((state) => ({ procedureWishlist: [...state.procedureWishlist, item] })),
+      removeProcedureWishlistItem: (id) =>
+        set((state) => ({ procedureWishlist: state.procedureWishlist.filter((w) => w.id !== id) })),
+      updateProcedureWishlistItem: (id, updates) =>
+        set((state) => ({
+          procedureWishlist: state.procedureWishlist.map((w) => (w.id === id ? { ...w, ...updates } : w)),
+        })),
+      snoozeExpiryAlerts: () =>
+        set(() => {
+          const snoozeUntil = new Date();
+          snoozeUntil.setDate(snoozeUntil.getDate() + 7);
+          return { expirySnoozedUntil: snoozeUntil.toISOString().split('T')[0] };
+        }),
     }),
     {
       name: 'skincare-app-storage',

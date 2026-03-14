@@ -1,7 +1,7 @@
 'use client';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar, X, Heart, Sun, Moon, CalendarDays } from 'lucide-react';
+import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar, X, Heart, Sun, Moon, CalendarDays, ShoppingBag, Syringe, ChevronRight } from 'lucide-react';
 import { useAppStore, useProducts, useUserProfile, useProcedures } from '@/lib/store';
 import { ProductBottle } from '@/components/shelf/ProductBottle';
 import { ProductDetailModal } from '@/components/shelf/ProductDetailModal';
@@ -33,8 +33,8 @@ function CabinetShelfRow({
     <div className="relative">
       {/* Shelf label */}
       <div className="flex items-center gap-2 px-5 pt-3 pb-1">
-        <Icon className="w-3.5 h-3.5" style={{ color: '#B5622A' }} />
-        <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#8B6340', fontFamily: 'var(--font-display)' }}>
+        <Icon className="w-4 h-4" style={{ color: '#B5622A' }} />
+        <span className="text-[13px] font-semibold uppercase tracking-wider" style={{ color: '#8B6340', fontFamily: 'var(--font-display)' }}>
           {label}
         </span>
         <span className="text-[10px]" style={{ color: '#B5A08A' }}>{products.length} items</span>
@@ -104,16 +104,16 @@ function MedicineCabinet({
         <div
           className="h-3 mx-1 rounded-t-sm"
           style={{
-            background: 'linear-gradient(180deg, #E8E0D5 0%, #DDD5C8 100%)',
-            boxShadow: '0 -1px 0 rgba(255,255,255,0.8), inset 0 -1px 2px rgba(0,0,0,0.04)',
+            background: 'linear-gradient(180deg, #FAF8F5 0%, #F0EDE8 100%)',
+            boxShadow: '0 -1px 0 rgba(255,255,255,0.95), inset 0 -1px 2px rgba(0,0,0,0.03)',
           }}
         />
         {/* Molding profile */}
         <div
           className="h-[10px] -mx-1"
           style={{
-            background: 'linear-gradient(180deg, #F0EAE2 0%, #E6DFD5 30%, #DDD5CA 70%, #D5CCBF 100%)',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+            background: 'linear-gradient(180deg, #FDFCFA 0%, #F5F2ED 30%, #EDE9E3 70%, #E8E3DC 100%)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,1)',
             borderRadius: '2px 2px 0 0',
           }}
         />
@@ -121,8 +121,8 @@ function MedicineCabinet({
         <div
           className="h-[5px] mx-0"
           style={{
-            background: 'linear-gradient(180deg, #E2DCD4 0%, #DCD5CC 100%)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 1px 3px rgba(0,0,0,0.05)',
+            background: 'linear-gradient(180deg, #F2EFEA 0%, #EBE7E1 100%)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 3px rgba(0,0,0,0.04)',
           }}
         />
       </div>
@@ -133,8 +133,8 @@ function MedicineCabinet({
         <div
           className="w-[14px] flex-shrink-0"
           style={{
-            background: 'linear-gradient(90deg, #D8D0C5 0%, #E4DCD2 40%, #DFD7CC 100%)',
-            boxShadow: 'inset -2px 0 4px rgba(0,0,0,0.04), inset 1px 0 0 rgba(255,255,255,0.5)',
+            background: 'linear-gradient(90deg, #EBE7E2 0%, #F3F0EC 40%, #EEEAE5 100%)',
+            boxShadow: 'inset -2px 0 4px rgba(0,0,0,0.03), inset 1px 0 0 rgba(255,255,255,0.8)',
           }}
         />
 
@@ -142,8 +142,8 @@ function MedicineCabinet({
         <div
           className="flex-1"
           style={{
-            background: 'linear-gradient(180deg, #F5F0EA 0%, #EDE6DD 50%, #E8E0D6 100%)',
-            boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.04), inset 0 0 30px rgba(0,0,0,0.02)',
+            background: 'linear-gradient(180deg, #FDFCFA 0%, #F8F5F1 50%, #F3EFEA 100%)',
+            boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.03), inset 0 0 30px rgba(0,0,0,0.015)',
           }}
         >
           {/* ── AM Shelf ── */}
@@ -179,8 +179,8 @@ function MedicineCabinet({
         <div
           className="w-[14px] flex-shrink-0"
           style={{
-            background: 'linear-gradient(90deg, #DFD7CC 0%, #E4DCD2 60%, #D8D0C5 100%)',
-            boxShadow: 'inset 2px 0 4px rgba(0,0,0,0.04), inset -1px 0 0 rgba(255,255,255,0.5)',
+            background: 'linear-gradient(90deg, #EEEAE5 0%, #F3F0EC 60%, #EBE7E2 100%)',
+            boxShadow: 'inset 2px 0 4px rgba(0,0,0,0.03), inset -1px 0 0 rgba(255,255,255,0.8)',
           }}
         />
       </div>
@@ -189,8 +189,8 @@ function MedicineCabinet({
       <div
         className="h-[8px] mx-0"
         style={{
-          background: 'linear-gradient(180deg, #DCD5CC 0%, #D5CCBF 50%, #CFC5B8 100%)',
-          boxShadow: '0 3px 8px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)',
+          background: 'linear-gradient(180deg, #F0EDE8 0%, #E8E3DC 50%, #E2DCD5 100%)',
+          boxShadow: '0 3px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.7)',
           borderRadius: '0 0 3px 3px',
         }}
       />
@@ -229,6 +229,106 @@ function StatCard({ label, value, sub, icon: Icon, color }: {
       </CardBody>
     </Card>
   );
+}
+
+/* ─── Product & Procedure Recommendations ─────────────────────────────────── */
+
+interface ProductRec {
+  name: string;
+  brand: string;
+  category: import('@/lib/types').ProductCategory;
+  why: string;
+  price?: number;
+  concerns: import('@/lib/types').SkinConcern[];
+}
+
+interface ProcedureRec {
+  name: string;
+  category: import('@/lib/types').ProcedureCategory;
+  why: string;
+  estimatedCost?: number;
+  concerns: import('@/lib/types').SkinConcern[];
+}
+
+const PRODUCT_RECS: Record<string, ProductRec[]> = {
+  'hyperpigmentation': [
+    { name: 'Discoloration Defense', brand: 'SkinCeuticals', category: 'serum', why: 'Tranexamic acid + niacinamide targets stubborn dark spots', price: 98, concerns: ['hyperpigmentation', 'dullness'] },
+    { name: 'Alpha Arbutin 2% + HA', brand: 'The Ordinary', category: 'serum', why: 'Affordable brightening with alpha arbutin', price: 9, concerns: ['hyperpigmentation', 'dullness'] },
+  ],
+  'acne': [
+    { name: 'Adapalene Gel 0.1%', brand: 'Differin', category: 'treatment', why: 'OTC retinoid proven for acne prevention', price: 15, concerns: ['acne', 'texture', 'pores'] },
+    { name: 'BHA Liquid Exfoliant', brand: "Paula's Choice", category: 'exfoliant', why: '2% salicylic acid clears pores without over-drying', price: 34, concerns: ['acne', 'pores', 'texture'] },
+  ],
+  'anti-aging': [
+    { name: 'A-Passioni Retinol Cream', brand: 'Drunk Elephant', category: 'treatment', why: '1% retinol in a nourishing, peptide-rich formula', price: 74, concerns: ['anti-aging', 'fine-lines', 'firmness'] },
+    { name: 'Peptide Complex Serum', brand: 'Peter Thomas Roth', category: 'serum', why: 'Multi-peptide blend for collagen support', price: 52, concerns: ['anti-aging', 'firmness', 'fine-lines'] },
+  ],
+  'dryness': [
+    { name: 'Moisture Surge Intense', brand: 'Clinique', category: 'moisturizer', why: '72-hour hydration with auto-replenishing technology', price: 42, concerns: ['dryness', 'sensitivity'] },
+    { name: 'Hyaluronic Acid 2% + B5', brand: 'The Ordinary', category: 'serum', why: 'Multi-weight HA for deep hydration', price: 8, concerns: ['dryness', 'fine-lines'] },
+  ],
+  'sensitivity': [
+    { name: 'Cicaplast Baume B5+', brand: 'La Roche-Posay', category: 'moisturizer', why: 'Barrier repair with madecassoside + panthenol', price: 17, concerns: ['sensitivity', 'redness', 'dryness'] },
+  ],
+  'pores': [
+    { name: 'Pore Tightening Toner', brand: 'COSRX', category: 'toner', why: 'BHA + willow bark minimizes pore appearance', price: 18, concerns: ['pores', 'acne', 'texture'] },
+  ],
+  'texture': [
+    { name: 'Good Genes Lactic Acid', brand: 'Sunday Riley', category: 'treatment', why: 'Lactic acid + licorice for smooth, bright skin', price: 85, concerns: ['texture', 'dullness', 'hyperpigmentation'] },
+  ],
+  'dullness': [
+    { name: 'Glow Recipe Toner', brand: 'Glow Recipe', category: 'toner', why: 'PHA + watermelon for gentle glow without irritation', price: 34, concerns: ['dullness', 'texture'] },
+  ],
+  'fine-lines': [
+    { name: 'Retinal 0.05%', brand: 'Avène', category: 'treatment', why: 'Retinaldehyde — stronger than retinol, less irritation', price: 48, concerns: ['fine-lines', 'anti-aging', 'firmness'] },
+  ],
+  'redness': [
+    { name: 'Azelaic Acid Suspension 10%', brand: 'The Ordinary', category: 'treatment', why: 'Azelaic acid calms redness and rosacea', price: 8, concerns: ['redness', 'sensitivity', 'acne'] },
+  ],
+  'firmness': [
+    { name: 'Firming Peptide Cream', brand: 'Naturium', category: 'moisturizer', why: 'Multi-peptide + bakuchiol for firming', price: 22, concerns: ['firmness', 'anti-aging', 'fine-lines'] },
+  ],
+};
+
+const PROCEDURE_RECS: Record<string, ProcedureRec[]> = {
+  'hyperpigmentation': [
+    { name: 'IPL Photofacial', category: 'light-therapy', why: 'Targets melanin deposits for even tone', estimatedCost: 400, concerns: ['hyperpigmentation', 'redness'] },
+    { name: 'VI Peel', category: 'peels', why: 'Medical-grade peel for stubborn discoloration', estimatedCost: 300, concerns: ['hyperpigmentation', 'texture'] },
+  ],
+  'anti-aging': [
+    { name: 'Microneedling with PRP', category: 'microneedling', why: 'Stimulates collagen with your own growth factors', estimatedCost: 600, concerns: ['anti-aging', 'firmness', 'texture'] },
+    { name: 'Ultherapy', category: 'other', why: 'Non-invasive ultrasound lifting for jowls and brows', estimatedCost: 3000, concerns: ['anti-aging', 'firmness'] },
+  ],
+  'acne': [
+    { name: 'Blue LED Light Therapy', category: 'light-therapy', why: 'Kills acne bacteria without chemicals', estimatedCost: 75, concerns: ['acne'] },
+    { name: 'Chemical Peel (Salicylic)', category: 'peels', why: 'Deep pore cleansing for persistent breakouts', estimatedCost: 200, concerns: ['acne', 'pores', 'texture'] },
+  ],
+  'texture': [
+    { name: 'Fractional CO2 Laser', category: 'laser', why: 'Gold standard for texture and scarring', estimatedCost: 1200, concerns: ['texture', 'anti-aging'] },
+  ],
+  'pores': [
+    { name: 'HydraFacial', category: 'facials', why: 'Deep extraction + hydration for refined pores', estimatedCost: 200, concerns: ['pores', 'dullness'] },
+  ],
+  'fine-lines': [
+    { name: 'Botox / Dysport', category: 'injectables', why: 'Prevents and smooths dynamic wrinkles', estimatedCost: 400, concerns: ['fine-lines', 'anti-aging'] },
+  ],
+  'firmness': [
+    { name: 'Sculptra', category: 'injectables', why: 'Stimulates your own collagen over months', estimatedCost: 800, concerns: ['firmness', 'anti-aging'] },
+  ],
+};
+
+function getRoutineGaps(
+  products: Product[],
+  concerns: import('@/lib/types').SkinConcern[]
+): { missingCategories: import('@/lib/types').ProductCategory[]; uncoveredConcerns: import('@/lib/types').SkinConcern[] } {
+  const categories = new Set(products.map((p) => p.category));
+  const coveredConcerns = new Set(products.flatMap((p) => p.concerns));
+
+  const essentialCategories: import('@/lib/types').ProductCategory[] = ['cleanser', 'moisturizer', 'spf', 'serum'];
+  const missingCategories = essentialCategories.filter((c) => !categories.has(c));
+  const uncoveredConcerns = concerns.filter((c) => !coveredConcerns.has(c));
+
+  return { missingCategories, uncoveredConcerns };
 }
 
 /* ─── Page ────────────────────────────────────────────────────────────────── */
@@ -312,30 +412,99 @@ export default function HomePage() {
     .filter((p) => p.daysOverdue > 0)
     .sort((a, b) => b.daysOverdue - a.daysOverdue);
 
+  const addWishlistItem = useAppStore((s) => s.addWishlistItem);
+  const addProcedureWishlistItem = useAppStore((s) => s.addProcedureWishlistItem);
+
+  // Recommendations based on user concerns and routine gaps
+  const { missingCategories, uncoveredConcerns } = useMemo(
+    () => getRoutineGaps(products, profile.skinConcerns),
+    [products, profile.skinConcerns]
+  );
+
+  const productRecs = useMemo(() => {
+    const recs: ProductRec[] = [];
+    const seen = new Set<string>();
+    const ownedNames = new Set(products.map((p) => p.name.toLowerCase()));
+    const wishlistNames = new Set(wishlist.map((w) => w.name.toLowerCase()));
+
+    for (const concern of profile.skinConcerns) {
+      for (const rec of PRODUCT_RECS[concern] || []) {
+        const key = `${rec.brand}-${rec.name}`;
+        if (!seen.has(key) && !ownedNames.has(rec.name.toLowerCase()) && !wishlistNames.has(rec.name.toLowerCase())) {
+          seen.add(key);
+          recs.push(rec);
+        }
+      }
+    }
+    return recs.slice(0, 4);
+  }, [products, profile.skinConcerns, wishlist]);
+
+  const procedureRecs = useMemo(() => {
+    const recs: ProcedureRec[] = [];
+    const seen = new Set<string>();
+    const ownedNames = new Set(procedures.map((p) => p.name.toLowerCase()));
+
+    for (const concern of profile.skinConcerns) {
+      for (const rec of PROCEDURE_RECS[concern] || []) {
+        if (!seen.has(rec.name) && !ownedNames.has(rec.name.toLowerCase())) {
+          seen.add(rec.name);
+          recs.push(rec);
+        }
+      }
+    }
+    return recs.slice(0, 3);
+  }, [procedures, profile.skinConcerns]);
+
+  function quickAddProductToWishlist(rec: ProductRec) {
+    addWishlistItem({
+      id: `wish-${Date.now()}`,
+      name: rec.name,
+      brand: rec.brand,
+      category: rec.category,
+      price: rec.price,
+      notes: rec.why,
+      addedDate: new Date().toISOString().split('T')[0],
+      priority: 'medium',
+    });
+  }
+
+  function quickAddProcedureToWishlist(rec: ProcedureRec) {
+    addProcedureWishlistItem({
+      id: `pwish-${Date.now()}`,
+      name: rec.name,
+      category: rec.category,
+      estimatedCost: rec.estimatedCost,
+      notes: rec.why,
+      addedDate: new Date().toISOString().split('T')[0],
+      priority: 'medium',
+      concerns: rec.concerns,
+    });
+  }
+
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="p-4 sm:p-8 max-w-6xl">
       {/* Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-obsidian-800">
+          <h1 className="text-2xl sm:text-3xl font-bold text-obsidian-800">
             {profile.name ? `Hello, ${profile.name}` : 'Your Skincare Shelf'}
           </h1>
-          <p className="text-obsidian-500 mt-1">
+          <p className="text-obsidian-500 mt-1 text-sm">
             {products.length} products · {ratedProducts.length} reviewed · {profile.skinType} skin
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button variant="outline" size="sm" onClick={() => window.location.href = '/wishlist'}>
             <Heart className="w-4 h-4 text-brand-400" />
-            Wishlist{wishlist.length > 0 && ` (${wishlist.length})`}
+            <span className="hidden sm:inline">Wishlist{wishlist.length > 0 && ` (${wishlist.length})`}</span>
           </Button>
           <Button variant="outline" size="sm" onClick={() => window.location.href = '/insights'}>
             <Sparkles className="w-4 h-4 text-rose-400" />
-            AI Insights
+            <span className="hidden sm:inline">AI Insights</span>
           </Button>
           <Button size="sm" onClick={() => setShowAddModal(true)}>
             <Plus className="w-4 h-4" />
-            Add Product
+            <span className="hidden sm:inline">Add Product</span>
           </Button>
         </div>
       </div>
@@ -379,7 +548,7 @@ export default function HomePage() {
       )}
 
       {/* Stats */}
-      <div className="flex gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         <StatCard label="Products" value={products.length} sub={`${products.filter((p) => p.inRoutine).length} in routine`} icon={TrendingUp} color="bg-rose-50 text-rose-500" />
         <StatCard label="Avg Rating" value={avgRating} sub={`${ratedProducts.length} reviewed`} icon={Star} color="bg-amber-50 text-amber-500" />
         <StatCard label="Procedures" value={procedures.length} sub={upcomingProcedures.length > 0 ? `${upcomingProcedures[0].name} in ${upcomingProcedures[0].daysUntil}d` : 'No upcoming'} icon={Calendar} color="bg-berry-50 text-berry-500" />
@@ -407,8 +576,117 @@ export default function HomePage() {
         />
       </div>
 
+      {/* ── Recommendations ── */}
+      {(productRecs.length > 0 || procedureRecs.length > 0) && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-obsidian-800">Recommended for You</h2>
+            <span className="text-xs text-obsidian-400">Based on your skin goals</span>
+          </div>
+
+          {/* Routine gap notice */}
+          {(missingCategories.length > 0 || uncoveredConcerns.length > 0) && (
+            <div className="bg-gold-50 border border-gold-100 rounded-2xl p-4 mb-4">
+              <div className="text-sm font-medium text-gold-700 mb-1">Routine Gaps</div>
+              <div className="text-xs text-gold-600">
+                {missingCategories.length > 0 && (
+                  <span>Missing: {missingCategories.map(categoryLabel).join(', ')}. </span>
+                )}
+                {uncoveredConcerns.length > 0 && (
+                  <span>No products targeting: {uncoveredConcerns.map(concernLabel).join(', ')}.</span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Product Recs */}
+          {productRecs.length > 0 && (
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <ShoppingBag className="w-4 h-4 text-brand-500" />
+                <span className="text-sm font-semibold text-obsidian-700">Products</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {productRecs.map((rec) => (
+                  <Card key={`${rec.brand}-${rec.name}`} className="hover:shadow-md transition-shadow">
+                    <CardBody className="p-4">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-semibold text-obsidian-800">{rec.name}</div>
+                          <div className="text-xs text-obsidian-500">{rec.brand} · {categoryLabel(rec.category)}</div>
+                          <div className="text-xs text-obsidian-400 mt-1">{rec.why}</div>
+                          {rec.price && (
+                            <div className="text-xs font-medium text-obsidian-600 mt-1.5">${rec.price}</div>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => quickAddProductToWishlist(rec)}
+                          className="flex-shrink-0 p-2 rounded-xl bg-brand-50 text-brand-600 hover:bg-brand-100 transition-colors"
+                          title="Add to wishlist"
+                        >
+                          <Heart className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="flex gap-1 mt-2">
+                        {rec.concerns.map((c) => (
+                          <span key={c} className="text-[10px] bg-ivory-darker text-obsidian-500 rounded-full px-1.5 py-0.5">
+                            {concernLabel(c)}
+                          </span>
+                        ))}
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Procedure Recs */}
+          {procedureRecs.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Syringe className="w-4 h-4 text-berry-500" />
+                <span className="text-sm font-semibold text-obsidian-700">Procedures</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {procedureRecs.map((rec) => (
+                  <Card key={rec.name} className="hover:shadow-md transition-shadow">
+                    <CardBody className="p-4">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-semibold text-obsidian-800">{rec.name}</div>
+                          <div className="text-xs text-obsidian-500 capitalize">{rec.category}</div>
+                          <div className="text-xs text-obsidian-400 mt-1">{rec.why}</div>
+                          {rec.estimatedCost && (
+                            <div className="text-xs font-medium text-obsidian-600 mt-1.5">~${rec.estimatedCost}</div>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => quickAddProcedureToWishlist(rec)}
+                          className="flex-shrink-0 p-2 rounded-xl bg-berry-50 text-berry-500 hover:bg-berry-100 transition-colors"
+                          title="Add to procedure wishlist"
+                        >
+                          <Heart className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div className="flex gap-1 mt-2">
+                        {rec.concerns.map((c) => (
+                          <span key={c} className="text-[10px] bg-ivory-darker text-obsidian-500 rounded-full px-1.5 py-0.5">
+                            {concernLabel(c)}
+                          </span>
+                        ))}
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Bottom panels */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <Card>
           <CardBody>
             <h3 className="text-sm font-semibold text-obsidian-700 mb-3">Concerns Coverage</h3>

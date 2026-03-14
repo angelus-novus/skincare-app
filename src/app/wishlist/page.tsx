@@ -13,6 +13,7 @@ import { Card, CardBody } from '@/components/ui/card';
 import { Input, Textarea } from '@/components/ui/input';
 import { Modal } from '@/components/ui/modal';
 import { Badge } from '@/components/ui/badge';
+import { Clock, CalendarDays, AlertCircle } from 'lucide-react';
 import type { WishlistItem, ProcedureWishlistItem, ProductCategory, ProcedureCategory, SkinConcern } from '@/lib/types';
 
 const PRODUCT_CATEGORIES: ProductCategory[] = [
@@ -61,6 +62,8 @@ function WishlistDetailModal({
   const [purchaseUrl, setPurchaseUrl] = useState(item.purchaseUrl || '');
   const [notes, setNotes] = useState(item.notes || '');
   const [priority, setPriority] = useState(item.priority);
+  const [ingredientsList, setIngredientsList] = useState(item.ingredientsList?.join(', ') || '');
+  const [size, setSize] = useState(item.size || '');
   const [isFetching, setIsFetching] = useState(false);
 
   async function autoFill() {
@@ -78,10 +81,10 @@ function WishlistDetailModal({
       if (data.brand && !brand.trim()) setBrand(data.brand);
       if (data.category && PRODUCT_CATEGORIES.includes(data.category)) setCategory(data.category);
       if (data.price && !price) setPrice(String(data.price));
+      if (data.size && !size) setSize(data.size);
       if (data.description) setNotes((prev) => prev || data.description);
-      // Try to find an image via the search query
-      if (data.imageSearchQuery && !imageUrl) {
-        setImageUrl(`https://source.unsplash.com/300x300/?${encodeURIComponent(data.imageSearchQuery)}`);
+      if (data.ingredients?.length > 0 && !ingredientsList) {
+        setIngredientsList(data.ingredients.join(', '));
       }
     } catch {
       // silent
@@ -115,6 +118,9 @@ function WishlistDetailModal({
   }
 
   function handleSave() {
+    const parsedIngredients = ingredientsList
+      ? ingredientsList.split(',').map((s) => s.trim()).filter(Boolean)
+      : undefined;
     updateWishlistItem(item.id, {
       name: name.trim(),
       brand: brand.trim(),
@@ -124,6 +130,8 @@ function WishlistDetailModal({
       purchaseUrl: purchaseUrl.trim() || undefined,
       notes: notes.trim() || undefined,
       priority,
+      ingredientsList: parsedIngredients,
+      size: size.trim() || undefined,
     });
     setEditing(false);
     onClose();
@@ -198,7 +206,21 @@ function WishlistDetailModal({
                 </div>
                 <Input label="Price" type="number" placeholder="65.00" value={price} onChange={(e) => setPrice(e.target.value)} />
               </div>
-              <Input label="Purchase URL" placeholder="https://..." value={purchaseUrl} onChange={(e) => setPurchaseUrl(e.target.value)} />
+              <div className="grid grid-cols-2 gap-3">
+                <Input label="Size" placeholder="e.g. 30ml" value={size} onChange={(e) => setSize(e.target.value)} />
+                <Input label="Purchase URL" placeholder="https://..." value={purchaseUrl} onChange={(e) => setPurchaseUrl(e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-obsidian-700">Ingredients</label>
+                <textarea
+                  value={ingredientsList}
+                  onChange={(e) => setIngredientsList(e.target.value)}
+                  placeholder="Water, Glycerin, Niacinamide, ..."
+                  rows={3}
+                  className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 placeholder:text-obsidian-400 bg-white resize-none"
+                />
+                <p className="text-xs text-obsidian-400">Comma-separated. Auto-filled by AI when available.</p>
+              </div>
               <div className="space-y-1">
                 <label className="text-sm font-medium text-obsidian-700">Priority</label>
                 <div className="flex gap-1.5">
@@ -236,15 +258,37 @@ function WishlistDetailModal({
               <h3 className="text-lg font-bold text-obsidian-800">{item.name}</h3>
               <p className="text-sm text-obsidian-500">{item.brand}</p>
 
-              {item.price && (
-                <div className="flex items-center gap-1.5 text-obsidian-600 mt-3">
-                  <DollarSign className="w-4 h-4 text-obsidian-400" />
-                  <span className="text-sm font-medium">${item.price}</span>
-                </div>
-              )}
+              <div className="flex items-center gap-4 mt-3 text-sm text-obsidian-600">
+                {item.price && (
+                  <div className="flex items-center gap-1">
+                    <DollarSign className="w-3.5 h-3.5 text-obsidian-400" />
+                    <span className="font-medium">${item.price}</span>
+                  </div>
+                )}
+                {item.size && (
+                  <div className="flex items-center gap-1">
+                    <Package className="w-3.5 h-3.5 text-obsidian-400" />
+                    <span>{item.size}</span>
+                  </div>
+                )}
+              </div>
 
               {item.notes && (
                 <p className="text-sm text-obsidian-600 mt-3 leading-relaxed">{item.notes}</p>
+              )}
+
+              {item.ingredientsList && item.ingredientsList.length > 0 && (
+                <div className="mt-3">
+                  <div className="text-xs font-medium text-obsidian-500 mb-1.5">Key Ingredients</div>
+                  <div className="flex flex-wrap gap-1">
+                    {item.ingredientsList.slice(0, 12).map((ing, i) => (
+                      <span key={i} className="text-xs bg-ivory-darker text-obsidian-600 rounded-full px-2 py-0.5">{ing}</span>
+                    ))}
+                    {item.ingredientsList.length > 12 && (
+                      <span className="text-xs text-obsidian-400">+{item.ingredientsList.length - 12} more</span>
+                    )}
+                  </div>
+                </div>
               )}
 
               <div className="text-xs text-obsidian-400 mt-3">Added {item.addedDate}</div>
@@ -273,6 +317,200 @@ function WishlistDetailModal({
   );
 }
 
+// ── Procedure Wishlist Detail Modal ──────────────────────────────────────────
+function ProcedureWishlistDetailModal({
+  item,
+  open,
+  onClose,
+}: {
+  item: ProcedureWishlistItem;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const { updateProcedureWishlistItem, removeProcedureWishlistItem } = useAppStore();
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(item.name);
+  const [category, setCategory] = useState(item.category);
+  const [estimatedCost, setEstimatedCost] = useState(item.estimatedCost ? String(item.estimatedCost) : '');
+  const [clinic, setClinic] = useState(item.clinic || '');
+  const [notes, setNotes] = useState(item.notes || '');
+  const [priority, setPriority] = useState(item.priority);
+  const [concerns, setConcerns] = useState<SkinConcern[]>(item.concerns);
+  const [description, setDescription] = useState(item.description || '');
+  const [downtime, setDowntime] = useState(item.downtime || '');
+  const [frequency, setFrequency] = useState(item.frequency || '');
+  const [typicalCost, setTypicalCost] = useState(item.typicalCost || '');
+
+  function handleSave() {
+    updateProcedureWishlistItem(item.id, {
+      name: name.trim(),
+      category,
+      estimatedCost: estimatedCost ? parseFloat(estimatedCost) : undefined,
+      clinic: clinic.trim() || undefined,
+      notes: notes.trim() || undefined,
+      priority,
+      concerns,
+      description: description.trim() || undefined,
+      downtime: downtime.trim() || undefined,
+      frequency: frequency.trim() || undefined,
+      typicalCost: typicalCost.trim() || undefined,
+    });
+    setEditing(false);
+    onClose();
+  }
+
+  return (
+    <Modal open={open} onClose={onClose} title={editing ? 'Edit Procedure' : item.name} size="lg">
+      {editing ? (
+        <div className="space-y-3">
+          <Input label="Procedure Name" value={name} onChange={(e) => setName(e.target.value)} />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-obsidian-700">Category</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value as ProcedureCategory)}
+                className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 bg-white"
+              >
+                {PROCEDURE_CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <Input label="Estimated Cost" type="number" placeholder="300" value={estimatedCost} onChange={(e) => setEstimatedCost(e.target.value)} />
+          </div>
+          <Textarea label="Description" placeholder="What does this procedure do?" value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
+          <div className="grid grid-cols-2 gap-3">
+            <Input label="Downtime" placeholder="e.g. 2-3 days" value={downtime} onChange={(e) => setDowntime(e.target.value)} />
+            <Input label="Frequency" placeholder="e.g. Every 4-6 weeks" value={frequency} onChange={(e) => setFrequency(e.target.value)} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Input label="Typical Cost Range" placeholder="e.g. $300-$500" value={typicalCost} onChange={(e) => setTypicalCost(e.target.value)} />
+            <Input label="Clinic" placeholder="e.g. SkinLab NYC" value={clinic} onChange={(e) => setClinic(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-obsidian-700">Priority</label>
+            <div className="flex gap-1.5">
+              {(['high', 'medium', 'low'] as const).map((p) => (
+                <button key={p} onClick={() => setPriority(p)} className={cn(
+                  'flex-1 rounded-lg px-3 py-2 text-sm font-medium border capitalize transition-colors',
+                  priority === p ? PRIORITY_COLORS[p] + ' border-current' : 'bg-white text-obsidian-500 border-ivory-darker'
+                )}>
+                  {p}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-obsidian-700 mb-2 block">Concerns</label>
+            <div className="flex flex-wrap gap-1.5">
+              {CONCERNS.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setConcerns((prev) => prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c])}
+                  className={cn(
+                    'text-xs rounded-full px-2.5 py-1 border font-medium transition-colors',
+                    concerns.includes(c)
+                      ? 'bg-berry-100 text-berry-700 border-berry-200'
+                      : 'bg-white text-obsidian-500 border-ivory-darker hover:border-berry-200'
+                  )}
+                >
+                  {concernLabel(c)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <Textarea label="Notes" placeholder="Research notes, questions for consultation..." value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
+          <div className="flex gap-2 pt-2">
+            <Button variant="outline" onClick={() => setEditing(false)} className="flex-1">Cancel</Button>
+            <Button onClick={handleSave} className="flex-1"><Save className="w-4 h-4" /> Save</Button>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <Badge className="bg-berry-100 text-berry-700 capitalize">{item.category}</Badge>
+            <PriorityLabel priority={item.priority} />
+          </div>
+
+          {item.description && (
+            <p className="text-sm text-obsidian-600 leading-relaxed mb-4">{item.description}</p>
+          )}
+
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            {item.typicalCost && (
+              <div className="bg-ivory-dark rounded-lg p-3">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-obsidian-500 mb-1">
+                  <DollarSign className="w-3.5 h-3.5" /> Typical Cost
+                </div>
+                <div className="text-sm font-semibold text-obsidian-800">{item.typicalCost}</div>
+              </div>
+            )}
+            {item.downtime && (
+              <div className="bg-ivory-dark rounded-lg p-3">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-obsidian-500 mb-1">
+                  <Clock className="w-3.5 h-3.5" /> Downtime
+                </div>
+                <div className="text-sm font-semibold text-obsidian-800">{item.downtime}</div>
+              </div>
+            )}
+            {item.frequency && (
+              <div className="bg-ivory-dark rounded-lg p-3">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-obsidian-500 mb-1">
+                  <CalendarDays className="w-3.5 h-3.5" /> Frequency
+                </div>
+                <div className="text-sm font-semibold text-obsidian-800">{item.frequency}</div>
+              </div>
+            )}
+            {item.estimatedCost && (
+              <div className="bg-ivory-dark rounded-lg p-3">
+                <div className="flex items-center gap-1.5 text-xs font-medium text-obsidian-500 mb-1">
+                  <DollarSign className="w-3.5 h-3.5" /> Your Budget
+                </div>
+                <div className="text-sm font-semibold text-obsidian-800">${item.estimatedCost}</div>
+              </div>
+            )}
+          </div>
+
+          {item.clinic && (
+            <div className="text-sm text-obsidian-600 mb-2">
+              <span className="text-obsidian-400">Clinic: </span>{item.clinic}
+            </div>
+          )}
+
+          {item.concerns.length > 0 && (
+            <div className="mb-3">
+              <div className="text-xs font-medium text-obsidian-500 mb-1.5">Addresses</div>
+              <div className="flex flex-wrap gap-1">
+                {item.concerns.map((c) => (
+                  <span key={c} className="text-xs bg-berry-50 text-berry-600 rounded-full px-2 py-0.5">{concernLabel(c)}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {item.notes && (
+            <p className="text-sm text-obsidian-600 mt-3 leading-relaxed">{item.notes}</p>
+          )}
+
+          <div className="text-xs text-obsidian-400 mt-3">Added {item.addedDate}</div>
+
+          <div className="flex gap-2 mt-4">
+            <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+              <Pencil className="w-3.5 h-3.5" /> Edit
+            </Button>
+            <Button variant="ghost" size="sm" className="text-red-500 hover:bg-red-50 ml-auto"
+              onClick={() => { removeProcedureWishlistItem(item.id); onClose(); }}>
+              <Trash2 className="w-3.5 h-3.5" /> Remove
+            </Button>
+          </div>
+        </div>
+      )}
+    </Modal>
+  );
+}
+
 export default function WishlistPage() {
   const wishlist = useAppStore((s) => s.wishlist);
   const procedureWishlist = useAppStore((s) => s.procedureWishlist);
@@ -285,6 +523,7 @@ export default function WishlistPage() {
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showAddProcedure, setShowAddProcedure] = useState(false);
   const [selectedWishlistItem, setSelectedWishlistItem] = useState<WishlistItem | null>(null);
+  const [selectedProcedureItem, setSelectedProcedureItem] = useState<ProcedureWishlistItem | null>(null);
 
   // Add product form
   const [pName, setPName] = useState('');
@@ -456,7 +695,7 @@ export default function WishlistPage() {
             <div className="grid gap-3">
               {procedureWishlist.map((item) => (
                 <motion.div key={item.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                  <Card className="hover:shadow-md transition-shadow">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedProcedureItem(item)}>
                     <CardBody className="flex items-center gap-4 p-4">
                       <div className="w-10 h-10 rounded-xl bg-berry-50 flex items-center justify-center flex-shrink-0">
                         <Syringe className="w-5 h-5 text-berry-500" />
@@ -465,9 +704,10 @@ export default function WishlistPage() {
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold text-obsidian-800">{item.name}</span>
                           <PriorityLabel priority={item.priority} />
-                          <Badge className="bg-berry-100 text-berry-700">{item.category}</Badge>
+                          <Badge className="bg-berry-100 text-berry-700 capitalize">{item.category}</Badge>
                         </div>
                         {item.clinic && <div className="text-xs text-obsidian-500 mt-0.5">{item.clinic}</div>}
+                        {item.description && <div className="text-xs text-obsidian-500 mt-0.5 truncate">{item.description}</div>}
                         {item.concerns.length > 0 && (
                           <div className="flex gap-1 mt-1">
                             {item.concerns.map((c) => (
@@ -475,13 +715,12 @@ export default function WishlistPage() {
                             ))}
                           </div>
                         )}
-                        {item.notes && <div className="text-xs text-obsidian-400 mt-1 truncate">{item.notes}</div>}
                       </div>
                       <div className="flex items-center gap-3 flex-shrink-0">
                         {item.estimatedCost && (
                           <span className="text-sm font-medium text-obsidian-600">${item.estimatedCost}</span>
                         )}
-                        <button onClick={() => removeProcedureWishlistItem(item.id)} className="text-obsidian-300 hover:text-red-500 transition-colors">
+                        <button onClick={(e) => { e.stopPropagation(); removeProcedureWishlistItem(item.id); }} className="text-obsidian-300 hover:text-red-500 transition-colors">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -626,6 +865,15 @@ export default function WishlistPage() {
           item={selectedWishlistItem}
           open={!!selectedWishlistItem}
           onClose={() => setSelectedWishlistItem(null)}
+        />
+      )}
+
+      {/* Procedure Wishlist Detail Modal */}
+      {selectedProcedureItem && (
+        <ProcedureWishlistDetailModal
+          item={selectedProcedureItem}
+          open={!!selectedProcedureItem}
+          onClose={() => setSelectedProcedureItem(null)}
         />
       )}
     </div>

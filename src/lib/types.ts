@@ -107,6 +107,8 @@ export interface WishlistItem {
   notes?: string;
   addedDate: string;
   priority: 'high' | 'medium' | 'low';
+  ingredientsList?: string[];
+  size?: string;
 }
 
 export interface ProcedureWishlistItem {
@@ -119,6 +121,10 @@ export interface ProcedureWishlistItem {
   addedDate: string;
   priority: 'high' | 'medium' | 'low';
   concerns: SkinConcern[];
+  description?: string;
+  downtime?: string;
+  frequency?: string;
+  typicalCost?: string;
 }
 
 export interface Procedure {

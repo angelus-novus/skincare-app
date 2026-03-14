@@ -3,7 +3,7 @@ import { useState } from 'react';
 import {
   Zap, Syringe, Sparkles, Droplets, CircleDot, Sun, User, MoreHorizontal,
   Calendar, Clock, DollarSign, ChevronDown, ChevronUp, AlertTriangle,
-  CheckCircle, XCircle, Plus, Star, MapPin, User2, ShoppingBag, Info,
+  CheckCircle, XCircle, Plus, Star, MapPin, User2, ShoppingBag, Info, Heart, CheckCircle2,
 } from 'lucide-react';
 import {
   differenceInDays, parseISO, format, addMonths, formatDistanceToNow,
@@ -974,7 +974,7 @@ export default function ProceduresPage() {
   const products = useProducts();
   const procedures = useProcedures();
   const userProfile = useUserProfile();
-  const { addProcedure } = useAppStore();
+  const { addProcedure, addProcedureWishlistItem, procedureWishlist } = useAppStore();
   const [logOpen, setLogOpen] = useState(false);
 
   const sorted = [...procedures].sort(
@@ -1122,13 +1122,40 @@ export default function ProceduresPage() {
             <CardBody className="pt-0 space-y-3">
               {suggestions.slice(0, 5).map((s, i) => {
                 const Icon = CATEGORY_ICONS[s.category];
+                const alreadyWishlisted = procedureWishlist.some((w) => w.name === s.name);
                 return (
                   <div key={i} className="border border-ivory-darker rounded-xl p-3">
                     <div className="flex items-center gap-2 mb-1.5">
                       <div className={cn('w-6 h-6 rounded-lg flex items-center justify-center', CATEGORY_COLORS[s.category])}>
                         <Icon className="w-3.5 h-3.5" />
                       </div>
-                      <span className="text-sm font-medium text-obsidian-800">{s.name}</span>
+                      <span className="text-sm font-medium text-obsidian-800 flex-1">{s.name}</span>
+                      <button
+                        onClick={() => {
+                          if (alreadyWishlisted) return;
+                          addProcedureWishlistItem({
+                            id: `pwish-${Date.now()}-${i}`,
+                            name: s.name,
+                            category: s.category,
+                            description: s.description,
+                            typicalCost: s.typicalCost,
+                            downtime: s.downtime,
+                            frequency: s.frequency,
+                            addedDate: new Date().toISOString().split('T')[0],
+                            priority: 'medium',
+                            concerns: s.bestFor.filter(c => userProfile.skinConcerns.includes(c as Procedure['concerns'][number])) as typeof userProfile.skinConcerns,
+                          });
+                        }}
+                        className={cn(
+                          'flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-lg transition-colors',
+                          alreadyWishlisted
+                            ? 'text-emerald-600 bg-emerald-50'
+                            : 'text-rose-500 hover:bg-rose-50'
+                        )}
+                        title={alreadyWishlisted ? 'Already in wishlist' : 'Add to wishlist'}
+                      >
+                        {alreadyWishlisted ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Heart className="w-3.5 h-3.5" />}
+                      </button>
                     </div>
                     <p className="text-xs text-obsidian-500 mb-2">{s.description}</p>
                     <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">

@@ -88,7 +88,7 @@ export interface Product {
   ingredientsList?: string[]; // raw ingredient names (from web/user)
   rating?: ProductRating;
   inRoutine: boolean;
-  routineStep?: 'am' | 'pm' | 'both';
+  routineStep?: 'am' | 'pm' | 'both' | 'weekly';
   routineOrder?: number;
   tags: string[];
   purchaseUrl?: string;

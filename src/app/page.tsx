@@ -1,60 +1,207 @@
 'use client';
 import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar, X, Heart } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar, X, Heart, Sun, Moon, CalendarDays } from 'lucide-react';
 import { useAppStore, useProducts, useUserProfile, useProcedures } from '@/lib/store';
 import { ProductBottle } from '@/components/shelf/ProductBottle';
 import { ProductDetailModal } from '@/components/shelf/ProductDetailModal';
 import { AddProductModal } from '@/components/products/AddProductModal';
-import type { Product, ProductCategory } from '@/lib/types';
+import type { Product } from '@/lib/types';
 import { categoryLabel, categoryColor, daysUntilExpiry, getExpiryStatus, concernLabel } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardBody } from '@/components/ui/card';
 import { BarcodeScanner } from '@/components/products/BarcodeScanner';
 import { ConflictBanner } from '@/components/shelf/ConflictBanner';
 import { addMonths, differenceInDays, parseISO, format, isBefore } from 'date-fns';
 
-/* ─── Realistic Shelf Row ─────────────────────────────────────────────────── */
+/* ─── Cabinet Shelf Row ───────────────────────────────────────────────────── */
 
-function ShelfRow({ category, products, onProductClick }: {
-  category: ProductCategory;
+function CabinetShelfRow({
+  label,
+  icon: Icon,
+  products,
+  onProductClick,
+  isLast,
+}: {
+  label: string;
+  icon: React.ElementType;
   products: Product[];
   onProductClick: (p: Product) => void;
+  isLast?: boolean;
 }) {
-  if (products.length === 0) return null;
   return (
-    <div className="mb-2">
-      {/* Category label */}
-      <div className="flex items-center gap-2 mb-2 ml-2">
-        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${categoryColor(category)}`}>
-          {categoryLabel(category)}
+    <div className="relative">
+      {/* Shelf label */}
+      <div className="flex items-center gap-2 px-5 pt-3 pb-1">
+        <Icon className="w-3.5 h-3.5" style={{ color: '#B5622A' }} />
+        <span className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: '#8B6340', fontFamily: 'var(--font-display)' }}>
+          {label}
         </span>
-        <span className="text-[10px] text-obsidian-400">{products.length}</span>
+        <span className="text-[10px]" style={{ color: '#B5A08A' }}>{products.length} items</span>
       </div>
-      {/* Products row sitting on the shelf */}
-      <div className="relative">
-        {/* Product surface area */}
-        <div className="flex items-end gap-3 px-6 pb-1 min-h-[110px]">
-          {products.map((product, index) => (
-            <ProductBottle
-              key={product.id}
-              product={product}
-              onClick={() => onProductClick(product)}
-              index={index}
-            />
-          ))}
+
+      {/* Products area — inside the cabinet */}
+      <div
+        className="flex items-end gap-3 flex-wrap px-5 pb-2 min-h-[120px]"
+      >
+        {products.map((product, index) => (
+          <ProductBottle
+            key={product.id}
+            product={product}
+            onClick={() => onProductClick(product)}
+            index={index}
+          />
+        ))}
+        {products.length === 0 && (
+          <div className="flex-1 flex items-center justify-center py-6">
+            <span className="text-xs italic" style={{ color: '#B5A08A' }}>No products yet</span>
+          </div>
+        )}
+      </div>
+
+      {/* Glass shelf with shine and shadow */}
+      {!isLast && (
+        <div className="relative mx-2">
+          {/* Shelf surface */}
+          <div
+            className="h-[6px] rounded-[1px]"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(230,225,218,0.9) 50%, rgba(210,203,194,0.8) 100%)',
+              boxShadow: '0 1px 0 rgba(255,255,255,0.6), inset 0 1px 0 rgba(255,255,255,0.9)',
+            }}
+          />
+          {/* Under-shelf shadow */}
+          <div
+            className="h-4"
+            style={{
+              background: 'linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.02) 40%, transparent 100%)',
+            }}
+          />
         </div>
-        {/* The shelf board */}
-        <div className="shelf-board h-[14px] rounded-sm" />
-        {/* Shadow below shelf board */}
+      )}
+    </div>
+  );
+}
+
+/* ─── Medicine Cabinet ────────────────────────────────────────────────────── */
+
+function MedicineCabinet({
+  amProducts,
+  pmProducts,
+  weeklyProducts,
+  onProductClick,
+}: {
+  amProducts: Product[];
+  pmProducts: Product[];
+  weeklyProducts: Product[];
+  onProductClick: (p: Product) => void;
+}) {
+  return (
+    <div className="relative inline-block w-full max-w-3xl mx-auto">
+      {/* ── Crown molding ── */}
+      <div className="relative">
+        {/* Top decorative piece */}
         <div
-          className="h-8 rounded-b-xl"
+          className="h-3 mx-1 rounded-t-sm"
           style={{
-            background: 'linear-gradient(180deg, rgba(28,25,23,0.12) 0%, rgba(28,25,23,0.04) 40%, transparent 100%)',
+            background: 'linear-gradient(180deg, #E8E0D5 0%, #DDD5C8 100%)',
+            boxShadow: '0 -1px 0 rgba(255,255,255,0.8), inset 0 -1px 2px rgba(0,0,0,0.04)',
+          }}
+        />
+        {/* Molding profile */}
+        <div
+          className="h-[10px] -mx-1"
+          style={{
+            background: 'linear-gradient(180deg, #F0EAE2 0%, #E6DFD5 30%, #DDD5CA 70%, #D5CCBF 100%)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9)',
+            borderRadius: '2px 2px 0 0',
+          }}
+        />
+        {/* Thinner sub-molding */}
+        <div
+          className="h-[5px] mx-0"
+          style={{
+            background: 'linear-gradient(180deg, #E2DCD4 0%, #DCD5CC 100%)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5), 0 1px 3px rgba(0,0,0,0.05)',
           }}
         />
       </div>
+
+      {/* ── Cabinet body ── */}
+      <div className="relative flex">
+        {/* Left side panel */}
+        <div
+          className="w-[14px] flex-shrink-0"
+          style={{
+            background: 'linear-gradient(90deg, #D8D0C5 0%, #E4DCD2 40%, #DFD7CC 100%)',
+            boxShadow: 'inset -2px 0 4px rgba(0,0,0,0.04), inset 1px 0 0 rgba(255,255,255,0.5)',
+          }}
+        />
+
+        {/* Interior */}
+        <div
+          className="flex-1"
+          style={{
+            background: 'linear-gradient(180deg, #F5F0EA 0%, #EDE6DD 50%, #E8E0D6 100%)',
+            boxShadow: 'inset 0 4px 12px rgba(0,0,0,0.04), inset 0 0 30px rgba(0,0,0,0.02)',
+          }}
+        >
+          {/* ── AM Shelf ── */}
+          <CabinetShelfRow
+            label="Morning"
+            icon={Sun}
+            products={amProducts}
+            onProductClick={onProductClick}
+          />
+
+          {/* ── PM Shelf ── */}
+          <CabinetShelfRow
+            label="Evening"
+            icon={Moon}
+            products={pmProducts}
+            onProductClick={onProductClick}
+          />
+
+          {/* ── Weekly Shelf ── */}
+          <CabinetShelfRow
+            label="Weekly"
+            icon={CalendarDays}
+            products={weeklyProducts}
+            onProductClick={onProductClick}
+            isLast
+          />
+
+          {/* Bottom padding */}
+          <div className="h-3" />
+        </div>
+
+        {/* Right side panel */}
+        <div
+          className="w-[14px] flex-shrink-0"
+          style={{
+            background: 'linear-gradient(90deg, #DFD7CC 0%, #E4DCD2 60%, #D8D0C5 100%)',
+            boxShadow: 'inset 2px 0 4px rgba(0,0,0,0.04), inset -1px 0 0 rgba(255,255,255,0.5)',
+          }}
+        />
+      </div>
+
+      {/* ── Bottom frame ── */}
+      <div
+        className="h-[8px] mx-0"
+        style={{
+          background: 'linear-gradient(180deg, #DCD5CC 0%, #D5CCBF 50%, #CFC5B8 100%)',
+          boxShadow: '0 3px 8px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)',
+          borderRadius: '0 0 3px 3px',
+        }}
+      />
+
+      {/* Cabinet outer shadow */}
+      <div
+        className="absolute inset-0 pointer-events-none rounded-sm"
+        style={{
+          boxShadow: '0 8px 30px rgba(28,25,23,0.12), 0 2px 8px rgba(28,25,23,0.06)',
+        }}
+      />
     </div>
   );
 }
@@ -90,6 +237,7 @@ export default function HomePage() {
   const products = useProducts();
   const profile = useUserProfile();
   const procedures = useProcedures();
+  const routine = useAppStore((s) => s.routine);
   const expirySnoozedUntil = useAppStore((s) => s.expirySnoozedUntil);
   const snoozeExpiryAlerts = useAppStore((s) => s.snoozeExpiryAlerts);
   const wishlist = useAppStore((s) => s.wishlist);
@@ -107,11 +255,42 @@ export default function HomePage() {
   });
   const expiredProducts = products.filter((p) => getExpiryStatus(daysUntilExpiry(p)) === 'expired');
 
-  // Check if expiry alerts are snoozed
   const isExpirySnoozed = useMemo(() => {
     if (!expirySnoozedUntil) return false;
     return isBefore(new Date(), parseISO(expirySnoozedUntil));
   }, [expirySnoozedUntil]);
+
+  // Group products by routine time
+  const amProductIds = new Set(routine.am.map((s) => s.productId));
+  const pmProductIds = new Set(routine.pm.map((s) => s.productId));
+  const weeklyProductIds = new Set(routine.weekly.map((s) => s.productId));
+
+  const amProducts = products.filter((p) => amProductIds.has(p.id));
+  const pmProducts = products.filter((p) => pmProductIds.has(p.id) && !amProductIds.has(p.id));
+  const weeklyProducts = products.filter((p) => weeklyProductIds.has(p.id));
+
+  // Products not in any routine go into the shelf based on their routineStep field
+  const unassigned = products.filter(
+    (p) => !amProductIds.has(p.id) && !pmProductIds.has(p.id) && !weeklyProductIds.has(p.id)
+  );
+  // Merge unassigned into appropriate shelves
+  const amAll = [
+    ...amProducts,
+    ...unassigned.filter((p) => p.routineStep === 'am' || p.routineStep === 'both'),
+  ];
+  const pmAll = [
+    ...pmProducts,
+    ...unassigned.filter((p) => p.routineStep === 'pm' || (!p.routineStep && !p.inRoutine)),
+  ];
+  const weeklyAll = [
+    ...weeklyProducts,
+    ...unassigned.filter((p) => p.routineStep === 'weekly'),
+  ];
+
+  // Any truly unassigned products go on the PM shelf as a default
+  const allAssigned = new Set([...amAll, ...pmAll, ...weeklyAll].map((p) => p.id));
+  const leftover = products.filter((p) => !allAssigned.has(p.id));
+  const pmFinal = [...pmAll, ...leftover];
 
   const upcomingProcedures = procedures
     .filter((p) => p.nextAppointment)
@@ -132,8 +311,6 @@ export default function HomePage() {
     })
     .filter((p) => p.daysOverdue > 0)
     .sort((a, b) => b.daysOverdue - a.daysOverdue);
-
-  const allCategories = [...new Set(products.map((p) => p.category))];
 
   return (
     <div className="p-8 max-w-6xl">
@@ -163,7 +340,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Expiry Alerts (dismissable with 7-day snooze) */}
+      {/* Expiry Alerts */}
       {!isExpirySnoozed && (expiringProducts.length > 0 || expiredProducts.length > 0) && (
         <div className="mb-6 space-y-2">
           {expiredProducts.length > 0 && (
@@ -177,11 +354,7 @@ export default function HomePage() {
                   {expiredProducts.map((p) => p.name).join(', ')}
                 </div>
               </div>
-              <button
-                onClick={snoozeExpiryAlerts}
-                className="text-xs text-obsidian-400 hover:text-obsidian-600 px-2 py-1 rounded-lg hover:bg-white/60 transition-colors flex-shrink-0"
-                title="Dismiss for 7 days"
-              >
+              <button onClick={snoozeExpiryAlerts} className="text-xs text-obsidian-400 hover:text-obsidian-600 p-1.5 rounded-lg hover:bg-white/60 transition-colors" title="Dismiss for 7 days">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -197,11 +370,7 @@ export default function HomePage() {
                   {expiringProducts.map((p) => `${p.name} (${daysUntilExpiry(p)}d)`).join(', ')}
                 </div>
               </div>
-              <button
-                onClick={snoozeExpiryAlerts}
-                className="text-xs text-obsidian-400 hover:text-obsidian-600 px-2 py-1 rounded-lg hover:bg-white/60 transition-colors flex-shrink-0"
-                title="Dismiss for 7 days"
-              >
+              <button onClick={snoozeExpiryAlerts} className="text-xs text-obsidian-400 hover:text-obsidian-600 p-1.5 rounded-lg hover:bg-white/60 transition-colors" title="Dismiss for 7 days">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -220,44 +389,22 @@ export default function HomePage() {
       {/* Routine Conflict Warnings */}
       <ConflictBanner />
 
-      {/* ── The Shelf (realistic vanity / bathroom shelf look) ── */}
+      {/* ── The Medicine Cabinet ── */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-obsidian-800">Your Shelf</h2>
+          <h2 className="text-lg font-bold text-obsidian-800">Your Cabinet</h2>
           <div className="flex items-center gap-4 text-xs text-obsidian-400">
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-amber-400" /><span>Expiring soon</span></div>
             <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-red-400" /><span>Expired</span></div>
           </div>
         </div>
 
-        {/* Shelf container — simulates a wall-mounted cabinet / open shelf unit */}
-        <div
-          className="rounded-2xl overflow-hidden"
-          style={{
-            background: 'linear-gradient(180deg, #F0EAE2 0%, #E8E0D5 50%, #DED5CA 100%)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 32px rgba(28,25,23,0.08)',
-            border: '1px solid rgba(201,169,110,0.15)',
-          }}
-        >
-          <div className="px-2 pt-6 pb-2">
-            {allCategories.map((cat) => (
-              <ShelfRow
-                key={cat}
-                category={cat}
-                products={products.filter((p) => p.category === cat)}
-                onProductClick={setSelectedProduct}
-              />
-            ))}
-            {products.length === 0 && (
-              <div className="text-center py-16 text-obsidian-400">
-                <p className="text-sm">Your shelf is empty. Add your first product!</p>
-                <Button size="sm" className="mt-3" onClick={() => setShowAddModal(true)}>
-                  <Plus className="w-4 h-4" /> Add Product
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
+        <MedicineCabinet
+          amProducts={amAll}
+          pmProducts={pmFinal}
+          weeklyProducts={weeklyAll}
+          onProductClick={setSelectedProduct}
+        />
       </div>
 
       {/* Bottom panels */}

@@ -76,7 +76,7 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
 
   // Routine
   const [inRoutine, setInRoutine] = useState(false);
-  const [routineStep, setRoutineStep] = useState<'am' | 'pm' | 'both'>('am');
+  const [routineStep, setRoutineStep] = useState<'am' | 'pm' | 'both' | 'weekly'>('am');
   const [routineOrder, setRoutineOrder] = useState('');
 
   // Auto-fetch state
@@ -680,12 +680,12 @@ export function AddProductModal({ open, onClose, onAdd }: AddProductModalProps) 
                   <div className="space-y-1">
                     <label className="text-sm font-medium text-obsidian-700">When</label>
                     <div className="flex gap-1.5">
-                      {(['am', 'pm', 'both'] as const).map((step) => (
+                      {(['am', 'pm', 'both', 'weekly'] as const).map((step) => (
                         <button key={step} type="button" onClick={() => setRoutineStep(step)} className={cn(
                           'flex-1 rounded-lg px-3 py-2 text-sm font-medium border transition-colors',
                           routineStep === step ? 'bg-rose-100 text-rose-700 border-rose-200' : 'bg-white text-obsidian-500 border-ivory-darker hover:border-rose-200'
                         )}>
-                          {step === 'am' ? 'AM' : step === 'pm' ? 'PM' : 'Both'}
+                          {step === 'am' ? 'AM' : step === 'pm' ? 'PM' : step === 'weekly' ? 'Weekly' : 'Both'}
                         </button>
                       ))}
                     </div>

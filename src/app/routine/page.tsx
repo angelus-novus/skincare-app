@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react';
 import {
   Sun, Moon, Plus, Trash2, ChevronUp, ChevronDown, AlertTriangle,
   CheckCircle, Info, Printer, Flame, Star, Sparkles, ListOrdered,
-  GripVertical, X,
+  GripVertical, X, CalendarDays,
 } from 'lucide-react';
 import { useAppStore, useProducts, useRoutine } from '@/lib/store';
 import { Badge } from '@/components/ui/badge';
@@ -268,7 +268,7 @@ function AddStepModal({
   open: boolean;
   onClose: () => void;
   onAdd: (productId: string, notes: string) => void;
-  time: 'am' | 'pm';
+  time: 'am' | 'pm' | 'weekly';
   existingProductIds: string[];
   products: Product[];
 }) {
@@ -393,7 +393,7 @@ function RoutineColumn({
   allProducts,
   onUpdate,
 }: {
-  time: 'am' | 'pm';
+  time: 'am' | 'pm' | 'weekly';
   steps: RoutineStep[];
   products: Product[];
   allProducts: Product[];
@@ -402,14 +402,22 @@ function RoutineColumn({
   const [addOpen, setAddOpen] = useState(false);
 
   const isAM = time === 'am';
-  const Icon = isAM ? Sun : Moon;
-  const accentColor = isAM ? 'text-amber-500' : 'text-indigo-500';
+  const isPM = time === 'pm';
+  const isWeekly = time === 'weekly';
+  const Icon = isAM ? Sun : isWeekly ? CalendarDays : Moon;
+  const accentColor = isAM ? 'text-amber-500' : isWeekly ? 'text-brand-500' : 'text-indigo-500';
   const headerBg = isAM
     ? 'from-amber-50 to-orange-50 border-amber-100'
-    : 'from-indigo-50 to-violet-50 border-indigo-100';
-  const btnBg = isAM ? 'bg-amber-100 hover:bg-amber-200 text-amber-700' : 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700';
+    : isWeekly
+      ? 'from-brand-50 to-gold-50 border-brand-100'
+      : 'from-indigo-50 to-violet-50 border-indigo-100';
+  const btnBg = isAM
+    ? 'bg-amber-100 hover:bg-amber-200 text-amber-700'
+    : isWeekly
+      ? 'bg-brand-100 hover:bg-brand-200 text-brand-700'
+      : 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700';
 
-  const conflicts = detectConflicts(products, time);
+  const conflicts = isWeekly ? [] : detectConflicts(products, isAM ? 'am' : 'pm');
 
   function moveUp(index: number) {
     if (index === 0) return;
@@ -445,7 +453,7 @@ function RoutineColumn({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon className={cn('w-5 h-5', accentColor)} />
-            <h2 className="text-base font-bold text-obsidian-800">{isAM ? 'AM Routine' : 'PM Routine'}</h2>
+            <h2 className="text-base font-bold text-obsidian-800">{isAM ? 'AM Routine' : isWeekly ? 'Weekly Routine' : 'PM Routine'}</h2>
             <span className="text-xs text-obsidian-400">{steps.length} steps</span>
           </div>
           <Button
@@ -459,7 +467,7 @@ function RoutineColumn({
           </Button>
         </div>
         <div className="text-xs text-obsidian-500 mt-1">
-          {isAM ? 'Cleanse · Protect · SPF' : 'Treat · Repair · Restore'}
+          {isAM ? 'Cleanse · Protect · SPF' : isWeekly ? 'Masks · Exfoliants · Treatments' : 'Treat · Repair · Restore'}
         </div>
       </div>
 
@@ -509,7 +517,7 @@ function RoutineColumn({
       {/* Steps list */}
       {steps.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-ivory-darker py-12 text-center">
-          <div className="text-3xl mb-2">{isAM ? '☀️' : '🌙'}</div>
+          <div className="text-3xl mb-2">{isAM ? '☀️' : isWeekly ? '📅' : '🌙'}</div>
           <div className="text-sm text-obsidian-500">No steps yet</div>
           <div className="text-xs text-obsidian-400 mt-1">Add products to build your routine</div>
           <Button size="sm" variant="outline" className="mt-3" onClick={() => setAddOpen(true)}>
@@ -822,6 +830,11 @@ export default function RoutinePage() {
     [routine.pm, products]
   );
 
+  const weeklyProducts = useMemo(
+    () => (routine.weekly || []).map((s) => products.find((p) => p.id === s.productId)).filter(Boolean) as Product[],
+    [routine.weekly, products]
+  );
+
   const amConflicts = detectConflicts(amProducts, 'am');
   const pmConflicts = detectConflicts(pmProducts, 'pm');
   const totalConflicts = amConflicts.filter((c) => c.severity === 'warning').length + pmConflicts.filter((c) => c.severity === 'warning').length;
@@ -833,7 +846,7 @@ export default function RoutinePage() {
         <div>
           <h1 className="text-3xl font-bold text-obsidian-800">My Routine</h1>
           <p className="text-obsidian-500 mt-1">
-            {routine.am.length} AM steps · {routine.pm.length} PM steps
+            {routine.am.length} AM · {routine.pm.length} PM · {(routine.weekly || []).length} weekly
             {totalConflicts > 0 && (
               <span className="ml-2 text-amber-600 font-medium">
                 · {totalConflicts} conflict{totalConflicts !== 1 ? 's' : ''} detected
@@ -864,7 +877,7 @@ export default function RoutinePage() {
 
       <div className="flex gap-6">
         {/* AM + PM columns */}
-        <div className="flex-[2] flex gap-5 min-w-0">
+        <div className="flex-[3] flex gap-4 min-w-0">
           <RoutineColumn
             time="am"
             steps={routine.am}
@@ -878,6 +891,13 @@ export default function RoutinePage() {
             products={pmProducts}
             allProducts={products}
             onUpdate={(steps) => updateRoutine('pm', steps)}
+          />
+          <RoutineColumn
+            time="weekly"
+            steps={routine.weekly || []}
+            products={weeklyProducts}
+            allProducts={products}
+            onUpdate={(steps) => updateRoutine('weekly', steps)}
           />
         </div>
 

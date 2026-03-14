@@ -27,7 +27,7 @@ interface AppState {
   procedures: Procedure[];
   journalEntries: JournalEntry[];
   userProfile: UserProfile;
-  routine: { am: RoutineStep[]; pm: RoutineStep[] };
+  routine: { am: RoutineStep[]; pm: RoutineStep[]; weekly: RoutineStep[] };
   wishlist: WishlistItem[];
   procedureWishlist: ProcedureWishlistItem[];
   expirySnoozedUntil: string | null; // ISO date
@@ -57,7 +57,7 @@ interface AppState {
   completeOnboarding: (profile: Partial<UserProfile>) => void;
 
   // Routine actions
-  updateRoutine: (time: 'am' | 'pm', steps: RoutineStep[]) => void;
+  updateRoutine: (time: 'am' | 'pm' | 'weekly', steps: RoutineStep[]) => void;
 
   // Ingredient actions
   addIngredient: (ingredient: Ingredient) => void;
@@ -91,6 +91,9 @@ export const useAppStore = create<AppState>()(
           .sort((a, b) => (a.routineOrder || 0) - (b.routineOrder || 0))
           .map((p) => ({ productId: p.id, order: p.routineOrder || 0 })),
         pm: PRODUCTS.filter((p) => p.routineStep === 'pm' || p.routineStep === 'both')
+          .sort((a, b) => (a.routineOrder || 0) - (b.routineOrder || 0))
+          .map((p) => ({ productId: p.id, order: p.routineOrder || 0 })),
+        weekly: PRODUCTS.filter((p) => p.routineStep === 'weekly')
           .sort((a, b) => (a.routineOrder || 0) - (b.routineOrder || 0))
           .map((p) => ({ productId: p.id, order: p.routineOrder || 0 })),
       },

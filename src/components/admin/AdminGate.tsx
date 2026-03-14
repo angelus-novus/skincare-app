@@ -15,9 +15,13 @@ export function useAdminAuth() {
     setChecked(true);
   }, []);
 
-  const login = (password: string): boolean => {
-    const correct = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
-    if (password === correct) {
+  const login = async (password: string): Promise<boolean> => {
+    const res = await fetch('/api/admin/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    if (res.ok) {
       sessionStorage.setItem(SESSION_KEY, 'true');
       setAuthed(true);
       return true;
@@ -37,8 +41,17 @@ export function AdminGate({ children }: { children: ReactNode }) {
   const { authed, checked, login } = useAdminAuth();
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!checked) return null;
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setError(false);
+    const ok = await login(password);
+    if (!ok) setError(true);
+    setLoading(false);
+  };
 
   if (!authed) {
     return (
@@ -60,18 +73,11 @@ export function AdminGate({ children }: { children: ReactNode }) {
               placeholder="••••••••"
               value={password}
               onChange={(e) => { setPassword(e.target.value); setError(false); }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  if (!login(password)) setError(true);
-                }
-              }}
+              onKeyDown={(e) => { if (e.key === 'Enter' && !loading) handleLogin(); }}
               error={error ? 'Incorrect password' : undefined}
             />
-            <Button
-              className="w-full"
-              onClick={() => { if (!login(password)) setError(true); }}
-            >
-              <Lock className="w-4 h-4" /> Sign In
+            <Button className="w-full" onClick={handleLogin} disabled={loading || !password}>
+              <Lock className="w-4 h-4" /> {loading ? 'Signing in…' : 'Sign In'}
             </Button>
           </div>
         </div>

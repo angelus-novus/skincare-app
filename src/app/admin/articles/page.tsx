@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil, Trash2, Eye, EyeOff, FileText, X } from 'lucide-react';
 import { AdminGate } from '@/components/admin/AdminGate';
-import { useArticles, useAppStore } from '@/lib/store';
+import { useArticles, useAppStore, useProducts, useProcedures } from '@/lib/store';
 import { Button } from '@/components/ui/button';
 import { Input, Textarea } from '@/components/ui/input';
 import { Card, CardBody } from '@/components/ui/card';
@@ -15,7 +15,19 @@ function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
-const EMPTY_FORM = {
+interface ArticleFormData {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  tags: string;
+  published: boolean;
+  linkedProductIds: string[];
+  linkedProcedureIds: string[];
+}
+
+const EMPTY_FORM: ArticleFormData = {
   title: '',
   slug: '',
   excerpt: '',
@@ -23,6 +35,8 @@ const EMPTY_FORM = {
   coverImage: '',
   tags: '',
   published: false,
+  linkedProductIds: [],
+  linkedProcedureIds: [],
 };
 
 function ArticleForm({
@@ -30,14 +44,35 @@ function ArticleForm({
   onSave,
   onCancel,
 }: {
-  initial?: typeof EMPTY_FORM;
-  onSave: (data: typeof EMPTY_FORM) => void;
+  initial?: ArticleFormData;
+  onSave: (data: ArticleFormData) => void;
   onCancel: () => void;
 }) {
-  const [form, setForm] = useState(initial ?? EMPTY_FORM);
+  const [form, setForm] = useState<ArticleFormData>(initial ?? EMPTY_FORM);
+  const products = useProducts();
+  const procedures = useProcedures();
+  const [productSearch, setProductSearch] = useState('');
+  const [procedureSearch, setProcedureSearch] = useState('');
 
-  const set = (field: string, value: string | boolean) =>
+  const set = (field: string, value: string | boolean | string[]) =>
     setForm((f) => ({ ...f, [field]: value }));
+
+  const toggleProduct = (id: string) =>
+    set('linkedProductIds', form.linkedProductIds.includes(id)
+      ? form.linkedProductIds.filter((x) => x !== id)
+      : [...form.linkedProductIds, id]);
+
+  const toggleProcedure = (id: string) =>
+    set('linkedProcedureIds', form.linkedProcedureIds.includes(id)
+      ? form.linkedProcedureIds.filter((x) => x !== id)
+      : [...form.linkedProcedureIds, id]);
+
+  const filteredProducts = products.filter((p) =>
+    `${p.name} ${p.brand}`.toLowerCase().includes(productSearch.toLowerCase())
+  );
+  const filteredProcedures = procedures.filter((p) =>
+    p.name.toLowerCase().includes(procedureSearch.toLowerCase())
+  );
 
   return (
     <div className="space-y-4">
@@ -82,6 +117,79 @@ function ArticleForm({
         value={form.tags}
         onChange={(e) => set('tags', e.target.value)}
       />
+
+      {/* Linked Products */}
+      <div className="space-y-2">
+        <label className="text-xs font-medium tracking-wider uppercase text-obsidian-500">
+          Linked Products <span className="normal-case font-normal text-obsidian-400">(readers can wishlist from article)</span>
+        </label>
+        {form.linkedProductIds.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {form.linkedProductIds.map((id) => {
+              const p = products.find((x) => x.id === id);
+              return p ? (
+                <span key={id} className="flex items-center gap-1 bg-rose-50 text-rose-700 text-xs rounded-full px-2.5 py-1">
+                  {p.name}
+                  <button onClick={() => toggleProduct(id)}><X className="w-3 h-3" /></button>
+                </span>
+              ) : null;
+            })}
+          </div>
+        )}
+        <Input placeholder="Search products..." value={productSearch} onChange={(e) => setProductSearch(e.target.value)} />
+        {productSearch && (
+          <div className="border border-ivory-darker rounded-lg max-h-40 overflow-y-auto">
+            {filteredProducts.slice(0, 10).map((p) => (
+              <button
+                key={p.id}
+                onClick={() => { toggleProduct(p.id); setProductSearch(''); }}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-ivory-dark flex items-center justify-between"
+              >
+                <span>{p.name} <span className="text-obsidian-400">· {p.brand}</span></span>
+                {form.linkedProductIds.includes(p.id) && <span className="text-rose-500 text-xs">✓ Added</span>}
+              </button>
+            ))}
+            {filteredProducts.length === 0 && <p className="px-3 py-2 text-sm text-obsidian-400">No products found</p>}
+          </div>
+        )}
+      </div>
+
+      {/* Linked Procedures */}
+      <div className="space-y-2">
+        <label className="text-xs font-medium tracking-wider uppercase text-obsidian-500">
+          Linked Procedures <span className="normal-case font-normal text-obsidian-400">(readers can wishlist from article)</span>
+        </label>
+        {form.linkedProcedureIds.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {form.linkedProcedureIds.map((id) => {
+              const p = procedures.find((x) => x.id === id);
+              return p ? (
+                <span key={id} className="flex items-center gap-1 bg-blue-50 text-blue-700 text-xs rounded-full px-2.5 py-1">
+                  {p.name}
+                  <button onClick={() => toggleProcedure(id)}><X className="w-3 h-3" /></button>
+                </span>
+              ) : null;
+            })}
+          </div>
+        )}
+        <Input placeholder="Search procedures..." value={procedureSearch} onChange={(e) => setProcedureSearch(e.target.value)} />
+        {procedureSearch && (
+          <div className="border border-ivory-darker rounded-lg max-h-40 overflow-y-auto">
+            {filteredProcedures.slice(0, 10).map((p) => (
+              <button
+                key={p.id}
+                onClick={() => { toggleProcedure(p.id); setProcedureSearch(''); }}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-ivory-dark flex items-center justify-between"
+              >
+                <span>{p.name} <span className="text-obsidian-400">· {p.category}</span></span>
+                {form.linkedProcedureIds.includes(p.id) && <span className="text-blue-500 text-xs">✓ Added</span>}
+              </button>
+            ))}
+            {filteredProcedures.length === 0 && <p className="px-3 py-2 text-sm text-obsidian-400">No procedures found</p>}
+          </div>
+        )}
+      </div>
+
       <label className="flex items-center gap-2 cursor-pointer select-none">
         <input
           type="checkbox"
@@ -108,7 +216,7 @@ function ArticlesAdmin() {
   const [editing, setEditing] = useState<Article | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
-  const handleSave = (form: typeof EMPTY_FORM) => {
+  const handleSave = (form: ArticleFormData) => {
     const now = new Date().toISOString();
     if (editing) {
       updateArticle(editing.id, {
@@ -121,6 +229,8 @@ function ArticlesAdmin() {
         published: form.published,
         publishedAt: form.published && !editing.publishedAt ? now.split('T')[0] : editing.publishedAt,
         updatedAt: now.split('T')[0],
+        linkedProductIds: form.linkedProductIds,
+        linkedProcedureIds: form.linkedProcedureIds,
       });
       setEditing(null);
     } else {
@@ -135,6 +245,8 @@ function ArticlesAdmin() {
         published: form.published,
         publishedAt: form.published ? now.split('T')[0] : undefined,
         updatedAt: now.split('T')[0],
+        linkedProductIds: form.linkedProductIds,
+        linkedProcedureIds: form.linkedProcedureIds,
       });
       setShowForm(false);
     }
@@ -171,6 +283,8 @@ function ArticlesAdmin() {
                 coverImage: editing.coverImage ?? '',
                 tags: editing.tags.join(', '),
                 published: editing.published,
+                linkedProductIds: editing.linkedProductIds ?? [],
+                linkedProcedureIds: editing.linkedProcedureIds ?? [],
               } : undefined}
               onSave={handleSave}
               onCancel={() => { setShowForm(false); setEditing(null); }}
@@ -202,6 +316,14 @@ function ArticlesAdmin() {
                     </div>
                     <p className="text-xs text-obsidian-400 truncate mb-1">/articles/{article.slug}</p>
                     <p className="text-sm text-obsidian-500 line-clamp-1">{article.excerpt}</p>
+                    {((article.linkedProductIds?.length ?? 0) > 0 || (article.linkedProcedureIds?.length ?? 0) > 0) && (
+                      <p className="text-xs text-obsidian-400 mt-1">
+                        {(article.linkedProductIds?.length ?? 0) > 0 && `${article.linkedProductIds!.length} product${article.linkedProductIds!.length !== 1 ? 's' : ''}`}
+                        {(article.linkedProductIds?.length ?? 0) > 0 && (article.linkedProcedureIds?.length ?? 0) > 0 && ' · '}
+                        {(article.linkedProcedureIds?.length ?? 0) > 0 && `${article.linkedProcedureIds!.length} procedure${article.linkedProcedureIds!.length !== 1 ? 's' : ''}`}
+                        {' linked'}
+                      </p>
+                    )}
                   </div>
                   <div className="flex gap-1 flex-shrink-0">
                     <Button

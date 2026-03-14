@@ -188,6 +188,8 @@ export interface Article {
   updatedAt: string;
   tags: string[];
   published: boolean;
+  linkedProductIds?: string[];
+  linkedProcedureIds?: string[];
 }
 
 export interface RoutineStep {

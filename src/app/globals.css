@@ -35,6 +35,26 @@
   --color-blush-400: #DCAA98;
   --color-blush-500: #CC8E78;
 
+  /* ── Berry / Aubergine (replaces purple/violet — rich accent) ── */
+  --color-berry-50:  #F7EEF4;
+  --color-berry-100: #EEDDE9;
+  --color-berry-200: #DBBAD3;
+  --color-berry-300: #C08BAE;
+  --color-berry-400: #A0648E;
+  --color-berry-500: #7D3E6A;
+  --color-berry-600: #69335A;
+  --color-berry-700: #55284A;
+
+  /* ── Garnet (replaces bright red — muted warning/negative) ── */
+  --color-garnet-50:  #F7ECEC;
+  --color-garnet-100: #EDD8D8;
+  --color-garnet-200: #DCB0B0;
+  --color-garnet-300: #C87878;
+  --color-garnet-400: #B45050;
+  --color-garnet-500: #9B3A3A;
+  --color-garnet-600: #832F2F;
+  --color-garnet-700: #6A2424;
+
   /* ── Dusty Sage (positive indicators only) ── */
   --color-sage-50:  #EEF5F2;
   --color-sage-100: #D6EAE3;
@@ -97,6 +117,43 @@
   --color-pink-300: var(--color-blush-300);
   --color-pink-400: var(--color-blush-400);
   --color-pink-500: var(--color-blush-500);
+
+  /* violet/purple → berry (aubergine) */
+  --color-violet-50:  var(--color-berry-50);
+  --color-violet-100: var(--color-berry-100);
+  --color-violet-200: var(--color-berry-200);
+  --color-violet-400: var(--color-berry-400);
+  --color-violet-500: var(--color-berry-500);
+  --color-violet-600: var(--color-berry-600);
+  --color-violet-700: var(--color-berry-700);
+  --color-violet-800: var(--color-berry-700);
+  --color-purple-50:  var(--color-berry-50);
+  --color-purple-100: var(--color-berry-100);
+  --color-purple-500: var(--color-berry-500);
+  --color-purple-700: var(--color-berry-700);
+
+  /* red → garnet (muted warm warning) */
+  --color-red-50:  var(--color-garnet-50);
+  --color-red-100: var(--color-garnet-100);
+  --color-red-200: var(--color-garnet-200);
+  --color-red-300: var(--color-garnet-300);
+  --color-red-400: var(--color-garnet-400);
+  --color-red-500: var(--color-garnet-500);
+  --color-red-600: var(--color-garnet-600);
+  --color-red-700: var(--color-garnet-700);
+
+  /* blue → gold (info/timing — keeps palette warm) */
+  --color-blue-50:  var(--color-gold-50);
+  --color-blue-100: var(--color-gold-100);
+  --color-blue-200: var(--color-gold-200);
+  --color-blue-400: var(--color-gold-400);
+  --color-blue-500: var(--color-gold-500);
+  --color-blue-600: var(--color-gold-600);
+  --color-blue-700: var(--color-gold-700);
+
+  /* indigo → brand (cognac tints) */
+  --color-indigo-50:  var(--color-brand-50);
+  --color-indigo-100: var(--color-brand-100);
 }
 
 /* ── Base styles ── */

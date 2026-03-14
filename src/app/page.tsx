@@ -30,7 +30,7 @@ function ShelfSection({ category, products, onProductClick }: {
         <span className="text-xs text-obsidian-400">{products.length} product{products.length !== 1 ? 's' : ''}</span>
       </div>
       <div className="relative">
-        <div className="bg-gradient-to-b from-rose-50/60 to-white rounded-2xl pt-4 pb-0 px-6 border border-rose-100/50 min-h-[120px]">
+        <div className="bg-gradient-to-b from-ivory/80 to-white rounded-2xl pt-4 pb-0 px-6 border border-ivory-darker/60 min-h-[120px]">
           <div className="flex items-end gap-4 flex-wrap pb-5">
             {products.map((product, index) => (
               <ProductBottle
@@ -172,7 +172,7 @@ export default function HomePage() {
       <div className="flex gap-4 mb-8">
         <StatCard label="Products" value={products.length} sub={`${products.filter((p) => p.inRoutine).length} in routine`} icon={TrendingUp} color="bg-rose-50 text-rose-500" />
         <StatCard label="Avg Rating" value={avgRating} sub={`${ratedProducts.length} reviewed`} icon={Star} color="bg-amber-50 text-amber-500" />
-        <StatCard label="Procedures" value={procedures.length} sub={upcomingProcedures.length > 0 ? `${upcomingProcedures[0].name} in ${upcomingProcedures[0].daysUntil}d` : 'No upcoming'} icon={Calendar} color="bg-purple-50 text-purple-500" />
+        <StatCard label="Procedures" value={procedures.length} sub={upcomingProcedures.length > 0 ? `${upcomingProcedures[0].name} in ${upcomingProcedures[0].daysUntil}d` : 'No upcoming'} icon={Calendar} color="bg-berry-50 text-berry-500" />
         <StatCard label="Concerns" value={profile.skinConcerns.length} sub={profile.skinConcerns.slice(0, 2).map(concernLabel).join(', ')} icon={Sparkles} color="bg-emerald-50 text-emerald-500" />
       </div>
 
@@ -191,8 +191,8 @@ export default function HomePage() {
         <div
           className="rounded-3xl p-6 min-h-96"
           style={{
-            background: 'linear-gradient(160deg, #fdf2f8 0%, #fce7f3 30%, #fff1f2 60%, #fdf4ff 100%)',
-            boxShadow: 'inset 0 2px 20px rgba(244, 63, 94, 0.05)',
+            background: 'linear-gradient(160deg, #EEE4DF 0%, #E8DDD5 30%, #EDE4DB 60%, #E8DDD6 100%)',
+            boxShadow: 'inset 0 2px 20px rgba(181, 98, 42, 0.05)',
           }}
         >
           {allCategories.map((cat) => (
@@ -237,7 +237,7 @@ export default function HomePage() {
               <div className="space-y-2">
                 {upcomingProcedures.map((p) => (
                   <div key={p.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-ivory-dark">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold ${p.daysUntil < 14 ? 'bg-rose-100 text-rose-600' : 'bg-blue-50 text-blue-600'}`}>
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold ${p.daysUntil < 14 ? 'bg-rose-100 text-rose-600' : 'bg-ivory-darker text-obsidian-500'}`}>
                       {p.daysUntil}d
                     </div>
                     <div>

@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #1e293b;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0;
+  border-radius: 2px;
+}
+
+/* Shelf wood texture */
+.shelf-board {
+  background: linear-gradient(
+    180deg,
+    #c8956b 0%,
+    #b8845a 40%,
+    #a8744a 60%,
+    #c8956b 100%
+  );
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.1);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #f43f5e, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}

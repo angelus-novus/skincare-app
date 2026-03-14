@@ -33,13 +33,14 @@ import {
   ShieldAlert,
   Lightbulb,
   BarChart2,
+  Heart,
 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
-import { concernLabel } from '@/lib/utils';
+import { concernLabel, categoryLabel } from '@/lib/utils';
 import { Card, CardHeader, CardBody, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import type { SkinConcern } from '@/lib/types';
+import type { SkinConcern, ProductCategory } from '@/lib/types';
 
 const COLORS = ['#f43f5e', '#fb7185', '#fda4af', '#fecdd3', '#ffe4e6', '#e11d48', '#be123c'];
 const GOOD_COLOR = '#10b981';
@@ -53,6 +54,38 @@ interface AIInsights {
   recommendations: string;
   nextSteps: string;
 }
+
+interface GapRec {
+  name: string;
+  brand: string;
+  category: ProductCategory;
+  why: string;
+  price?: number;
+  concerns: SkinConcern[];
+}
+
+const GAP_RECS: Record<string, GapRec[]> = {
+  spf: [
+    { name: 'Anthelios Melt-In Milk SPF 60', brand: 'La Roche-Posay', category: 'spf', why: 'Lightweight, broad spectrum, no white cast', price: 36, concerns: ['anti-aging', 'hyperpigmentation'] },
+    { name: 'UV Expert Aquagel SPF 50', brand: 'Lancôme', category: 'spf', why: 'Elegant finish under makeup', price: 42, concerns: ['anti-aging', 'sensitivity'] },
+  ],
+  exfoliant: [
+    { name: 'BHA Liquid Exfoliant', brand: "Paula's Choice", category: 'exfoliant', why: '2% salicylic acid, great for pores', price: 34, concerns: ['pores', 'acne', 'texture'] },
+    { name: 'Good Genes Lactic Acid', brand: 'Sunday Riley', category: 'exfoliant', why: 'Gentle AHA for smooth, bright skin', price: 85, concerns: ['texture', 'dullness'] },
+  ],
+  'eye-cream': [
+    { name: 'Retinol Eye Cream', brand: 'RoC', category: 'eye-cream', why: 'Proven retinol formula for fine lines around eyes', price: 25, concerns: ['fine-lines', 'dark-circles'] },
+    { name: 'Peptide Eye Cream', brand: 'CeraVe', category: 'eye-cream', why: 'Ceramides + peptides, gentle and effective', price: 18, concerns: ['dark-circles', 'fine-lines'] },
+  ],
+  serum: [
+    { name: 'C E Ferulic', brand: 'SkinCeuticals', category: 'serum', why: 'Gold-standard vitamin C for brightening', price: 185, concerns: ['dullness', 'anti-aging', 'hyperpigmentation'] },
+    { name: 'Niacinamide 10% + Zinc 1%', brand: 'The Ordinary', category: 'serum', why: 'Budget-friendly brightener', price: 6, concerns: ['dullness', 'pores'] },
+  ],
+  oil: [
+    { name: 'Squalane Oil', brand: 'Biossance', category: 'oil', why: 'Plant-derived squalane for deep nourishment', price: 32, concerns: ['dryness', 'anti-aging'] },
+    { name: 'Rosehip Seed Oil', brand: 'The Ordinary', category: 'oil', why: 'Rich in vitamin A, great for dry skin', price: 10, concerns: ['dryness', 'dullness'] },
+  ],
+};
 
 function SkeletonCard({ className = '' }: { className?: string }) {
   return (
@@ -78,7 +111,7 @@ function InsightSection({ title, content }: { title: string; content: string }) 
 }
 
 export default function InsightsPage() {
-  const { products, ingredients, journalEntries, userProfile } = useAppStore();
+  const { products, ingredients, journalEntries, userProfile, addWishlistItem, wishlist } = useAppStore();
   const [loading, setLoading] = useState(false);
   const [aiInsights, setAiInsights] = useState<AIInsights | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -213,15 +246,15 @@ export default function InsightsPage() {
   // Routine gaps
   const routineGaps = useMemo(() => {
     const categories = products.filter((p) => p.inRoutine).map((p) => p.category);
-    const gaps: string[] = [];
-    if (!categories.includes('spf')) gaps.push('SPF / Sunscreen — essential for skin protection');
-    if (!categories.includes('exfoliant')) gaps.push('Chemical Exfoliant — helps with texture & tone');
+    const gaps: { label: string; key: string }[] = [];
+    if (!categories.includes('spf')) gaps.push({ label: 'SPF / Sunscreen — essential for skin protection', key: 'spf' });
+    if (!categories.includes('exfoliant')) gaps.push({ label: 'Chemical Exfoliant — helps with texture & tone', key: 'exfoliant' });
     if (userProfile.skinConcerns.includes('anti-aging') && !categories.includes('eye-cream'))
-      gaps.push('Eye Cream — targeted care for fine lines & dark circles');
+      gaps.push({ label: 'Eye Cream — targeted care for fine lines & dark circles', key: 'eye-cream' });
     if (userProfile.skinConcerns.includes('dullness') && !categories.includes('serum'))
-      gaps.push('Brightening Serum — Vitamin C or Niacinamide for radiance');
+      gaps.push({ label: 'Brightening Serum — Vitamin C or Niacinamide for radiance', key: 'serum' });
     if (userProfile.skinType === 'dry' && !categories.includes('oil'))
-      gaps.push('Face Oil — extra nourishment for dry skin');
+      gaps.push({ label: 'Face Oil — extra nourishment for dry skin', key: 'oil' });
     return gaps.slice(0, 4);
   }, [products, userProfile]);
 
@@ -719,16 +752,62 @@ export default function InsightsPage() {
                 <span className="text-sm font-medium">Your routine looks comprehensive!</span>
               </div>
             ) : (
-              <ul className="space-y-3">
-                {routineGaps.map((gap, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                      {i + 1}
+              <div className="space-y-4">
+                {routineGaps.map((gap, i) => {
+                  const recs = GAP_RECS[gap.key] || [];
+                  const wishlistNames = new Set(wishlist.map((w) => w.name.toLowerCase()));
+                  return (
+                    <div key={i}>
+                      <div className="flex items-start gap-3 mb-2">
+                        <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                          {i + 1}
+                        </div>
+                        <p className="text-sm font-medium text-obsidian-700 pt-0.5">{gap.label}</p>
+                      </div>
+                      {recs.length > 0 && (
+                        <div className="ml-9 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {recs.map((rec) => {
+                            const inWishlist = wishlistNames.has(rec.name.toLowerCase());
+                            return (
+                              <div key={rec.name} className="flex items-center gap-3 bg-ivory-dark rounded-xl p-3">
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-sm font-medium text-obsidian-700">{rec.name}</div>
+                                  <div className="text-xs text-obsidian-500">{rec.brand}{rec.price ? ` · $${rec.price}` : ''}</div>
+                                  <div className="text-xs text-obsidian-400 mt-0.5">{rec.why}</div>
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    if (inWishlist) return;
+                                    addWishlistItem({
+                                      id: `wish-${Date.now()}`,
+                                      name: rec.name,
+                                      brand: rec.brand,
+                                      category: rec.category,
+                                      price: rec.price,
+                                      notes: rec.why,
+                                      addedDate: new Date().toISOString().split('T')[0],
+                                      priority: 'medium',
+                                    });
+                                  }}
+                                  disabled={inWishlist}
+                                  className={`flex-shrink-0 p-2 rounded-xl transition-colors ${
+                                    inWishlist
+                                      ? 'bg-emerald-50 text-emerald-500'
+                                      : 'bg-brand-50 text-brand-600 hover:bg-brand-100'
+                                  }`}
+                                  title={inWishlist ? 'Already in wishlist' : 'Add to wishlist'}
+                                >
+                                  {inWishlist ? <CheckCircle2 className="w-4 h-4" /> : <Heart className="w-4 h-4" />}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                    <p className="text-sm text-obsidian-700 pt-0.5">{gap}</p>
-                  </li>
-                ))}
-              </ul>
+                  );
+                })}
+              </div>
             )}
           </CardBody>
         </Card>

@@ -1,7 +1,7 @@
 'use client';
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar, X, Heart, Sun, Moon, CalendarDays, ShoppingBag, Syringe, ChevronRight } from 'lucide-react';
+import { Plus, Sparkles, AlertCircle, Star, TrendingUp, Calendar, X, Heart, Sun, Moon, CalendarDays, ShoppingBag, Syringe, ChevronRight, RefreshCw } from 'lucide-react';
 import { useAppStore, useProducts, useUserProfile, useProcedures } from '@/lib/store';
 import { ProductBottle } from '@/components/shelf/ProductBottle';
 import { ProductDetailModal } from '@/components/shelf/ProductDetailModal';
@@ -343,6 +343,7 @@ export default function HomePage() {
   const wishlist = useAppStore((s) => s.wishlist);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [recSeed, setRecSeed] = useState(0);
 
   const ratedProducts = products.filter((p) => p.rating);
   const avgRating = ratedProducts.length
@@ -436,8 +437,11 @@ export default function HomePage() {
         }
       }
     }
-    return recs.slice(0, 4);
-  }, [products, profile.skinConcerns, wishlist]);
+    // Rotate based on recSeed
+    const offset = (recSeed * 2) % Math.max(recs.length, 1);
+    const rotated = [...recs.slice(offset), ...recs.slice(0, offset)];
+    return rotated.slice(0, 4);
+  }, [products, profile.skinConcerns, wishlist, recSeed]);
 
   const procedureRecs = useMemo(() => {
     const recs: ProcedureRec[] = [];
@@ -452,8 +456,10 @@ export default function HomePage() {
         }
       }
     }
-    return recs.slice(0, 3);
-  }, [procedures, profile.skinConcerns]);
+    const offset = (recSeed * 1) % Math.max(recs.length, 1);
+    const rotated = [...recs.slice(offset), ...recs.slice(0, offset)];
+    return rotated.slice(0, 3);
+  }, [procedures, profile.skinConcerns, recSeed]);
 
   function quickAddProductToWishlist(rec: ProductRec) {
     addWishlistItem({
@@ -581,7 +587,16 @@ export default function HomePage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-obsidian-800">Recommended for You</h2>
-            <span className="text-xs text-obsidian-400">Based on your skin goals</span>
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-obsidian-400">Based on your skin goals</span>
+              <button
+                onClick={() => setRecSeed((s) => s + 1)}
+                className="flex items-center gap-1.5 text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Refresh
+              </button>
+            </div>
           </div>
 
           {/* Routine gap notice */}

@@ -1,16 +1,17 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Modal } from '@/components/ui/modal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { StarRating } from '@/components/ui/star-rating';
 import { Textarea, Input } from '@/components/ui/input';
-import type { Product, ProductRating } from '@/lib/types';
+import type { Product, ProductRating, ProductCategory, SkinConcern } from '@/lib/types';
 import { useAppStore, useIngredients } from '@/lib/store';
 import { categoryLabel, concernLabel, formatDate, daysUntilExpiry, getExpiryStatus, categoryColor } from '@/lib/utils';
 import {
   Star, ThumbsUp, ThumbsDown, AlertTriangle, Calendar, Package,
   DollarSign, Clock, ExternalLink, RefreshCw, Trash2, Edit2, CheckCircle2,
+  Pencil, Save, X, Camera, Loader2, Wand2,
 } from 'lucide-react';
 
 interface ProductDetailModalProps {
@@ -32,15 +33,111 @@ const BLANK_RATING: ProductRating = {
   reviewDate: new Date().toISOString().split('T')[0],
 };
 
+const ALL_CATEGORIES: ProductCategory[] = [
+  'cleanser', 'toner', 'essence', 'serum', 'moisturizer', 'eye-cream',
+  'spf', 'mask', 'exfoliant', 'oil', 'mist', 'treatment', 'lip-care', 'body-care',
+];
+
 export function ProductDetailModal({ product, open, onClose }: ProductDetailModalProps) {
   const [tab, setTab] = useState<'overview' | 'ingredients' | 'review'>('overview');
   const [editing, setEditing] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(false);
   const [draft, setDraft] = useState<ProductRating>(product.rating || BLANK_RATING);
   const [prosInput, setProsInput] = useState('');
   const [consInput, setConsInput] = useState('');
   const [adverseInput, setAdverseInput] = useState('');
   const ingredients = useIngredients();
-  const { rateProduct, deleteProduct } = useAppStore();
+  const { rateProduct, deleteProduct, updateProduct } = useAppStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isFetching, setIsFetching] = useState(false);
+
+  // Edit product form state
+  const [editName, setEditName] = useState(product.name);
+  const [editBrand, setEditBrand] = useState(product.brand);
+  const [editCategory, setEditCategory] = useState(product.category);
+  const [editPrice, setEditPrice] = useState(product.price ? String(product.price) : '');
+  const [editSize, setEditSize] = useState(product.size || '');
+  const [editImageUrl, setEditImageUrl] = useState(product.imageUrl);
+  const [editPurchaseUrl, setEditPurchaseUrl] = useState(product.purchaseUrl || '');
+  const [editPaoMonths, setEditPaoMonths] = useState(product.paoMonths ? String(product.paoMonths) : '');
+  const [editOpenedDate, setEditOpenedDate] = useState(product.openedDate || '');
+  const [editExpiryDate, setEditExpiryDate] = useState(product.expiryDate || '');
+
+  function startEditingProduct() {
+    setEditName(product.name);
+    setEditBrand(product.brand);
+    setEditCategory(product.category);
+    setEditPrice(product.price ? String(product.price) : '');
+    setEditSize(product.size || '');
+    setEditImageUrl(product.imageUrl);
+    setEditPurchaseUrl(product.purchaseUrl || '');
+    setEditPaoMonths(product.paoMonths ? String(product.paoMonths) : '');
+    setEditOpenedDate(product.openedDate || '');
+    setEditExpiryDate(product.expiryDate || '');
+    setEditingProduct(true);
+  }
+
+  function saveProductEdits() {
+    updateProduct(product.id, {
+      name: editName.trim(),
+      brand: editBrand.trim(),
+      category: editCategory,
+      price: editPrice ? parseFloat(editPrice) : undefined,
+      size: editSize || undefined,
+      imageUrl: editImageUrl,
+      purchaseUrl: editPurchaseUrl.trim() || undefined,
+      paoMonths: editPaoMonths ? parseInt(editPaoMonths, 10) : undefined,
+      openedDate: editOpenedDate || undefined,
+      expiryDate: editExpiryDate || undefined,
+    });
+    setEditingProduct(false);
+  }
+
+  function handleEditImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxSize = 600;
+        let { width, height } = img;
+        if (width > maxSize || height > maxSize) {
+          if (width > height) { height = (height / width) * maxSize; width = maxSize; }
+          else { width = (width / height) * maxSize; height = maxSize; }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
+        setEditImageUrl(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = ev.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function autoFillProduct() {
+    if (!editName.trim() && !editBrand.trim()) return;
+    setIsFetching(true);
+    try {
+      const res = await fetch('/api/product-lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: editName.trim(), brand: editBrand.trim() }),
+      });
+      if (!res.ok) throw new Error('Lookup failed');
+      const data = await res.json();
+      if (data.size && !editSize) setEditSize(data.size);
+      if (data.price && !editPrice) setEditPrice(String(data.price));
+      if (data.paoMonths && !editPaoMonths) setEditPaoMonths(String(data.paoMonths));
+      if (data.category && ALL_CATEGORIES.includes(data.category)) setEditCategory(data.category);
+    } catch {
+      // silently fail
+    } finally {
+      setIsFetching(false);
+    }
+  }
 
   const expiryDays = daysUntilExpiry(product);
   const expiryStatus = getExpiryStatus(expiryDays);
@@ -76,99 +173,181 @@ export function ProductDetailModal({ product, open, onClose }: ProductDetailModa
       <div className="flex gap-6">
         {/* Left: Product image and quick info */}
         <div className="w-48 flex-shrink-0">
-          <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-ivory-dark mb-4 border border-ivory-darker">
-            {product.imageUrl ? (
-              <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: product.imageColor }}>
-                <Package className="w-12 h-12 text-white/50" />
+          {editingProduct ? (
+            <>
+              {/* Editable image */}
+              <div
+                className="relative w-full aspect-square rounded-2xl overflow-hidden bg-ivory-dark mb-4 border border-ivory-darker cursor-pointer group"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {editImageUrl ? (
+                  <>
+                    <img src={editImageUrl} alt={editName} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Camera className="w-6 h-6 text-white" />
+                    </div>
+                  </>
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center" style={{ backgroundColor: product.imageColor }}>
+                    <Camera className="w-8 h-8 text-white/60" />
+                    <span className="text-xs text-white/50 mt-1">Upload</span>
+                  </div>
+                )}
+                <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleEditImageUpload} />
               </div>
-            )}
-          </div>
 
-          {/* Quick stats */}
-          <div className="space-y-2 text-sm">
-            {product.price && (
-              <div className="flex items-center gap-2 text-obsidian-600">
-                <DollarSign className="w-3.5 h-3.5 text-obsidian-400" />
-                <span>${product.price}</span>
+              {/* Editable fields */}
+              <div className="space-y-2">
+                <Input label="Price" type="number" placeholder="29.99" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} />
+                <Input label="Size" placeholder="30ml" value={editSize} onChange={(e) => setEditSize(e.target.value)} />
+                <Input label="PAO (months)" type="number" placeholder="12" value={editPaoMonths} onChange={(e) => setEditPaoMonths(e.target.value)} />
+                <Input label="Opened Date" type="date" value={editOpenedDate} onChange={(e) => setEditOpenedDate(e.target.value)} />
+                <Input label="Expiry Date" type="date" value={editExpiryDate} onChange={(e) => setEditExpiryDate(e.target.value)} />
+                <Input label="Purchase URL" placeholder="https://..." value={editPurchaseUrl} onChange={(e) => setEditPurchaseUrl(e.target.value)} />
               </div>
-            )}
-            {product.size && (
-              <div className="flex items-center gap-2 text-obsidian-600">
-                <Package className="w-3.5 h-3.5 text-obsidian-400" />
-                <span>{product.size}</span>
-              </div>
-            )}
-            {product.purchaseDate && (
-              <div className="flex items-center gap-2 text-obsidian-600">
-                <Calendar className="w-3.5 h-3.5 text-obsidian-400" />
-                <span>Bought {formatDate(product.purchaseDate)}</span>
-              </div>
-            )}
-            {expiryDays !== null && (
-              <div className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 ${
-                expiryStatus === 'expired' ? 'bg-red-50 text-red-600' :
-                expiryStatus === 'warning' ? 'bg-amber-50 text-amber-600' :
-                'bg-ivory-dark text-obsidian-600'
-              }`}>
-                <Clock className="w-3.5 h-3.5" />
-                <span className="text-xs font-medium">
-                  {expiryStatus === 'expired'
-                    ? `Expired ${Math.abs(expiryDays)}d ago`
-                    : `${expiryDays}d left`}
-                </span>
-              </div>
-            )}
-          </div>
 
-          {product.purchaseUrl && (
-            <a href={product.purchaseUrl} target="_blank" rel="noopener noreferrer" className="mt-3 block">
-              <Button variant="outline" size="sm" className="w-full">
-                <ExternalLink className="w-3.5 h-3.5" />
-                Buy Again
+              <div className="flex gap-2 mt-3">
+                <Button size="sm" className="flex-1" onClick={saveProductEdits}>
+                  <Save className="w-3.5 h-3.5" /> Save
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setEditingProduct(false)}>
+                  <X className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-ivory-dark mb-4 border border-ivory-darker">
+                {product.imageUrl ? (
+                  <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: product.imageColor }}>
+                    <Package className="w-12 h-12 text-white/50" />
+                  </div>
+                )}
+              </div>
+
+              {/* Quick stats */}
+              <div className="space-y-2 text-sm">
+                {product.price && (
+                  <div className="flex items-center gap-2 text-obsidian-600">
+                    <DollarSign className="w-3.5 h-3.5 text-obsidian-400" />
+                    <span>${product.price}</span>
+                  </div>
+                )}
+                {product.size && (
+                  <div className="flex items-center gap-2 text-obsidian-600">
+                    <Package className="w-3.5 h-3.5 text-obsidian-400" />
+                    <span>{product.size}</span>
+                  </div>
+                )}
+                {product.purchaseDate && (
+                  <div className="flex items-center gap-2 text-obsidian-600">
+                    <Calendar className="w-3.5 h-3.5 text-obsidian-400" />
+                    <span>Bought {formatDate(product.purchaseDate)}</span>
+                  </div>
+                )}
+                {expiryDays !== null && (
+                  <div className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 ${
+                    expiryStatus === 'expired' ? 'bg-red-50 text-red-600' :
+                    expiryStatus === 'warning' ? 'bg-amber-50 text-amber-600' :
+                    'bg-ivory-dark text-obsidian-600'
+                  }`}>
+                    <Clock className="w-3.5 h-3.5" />
+                    <span className="text-xs font-medium">
+                      {expiryStatus === 'expired'
+                        ? `Expired ${Math.abs(expiryDays)}d ago`
+                        : `${expiryDays}d left`}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full mt-3"
+                onClick={startEditingProduct}
+              >
+                <Pencil className="w-3.5 h-3.5" />
+                Edit Product
               </Button>
-            </a>
-          )}
 
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full mt-2 text-red-500 hover:bg-red-50"
-            onClick={() => { deleteProduct(product.id); onClose(); }}
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            Remove
-          </Button>
+              {product.purchaseUrl && (
+                <a href={product.purchaseUrl} target="_blank" rel="noopener noreferrer" className="mt-2 block">
+                  <Button variant="outline" size="sm" className="w-full">
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    Buy Again
+                  </Button>
+                </a>
+              )}
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full mt-2 text-red-500 hover:bg-red-50"
+                onClick={() => { deleteProduct(product.id); onClose(); }}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                Remove
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Right: Details */}
         <div className="flex-1 min-w-0">
           <div className="mb-4">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <span className={`inline-block text-xs rounded-full px-2 py-0.5 font-medium mb-1 ${categoryColor(product.category)}`}>
-                  {categoryLabel(product.category)}
-                </span>
-                <h2 className="text-xl font-bold text-obsidian-800">{product.name}</h2>
-                <p className="text-obsidian-500 text-sm mt-0.5">{product.brand}</p>
-              </div>
-              {product.rating && (
-                <div className="text-right flex-shrink-0">
-                  <div className="text-2xl font-bold text-obsidian-800">{product.rating.overall.toFixed(1)}</div>
-                  <StarRating value={product.rating.overall} size="sm" />
+            {editingProduct ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Input label="Name" value={editName} onChange={(e) => setEditName(e.target.value)} />
+                  <Button variant="gold" size="sm" className="mt-5 flex-shrink-0" onClick={autoFillProduct} disabled={isFetching}>
+                    {isFetching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><Wand2 className="w-3.5 h-3.5" /> Auto-Fill</>}
+                  </Button>
                 </div>
-              )}
-            </div>
+                <Input label="Brand" value={editBrand} onChange={(e) => setEditBrand(e.target.value)} />
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-obsidian-700">Category</label>
+                  <select
+                    value={editCategory}
+                    onChange={(e) => setEditCategory(e.target.value as ProductCategory)}
+                    className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 bg-white"
+                  >
+                    {ALL_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>{categoryLabel(c)}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className={`inline-block text-xs rounded-full px-2 py-0.5 font-medium mb-1 ${categoryColor(product.category)}`}>
+                      {categoryLabel(product.category)}
+                    </span>
+                    <h2 className="text-xl font-bold text-obsidian-800">{product.name}</h2>
+                    <p className="text-obsidian-500 text-sm mt-0.5">{product.brand}</p>
+                  </div>
+                  {product.rating && (
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-2xl font-bold text-obsidian-800">{product.rating.overall.toFixed(1)}</div>
+                      <StarRating value={product.rating.overall} size="sm" />
+                    </div>
+                  )}
+                </div>
 
-            <div className="flex flex-wrap gap-1 mt-3">
-              {product.concerns.map((c) => (
-                <Badge key={c} className="bg-rose-50 text-rose-600">{concernLabel(c)}</Badge>
-              ))}
-              {product.tags.map((t) => (
-                <Badge key={t} variant="secondary">{t}</Badge>
-              ))}
-            </div>
+                <div className="flex flex-wrap gap-1 mt-3">
+                  {product.concerns.map((c) => (
+                    <Badge key={c} className="bg-rose-50 text-rose-600">{concernLabel(c)}</Badge>
+                  ))}
+                  {product.tags.map((t) => (
+                    <Badge key={t} variant="secondary">{t}</Badge>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Tabs */}

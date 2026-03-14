@@ -17,7 +17,7 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
-  CalendarDays,
+  Pencil,
   X,
 } from 'lucide-react';
 import { format, parseISO, subDays, isWithinInterval } from 'date-fns';
@@ -382,8 +382,9 @@ function EntryCard({
               <button
                 onClick={onEdit}
                 className="p-1.5 rounded-lg hover:bg-ivory-darker text-obsidian-400 hover:text-obsidian-600 transition-colors"
+                title="Edit entry"
               >
-                <CalendarDays className="w-4 h-4" />
+                <Pencil className="w-4 h-4" />
               </button>
               <button
                 onClick={onDelete}

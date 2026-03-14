@@ -1,9 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Heart, Plus, X, Trash2, ExternalLink, Package, Syringe,
-  ChevronDown, Star, DollarSign,
+  ChevronDown, Star, DollarSign, Pencil, Save, Camera, Loader2, Wand2,
 } from 'lucide-react';
 import * as Select from '@radix-ui/react-select';
 import { useAppStore } from '@/lib/store';
@@ -39,6 +39,240 @@ function PriorityLabel({ priority }: { priority: 'high' | 'medium' | 'low' }) {
   return <Badge className={PRIORITY_COLORS[priority]}>{priority}</Badge>;
 }
 
+// ── Wishlist Detail Modal ────────────────────────────────────────────────────
+function WishlistDetailModal({
+  item,
+  open,
+  onClose,
+}: {
+  item: WishlistItem;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const { updateWishlistItem, removeWishlistItem } = useAppStore();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [editing, setEditing] = useState(false);
+  const [name, setName] = useState(item.name);
+  const [brand, setBrand] = useState(item.brand);
+  const [category, setCategory] = useState(item.category);
+  const [price, setPrice] = useState(item.price ? String(item.price) : '');
+  const [imageUrl, setImageUrl] = useState(item.imageUrl || '');
+  const [purchaseUrl, setPurchaseUrl] = useState(item.purchaseUrl || '');
+  const [notes, setNotes] = useState(item.notes || '');
+  const [priority, setPriority] = useState(item.priority);
+  const [isFetching, setIsFetching] = useState(false);
+
+  async function autoFill() {
+    if (!name.trim() && !brand.trim()) return;
+    setIsFetching(true);
+    try {
+      const res = await fetch('/api/product-lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name.trim(), brand: brand.trim() }),
+      });
+      if (!res.ok) throw new Error('Lookup failed');
+      const data = await res.json();
+      if (data.name && !name.trim()) setName(data.name);
+      if (data.brand && !brand.trim()) setBrand(data.brand);
+      if (data.category && PRODUCT_CATEGORIES.includes(data.category)) setCategory(data.category);
+      if (data.price && !price) setPrice(String(data.price));
+      if (data.description) setNotes((prev) => prev || data.description);
+      // Try to find an image via the search query
+      if (data.imageSearchQuery && !imageUrl) {
+        setImageUrl(`https://source.unsplash.com/300x300/?${encodeURIComponent(data.imageSearchQuery)}`);
+      }
+    } catch {
+      // silent
+    } finally {
+      setIsFetching(false);
+    }
+  }
+
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxSize = 600;
+        let { width, height } = img;
+        if (width > maxSize || height > maxSize) {
+          if (width > height) { height = (height / width) * maxSize; width = maxSize; }
+          else { width = (width / height) * maxSize; height = maxSize; }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
+        setImageUrl(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = ev.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleSave() {
+    updateWishlistItem(item.id, {
+      name: name.trim(),
+      brand: brand.trim(),
+      category,
+      price: price ? parseFloat(price) : undefined,
+      imageUrl: imageUrl || undefined,
+      purchaseUrl: purchaseUrl.trim() || undefined,
+      notes: notes.trim() || undefined,
+      priority,
+    });
+    setEditing(false);
+    onClose();
+  }
+
+  return (
+    <Modal open={open} onClose={onClose} title={editing ? 'Edit Wishlist Item' : item.name} size="lg">
+      <div className="flex gap-5">
+        {/* Image */}
+        <div className="w-36 flex-shrink-0">
+          <div
+            className={cn(
+              'w-full aspect-square rounded-xl overflow-hidden bg-ivory-dark border border-ivory-darker flex items-center justify-center',
+              editing && 'cursor-pointer group relative'
+            )}
+            onClick={editing ? () => fileInputRef.current?.click() : undefined}
+          >
+            {imageUrl ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
+                {editing && (
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex flex-col items-center text-obsidian-300">
+                <Package className="w-8 h-8" />
+                {editing && <span className="text-xs mt-1">Upload</span>}
+              </div>
+            )}
+            {editing && <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />}
+          </div>
+          {editing && (
+            <Input
+              label="Image URL"
+              placeholder="https://..."
+              value={imageUrl.startsWith('data:') ? '' : imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              className="mt-2"
+            />
+          )}
+        </div>
+
+        {/* Details */}
+        <div className="flex-1 min-w-0">
+          {editing ? (
+            <div className="space-y-3">
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
+                  <Input label="Product Name" value={name} onChange={(e) => setName(e.target.value)} />
+                </div>
+                <Button variant="gold" size="sm" onClick={autoFill} disabled={isFetching} className="h-[38px]">
+                  {isFetching ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><Wand2 className="w-3.5 h-3.5" /> Auto-Fill</>}
+                </Button>
+              </div>
+              <Input label="Brand" value={brand} onChange={(e) => setBrand(e.target.value)} />
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-obsidian-700">Category</label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value as ProductCategory)}
+                    className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 bg-white"
+                  >
+                    {PRODUCT_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>{categoryLabel(c)}</option>
+                    ))}
+                  </select>
+                </div>
+                <Input label="Price" type="number" placeholder="65.00" value={price} onChange={(e) => setPrice(e.target.value)} />
+              </div>
+              <Input label="Purchase URL" placeholder="https://..." value={purchaseUrl} onChange={(e) => setPurchaseUrl(e.target.value)} />
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-obsidian-700">Priority</label>
+                <div className="flex gap-1.5">
+                  {(['high', 'medium', 'low'] as const).map((p) => (
+                    <button key={p} onClick={() => setPriority(p)} className={cn(
+                      'flex-1 rounded-lg px-3 py-2 text-sm font-medium border capitalize transition-colors',
+                      priority === p ? PRIORITY_COLORS[p] + ' border-current' : 'bg-white text-obsidian-500 border-ivory-darker'
+                    )}>
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-obsidian-700">Notes</label>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Why do you want this product?"
+                  rows={3}
+                  className="w-full rounded-lg border border-ivory-darker px-3 py-2 text-sm text-obsidian-800 placeholder:text-obsidian-400 bg-white resize-none"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button variant="outline" onClick={() => setEditing(false)} className="flex-1">Cancel</Button>
+                <Button onClick={handleSave} className="flex-1"><Save className="w-4 h-4" /> Save</Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-brand-50 text-brand-600">{categoryLabel(item.category)}</span>
+                <PriorityLabel priority={item.priority} />
+              </div>
+              <h3 className="text-lg font-bold text-obsidian-800">{item.name}</h3>
+              <p className="text-sm text-obsidian-500">{item.brand}</p>
+
+              {item.price && (
+                <div className="flex items-center gap-1.5 text-obsidian-600 mt-3">
+                  <DollarSign className="w-4 h-4 text-obsidian-400" />
+                  <span className="text-sm font-medium">${item.price}</span>
+                </div>
+              )}
+
+              {item.notes && (
+                <p className="text-sm text-obsidian-600 mt-3 leading-relaxed">{item.notes}</p>
+              )}
+
+              <div className="text-xs text-obsidian-400 mt-3">Added {item.addedDate}</div>
+
+              <div className="flex gap-2 mt-4">
+                <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+                  <Pencil className="w-3.5 h-3.5" /> Edit
+                </Button>
+                {item.purchaseUrl && (
+                  <a href={item.purchaseUrl} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm">
+                      <ExternalLink className="w-3.5 h-3.5" /> Buy
+                    </Button>
+                  </a>
+                )}
+                <Button variant="ghost" size="sm" className="text-red-500 hover:bg-red-50 ml-auto"
+                  onClick={() => { removeWishlistItem(item.id); onClose(); }}>
+                  <Trash2 className="w-3.5 h-3.5" /> Remove
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 export default function WishlistPage() {
   const wishlist = useAppStore((s) => s.wishlist);
   const procedureWishlist = useAppStore((s) => s.procedureWishlist);
@@ -50,6 +284,7 @@ export default function WishlistPage() {
   const [tab, setTab] = useState<'products' | 'procedures'>('products');
   const [showAddProduct, setShowAddProduct] = useState(false);
   const [showAddProcedure, setShowAddProcedure] = useState(false);
+  const [selectedWishlistItem, setSelectedWishlistItem] = useState<WishlistItem | null>(null);
 
   // Add product form
   const [pName, setPName] = useState('');
@@ -158,9 +393,10 @@ export default function WishlistPage() {
             <div className="grid gap-3">
               {wishlist.map((item) => (
                 <motion.div key={item.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                  <Card className="hover:shadow-md transition-shadow">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedWishlistItem(item)}>
                     <CardBody className="flex items-center gap-4 p-4">
                       {item.imageUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img src={item.imageUrl} alt={item.name} className="w-14 h-14 rounded-lg object-cover flex-shrink-0" />
                       ) : (
                         <div className="w-14 h-14 rounded-lg bg-ivory-darker flex items-center justify-center flex-shrink-0">
@@ -180,11 +416,12 @@ export default function WishlistPage() {
                           <span className="text-sm font-medium text-obsidian-600">${item.price}</span>
                         )}
                         {item.purchaseUrl && (
-                          <a href={item.purchaseUrl} target="_blank" rel="noopener noreferrer" className="text-obsidian-400 hover:text-brand-500">
+                          <a href={item.purchaseUrl} target="_blank" rel="noopener noreferrer" className="text-obsidian-400 hover:text-brand-500"
+                            onClick={(e) => e.stopPropagation()}>
                             <ExternalLink className="w-4 h-4" />
                           </a>
                         )}
-                        <button onClick={() => removeWishlistItem(item.id)} className="text-obsidian-300 hover:text-red-500 transition-colors">
+                        <button onClick={(e) => { e.stopPropagation(); removeWishlistItem(item.id); }} className="text-obsidian-300 hover:text-red-500 transition-colors">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -382,6 +619,15 @@ export default function WishlistPage() {
           <Button onClick={handleAddProcedure}><Plus className="w-4 h-4" /> Add</Button>
         </div>
       </Modal>
+
+      {/* Wishlist Detail Modal */}
+      {selectedWishlistItem && (
+        <WishlistDetailModal
+          item={selectedWishlistItem}
+          open={!!selectedWishlistItem}
+          onClose={() => setSelectedWishlistItem(null)}
+        />
+      )}
     </div>
   );
 }
